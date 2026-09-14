@@ -57,6 +57,19 @@ const I18N = {
     lowlandNote: '此測站網絡集中於低地，海拔跨度有限，因此氣溫遞減率修正屬外推而非擬合關係；交叉驗證顯示修正未能改善誤差，故本分析採用未經地形修正的內插法。',
     spansNote: '測站網絡涵蓋足夠地形起伏，氣溫遞減率修正經交叉驗證證實有效。',
     analysisPending: '正在計算分析場…', stationElev: '海拔',
+    tabLae: '低空作業', laeTitle: '低空經濟（LAE）作業評估',
+    laeSub: '結合分區風場、METAR／TAF 及天文台警告的起降決策',
+    verdict: '作業決定', vGo: '可飛', vCaution: '注意', vNoGo: '不可飛', vUnknown: '未確定',
+    factors: '評估因素', fFactor: '因素', fValue: '數值', fThreshold: '門檻', fStatus: '狀態',
+    surfaceWind: '地面風（10 米平均）', gust: '最大陣風', gustSpread: '陣風跨度',
+    windAtHeight: '作業高度風速', visibility: '能見度', ceiling: '雲底高度',
+    thunder: '雷暴', lightningL: '閃電', precip: '降水', flightCat: '飛行分類', warnL: '天氣警告',
+    metarTitle: 'METAR（實況）', tafTitle: 'TAF（預報）', rawReport: '原文',
+    windField: '風場', windNet: '測風站', vecValidation: '向量交叉驗證',
+    speedRmse: '風速 RMSE', dirMae: '風向平均誤差', altitudeL: '作業高度',
+    thresholdsTitle: '門檻值（可調整，非官方標準）', altNote: '風速以冪律由 10 米外推至作業高度',
+    notStandard: '此門檻為本示範自訂，並非任何認可標準，不可取代營運商自身的作業限制。',
+    windArrows: '風向箭頭', stronger: '風速', opWindow: '預報窗口',
   },
   sc: {
     siteTitle: '本地气象站', siteSub: '数据来源：香港天文台开放数据',
@@ -106,6 +119,19 @@ const I18N = {
     lowlandNote: '此测站网络集中于低地，海拔跨度有限，因此气温递减率修正属外推而非拟合关系；交叉验证显示修正未能改善误差，故本分析采用未经地形修正的内插法。',
     spansNote: '测站网络涵盖足够地形起伏，气温递减率修正经交叉验证证实有效。',
     analysisPending: '正在计算分析场…', stationElev: '海拔',
+    tabLae: '低空作业', laeTitle: '低空经济（LAE）作业评估',
+    laeSub: '结合分区风场、METAR／TAF 及天文台警告的起降决策',
+    verdict: '作业决定', vGo: '可飞', vCaution: '注意', vNoGo: '不可飞', vUnknown: '未确定',
+    factors: '评估因素', fFactor: '因素', fValue: '数值', fThreshold: '门槛', fStatus: '状态',
+    surfaceWind: '地面风（10 米平均）', gust: '最大阵风', gustSpread: '阵风跨度',
+    windAtHeight: '作业高度风速', visibility: '能见度', ceiling: '云底高度',
+    thunder: '雷暴', lightningL: '闪电', precip: '降水', flightCat: '飞行分类', warnL: '天气警告',
+    metarTitle: 'METAR（实况）', tafTitle: 'TAF（预报）', rawReport: '原文',
+    windField: '风场', windNet: '测风站', vecValidation: '向量交叉验证',
+    speedRmse: '风速 RMSE', dirMae: '风向平均误差', altitudeL: '作业高度',
+    thresholdsTitle: '门槛值（可调整，非官方标准）', altNote: '风速以幂律由 10 米外推至作业高度',
+    notStandard: '此门槛为本示范自订，并非任何认可标准，不可取代营运商自身的作业限制。',
+    windArrows: '风向箭头', stronger: '风速', opWindow: '预报窗口',
   },
   en: {
     siteTitle: 'Local Weather Station', siteSub: 'Source: Hong Kong Observatory Open Data',
@@ -155,6 +181,21 @@ const I18N = {
     lowlandNote: 'This network sits almost entirely in the lowlands, so the lapse-rate correction is extrapolation rather than a fitted relationship. Cross-validation shows it does not reduce error here, so the uncorrected estimator is used.',
     spansNote: 'The network spans enough relief for the lapse-rate correction to be identifiable; cross-validation confirms it helps.',
     analysisPending: 'Computing analysis field…', stationElev: 'Elev',
+    tabLae: 'LAE Ops', laeTitle: 'Low-Altitude Economy (LAE) operations assessment',
+    laeSub: 'Go/no-go from the district wind field, METAR/TAF and Observatory warnings',
+    verdict: 'Verdict', vGo: 'GO', vCaution: 'CAUTION', vNoGo: 'NO-GO', vUnknown: 'UNKNOWN',
+    factors: 'Assessment factors', fFactor: 'Factor', fValue: 'Value', fThreshold: 'Threshold', fStatus: 'Status',
+    surfaceWind: 'Surface wind (10 m mean)', gust: 'Maximum gust', gustSpread: 'Gust spread',
+    windAtHeight: 'Wind at operating altitude', visibility: 'Visibility', ceiling: 'Cloud ceiling',
+    thunder: 'Thunderstorm', lightningL: 'Lightning', precip: 'Precipitation',
+    flightCat: 'Flight category', warnL: 'Weather warnings',
+    metarTitle: 'METAR (observed)', tafTitle: 'TAF (forecast)', rawReport: 'Raw report',
+    windField: 'Wind field', windNet: 'Wind stations', vecValidation: 'Vector cross-validation',
+    speedRmse: 'Speed RMSE', dirMae: 'Direction MAE', altitudeL: 'Operating altitude',
+    thresholdsTitle: 'Thresholds (configurable, not an official standard)',
+    altNote: 'wind is extrapolated from 10 m to the operating altitude by a power law',
+    notStandard: 'These thresholds are this demonstration\'s own starting point. They are not an approved standard and do not replace an operator\'s own documented limits.',
+    windArrows: 'Wind arrows', stronger: 'Speed', opWindow: 'Forecast window',
   },
 };
 
@@ -261,10 +302,15 @@ const state = {
   analysisError: null,
   analysisInFlight: null,
   showOverlay: true,
+  lae: null,
+  laeLoading: false,
+  laeError: null,
+  laeInFlight: null,
+  laeAlt: 120,
 };
 
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
-const ROUTES = ['home', 'overview', 'regional', 'analysis', 'imagery', 'forecast', 'alerts', 'news'];
+const ROUTES = ['home', 'overview', 'regional', 'analysis', 'lae', 'imagery', 'forecast', 'alerts', 'news'];
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -392,6 +438,57 @@ function overlayFor() {
   };
 }
 
+/* The LAE assessment is fetched on demand; it is heavier still (wind field plus
+   two external aviation feeds). */
+async function loadLae(force = false, alt = null) {
+  if (alt != null) state.laeAlt = alt;
+  if (state.lae && !force && alt == null) return state.lae;
+  if (state.laeInFlight && !force) return state.laeInFlight;
+
+  state.laeLoading = true;
+  state.laeError = null;
+  if (state.route === 'lae') renderAll();
+
+  const job = (async () => {
+    const res = await fetch(`/api/lae?alt=${encodeURIComponent(state.laeAlt)}${force ? '&force=1' : ''}`);
+    const json = await res.json();
+    if (!res.ok || !json.ok) throw new Error(json.error || `HTTP ${res.status}`);
+    return json;
+  })();
+  state.laeInFlight = job;
+
+  try {
+    state.lae = await job;
+    state.laeError = null;
+  } catch (err) {
+    state.laeError = err.message || String(err);
+    state.lae = null;
+  } finally {
+    state.laeInFlight = null;
+    state.laeLoading = false;
+    if (state.route === 'lae') renderAll();
+  }
+  return state.lae;
+}
+
+/** Wind speed ramp — mirrors WIND_STOPS in lib/colormap.js. */
+const WIND_STOPS_CLIENT = [
+  [0, '#eaf5ff'], [10, '#a8d5f0'], [20, '#4a9fd8'],
+  [30, '#f0b429'], [40, '#e07b2c'], [50, '#c0392b'],
+];
+function windColor(v) {
+  if (v == null || !Number.isFinite(v)) return '#a8d5f0';
+  if (v <= WIND_STOPS_CLIENT[0][0]) return WIND_STOPS_CLIENT[0][1];
+  for (let i = 1; i < WIND_STOPS_CLIENT.length; i++) {
+    if (v <= WIND_STOPS_CLIENT[i][0]) {
+      const [v0, c0] = WIND_STOPS_CLIENT[i - 1];
+      const [v1, c1] = WIND_STOPS_CLIENT[i];
+      return mixHex(c0, c1, (v - v0) / (v1 - v0 || 1));
+    }
+  }
+  return WIND_STOPS_CLIENT[WIND_STOPS_CLIENT.length - 1][1];
+}
+
 /* ------------------------------------------------------------------ *
  * derived data
  * ------------------------------------------------------------------ */
@@ -483,7 +580,7 @@ const LAND = [
   [[114.020,22.045],[114.065,22.055],[114.070,22.020],[114.025,22.010]],
 ];
 
-function renderMap(rows, kind, overlay) {
+function renderMap(rows, kind, overlay, arrows) {
   const polys = LAND.map((ring) => {
     const pts = ring.map(([lon, lat]) => project(lat, lon).map((n) => n.toFixed(1)).join(',')).join(' ');
     return overlay
@@ -504,12 +601,40 @@ function renderMap(rows, kind, overlay) {
       preserveAspectRatio="none" opacity="0.9"/>`;
   }
 
+  /* Wind arrows. The meteorological direction is where the wind comes FROM, so
+     the arrow is drawn pointing downwind (dir + 180). Length and colour both
+     encode speed, because colour alone is unreliable for the colour-blind. */
+  let arrowSvg = '';
+  if (arrows && arrows.length) {
+    arrowSvg = arrows.map((a) => {
+      const [x, y] = project(a.lat, a.lon);
+      const col = windColor(a.speed);
+      const len = 7 + Math.min(13, a.speed * 0.45);
+      const rad = ((a.dir + 180) * Math.PI) / 180;
+      const ux = Math.sin(rad), uy = -Math.cos(rad);
+      const x2 = x + ux * len, y2 = y + uy * len;
+      const px = -uy, py = ux;
+      const hl = 4, hw = 2.4;
+      const tip = `${x2.toFixed(1)},${y2.toFixed(1)} ` +
+                  `${(x2 - ux * hl + px * hw).toFixed(1)},${(y2 - uy * hl + py * hw).toFixed(1)} ` +
+                  `${(x2 - ux * hl - px * hw).toFixed(1)},${(y2 - uy * hl - py * hw).toFixed(1)}`;
+      return `<g class="war" data-speed="${a.speed}" data-dir="${a.dir}">` +
+             `<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(x2 - ux * hl * 0.6).toFixed(1)}" y2="${(y2 - uy * hl * 0.6).toFixed(1)}" stroke="${col}" stroke-width="1.5"/>` +
+             `<polygon points="${tip}" fill="${col}"/></g>`;
+    }).join('');
+  }
+
   const maxV = Math.max(...rows.map((r) => r.value), 1);
   const markers = rows.map((r) => {
-    const c = stationCoords(r.place);
+    // Prefer coordinates carried on the row (the wind network is larger than the
+    // temperature one and most of its marine stations have no name counterpart
+    // in the station table); fall back to the name lookup.
+    const c = (r.lat != null && r.lon != null) ? { lat: r.lat, lon: r.lon } : stationCoords(r.place);
     if (!c) return '';
     const [x, y] = project(c.lat, c.lon);
-    const fill = kind === 'rain' ? rainColor(r.value) : tempColor(r.value);
+    const fill = kind === 'rain' ? rainColor(r.value)
+               : kind === 'wind' ? windColor(r.value)
+               : tempColor(r.value);
     const label = String(r.place);
     return `<g class="station" data-place="${esc(label)}">
       <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="${fill}"/>
@@ -523,6 +648,7 @@ function renderMap(rows, kind, overlay) {
       <rect width="${MAP.w}" height="${MAP.h}" fill="#dceef7"/>
       ${polys}
       ${overlaySvg}
+      ${arrowSvg}
       ${markers}
     </svg>
   </div>`;
@@ -1060,6 +1186,220 @@ function viewAnalysis() {
   return mapCard + `<div class="grid grid--2">${estCard}${whyCard}</div>` + fieldCard;
 }
 
+/* ------------------------------------------------------------------ *
+ * view: LAE operations assessment
+ * ------------------------------------------------------------------ */
+
+const VERDICT_CLASS = { 'GO': 'verdict--go', 'CAUTION': 'verdict--caution', 'NO-GO': 'verdict--nogo', 'UNKNOWN': 'verdict--unknown' };
+const VERDICT_LABEL = { 'GO': 'vGo', 'CAUTION': 'vCaution', 'NO-GO': 'vNoGo', 'UNKNOWN': 'vUnknown' };
+
+function viewLae() {
+  const d = state.lae;
+
+  if (!d) {
+    return `<section class="card">
+      <h2 class="card__title">${esc(state.laeError ? t('errorTitle') : t('laeTitle'))}</h2>
+      <div class="card__body">
+        ${state.laeError
+          ? `<p class="empty">${esc(state.laeError)}</p>`
+          : `<p class="prose">${esc(t('analysisPending'))}</p>
+             <div class="skeleton" style="width:70%"></div>
+             <div class="skeleton" style="width:50%"></div>`}
+        <button class="btn" data-lae-refresh type="button">${esc(t('refreshAnalysis'))}</button>
+      </div></section>`;
+  }
+
+  const a = d.assessment;
+
+  /* --- verdict --- */
+  const verdictCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('laeTitle'))}
+        <span class="spacer">
+          <button class="btn" data-lae-refresh type="button" ${state.laeLoading ? 'disabled' : ''}>${esc(t('refreshAnalysis'))}</button>
+        </span>
+      </h2>
+      <div class="card__body">
+        <div class="verdict ${VERDICT_CLASS[a.overall] || 'verdict--unknown'}">
+          <span class="verdict__badge">${esc(t(VERDICT_LABEL[a.overall] || 'vUnknown'))}</span>
+          <span class="verdict__text">${esc(a.summary)}</span>
+        </div>
+        <div class="metrics" style="margin-top:14px">
+          <div class="metric">
+            <div class="metric__k">${esc(t('altitudeL'))}</div>
+            <div class="metric__v">${a.altitudeM}<small>m AGL</small></div>
+            <div class="metric__sub">${esc(t('altNote'))}</div>
+          </div>
+          <div class="metric"><div class="metric__k">${esc(t('factors'))}</div><div class="metric__v">${a.factors.length}</div>
+            <div class="metric__sub">${a.blockers.length} blocker(s), ${a.cautions.length} caution(s)</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('windNet'))}</div>
+            <div class="metric__v">${d.wind.network.usable}<small>/${d.wind.network.reported}</small></div>
+            <div class="metric__sub">${esc(t('speedRmse'))} ${d.wind.validation.speedRmseKmh} km/h</div></div>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(d.generatedAt))} ·
+        ${esc(t('rawReport'))}: wind ${esc(fmtTime(d.observationTimes.windNetwork))}, METAR ${esc(fmtTime(d.observationTimes.metar))}</p>
+    </section>`;
+
+  /* --- factors --- */
+  const factorRows = a.factors.map((f) => {
+    const val = f.value == null ? '—'
+      : typeof f.value === 'boolean' ? (f.value ? '✓' : '—')
+      : `${f.value}${f.unit ? ' ' + f.unit : ''}`;
+    const thr = f.threshold == null ? '—'
+      : typeof f.threshold === 'object'
+        ? Object.entries(f.threshold).map(([k, v]) => `${k} ${v}`).join(' / ')
+        : String(f.threshold);
+    return `<tr class="${f.status === 'NO-GO' ? 'row--nogo' : f.status === 'CAUTION' ? 'row--caution' : ''}">
+      <td>${esc(f.label)}</td>
+      <td class="num">${esc(val)}</td>
+      <td class="num" style="color:#7b8a9c;font-size:12.5px">${esc(thr)}</td>
+      <td><span class="pill pill--${f.status.toLowerCase().replace('-', '')}">${esc(f.status)}</span></td>
+    </tr>`;
+  }).join('');
+
+  const factorCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('factors'))}</h2>
+      <div class="card__body">
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr>
+              <th>${esc(t('fFactor'))}</th>
+              <th style="text-align:right">${esc(t('fValue'))}</th>
+              <th style="text-align:right">${esc(t('fThreshold'))}</th>
+              <th>${esc(t('fStatus'))}</th>
+            </tr></thead>
+            <tbody>${factorRows}</tbody>
+          </table>
+        </div>
+      </div>
+    </section>`;
+
+  /* --- wind map --- */
+  const windRows = d.wind.stations.map((s) => ({
+    place: state.lang === 'en' ? s.station : (s.tc || s.station),
+    value: s.speedKmh, lat: s.lat, lon: s.lon,
+  }));
+  const windCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('windField'))}</h2>
+      <div class="card__body">
+        ${renderMap(windRows, 'wind', null, d.wind.arrows)}
+        <div class="chartlegend">
+          <span>${d.wind.arrows.length} ${esc(t('windArrows'))}</span>
+          <span>${esc(t('windField'))} ${d.wind.field.speedMinKmh}–${d.wind.field.speedMaxKmh} km/h (mean ${d.wind.field.speedMeanKmh})</span>
+          <span>${esc(t('vecValidation'))}: ${esc(t('speedRmse'))} ${d.wind.validation.speedRmseKmh} km/h, ${esc(t('dirMae'))} ${d.wind.validation.dirMaeDeg}° &ge;${d.wind.validation.minDirSpeedKmh} km/h</span>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('recordTime'))}: ${esc(fmtTime(d.wind.observedAt))} ·
+        u/v interpolated separately, recombined — direction is never interpolated as a scalar</p>
+    </section>`;
+
+  /* --- stations --- */
+  const stationRows = [...d.wind.stations].sort((x, y) => y.speedKmh - x.speedKmh).map((s) => `
+    <tr>
+      <td>${esc(s.station)}</td>
+      <td>${esc(s.dirName)} <small style="color:#7b8a9c">${s.dirDeg != null ? s.dirDeg + '°' : ''}</small></td>
+      <td class="num">${s.speedKmh}</td>
+      <td class="num">${s.gustKmh == null ? '—' : s.gustKmh}</td>
+      <td class="num">B${s.beaufort}</td>
+    </tr>`).join('');
+
+  const stationCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('windNet'))} · ${d.wind.stations.length}</h2>
+      <div class="card__body">
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr>
+              <th>${esc(t('station'))}</th><th>${esc(t('wind'))}</th>
+              <th style="text-align:right">km/h</th>
+              <th style="text-align:right">${esc(t('gust'))}</th>
+              <th style="text-align:right">Bft</th>
+            </tr></thead>
+            <tbody>${stationRows}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${d.wind.network.dropped.length} station(s) excluded:
+        ${d.wind.network.dropped.map((x) => `${esc(x.station)} (${esc(x.reason)})`).join('; ') || 'none'}</p>
+    </section>`;
+
+  /* --- METAR / TAF --- */
+  const aviationCard = (() => {
+    const m = d.metar, tf = d.taf;
+    const metarBlock = m ? `
+      <p class="prose"><b>${esc(t('metarTitle'))}</b> · ${esc(m.station)} ·
+        ${esc(t('flightCat'))} <code>${esc(m.flightCategory)}</code></p>
+      <pre class="rawbox">${esc(m.raw)}</pre>
+      <div class="metrics">
+        <div class="metric"><div class="metric__k">${esc(t('surfaceWind'))}</div>
+          <div class="metric__v">${m.wind.dirDeg == null ? 'VRB' : m.wind.dirDeg + '°'}<small>/${m.wind.speedKt} kt</small></div>
+          <div class="metric__sub">${m.wind.gustKt ? 'G' + m.wind.gustKt + ' kt gust' : 'no gust reported'}</div></div>
+        <div class="metric"><div class="metric__k">${esc(t('visibility'))}</div>
+          <div class="metric__v">${(m.visibility.metres / 1000).toFixed(1)}<small>km</small></div>
+          <div class="metric__sub">${m.visibility.atLeast ? '10 km or more' : ''}</div></div>
+        <div class="metric"><div class="metric__k">${esc(t('ceiling'))}</div>
+          <div class="metric__v">${m.ceilingFt == null ? '—' : m.ceilingFt}<small>${m.ceilingFt == null ? '' : 'ft'}</small></div>
+          <div class="metric__sub">${m.ceilingFt == null ? 'no BKN/OVC' : ''}</div></div>
+        <div class="metric"><div class="metric__k">T / Td</div>
+          <div class="metric__v">${m.temperatureC}/${m.dewpointC}<small>${esc(t('unitC'))}</small></div>
+          <div class="metric__sub">Q${m.qnhHpa}</div></div>
+      </div>` : '<p class="empty">METAR unavailable</p>';
+
+    const tafBlock = tf ? `
+      <p class="prose" style="margin-top:18px"><b>${esc(t('tafTitle'))}</b> · ${esc(tf.station)} ·
+        ${esc(t('opWindow'))} ${esc(fmtTime(tf.validity.from))} – ${esc(fmtTime(tf.validity.to))}</p>
+      <div class="tablewrap">
+        <table class="tbl">
+          <thead><tr><th>Type</th><th>Window</th><th>Wind</th><th>Vis</th><th>Wx</th></tr></thead>
+          <tbody>
+            <tr><td>BASE</td><td>${esc(fmtTime(tf.validity.from))}–${esc(fmtTime(tf.validity.to))}</td>
+              <td>${tf.base.wind ? esc(tf.base.wind.dirDeg + '@' + tf.base.wind.speedKt + 'kt') : '—'}</td>
+              <td>${tf.base.visibility ? tf.base.visibility.metres + ' m' : '—'}</td>
+              <td>${tf.base.weather.map((w) => esc(w.raw)).join(' ') || '—'}</td></tr>
+            ${tf.groups.map((g) => `<tr>
+              <td>${esc(g.type)}${g.prob ? ' ' + g.prob + '%' : ''}</td>
+              <td>${esc(fmtTime(g.from))}–${esc(fmtTime(g.to))}</td>
+              <td>${g.wind ? esc(g.wind.dirDeg + '@' + g.wind.speedKt + (g.wind.gustKt ? 'G' + g.wind.gustKt : '') + 'kt') : '—'}</td>
+              <td>${g.visibility ? g.visibility.metres + ' m' : '—'}</td>
+              <td>${g.weather.map((w) => esc(w.raw)).join(' ') || '—'}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <p class="card__note">worst case over validity: wind
+        ${tf.worstCase.wind ? esc(tf.worstCase.wind.dirDeg + '@' + tf.worstCase.wind.speedKt + (tf.worstCase.wind.gustKt ? 'G' + tf.worstCase.wind.gustKt : '') + 'kt') : '—'},
+        vis ${tf.worstCase.visibility ? tf.worstCase.visibility.metres + ' m' : '—'},
+        ceiling ${tf.worstCase.ceilingFt == null ? '—' : tf.worstCase.ceilingFt + ' ft'},
+        thunder ${tf.worstCase.thunder ? 'yes' : 'no'}</p>` : '<p class="empty">TAF unavailable</p>';
+
+    return `<section class="card">
+      <h2 class="card__title">${esc(t('metarTitle'))} / ${esc(t('tafTitle'))}</h2>
+      <div class="card__body">${metarBlock}${tafBlock}</div>
+    </section>`;
+  })();
+
+  /* --- thresholds, with the caveat stated --- */
+  const thrRows = Object.entries(d.thresholds).map(([k, v]) => `
+    <tr><td>${esc(k)}</td><td class="num">${Object.entries(v).map(([a, b]) => `${esc(a)} ${b}`).join(' / ')}</td></tr>`).join('');
+
+  const thrCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('thresholdsTitle'))}</h2>
+      <div class="card__body">
+        <div class="tablewrap">
+          <table class="tbl"><thead><tr><th>${esc(t('fFactor'))}</th><th style="text-align:right">km/h · m · ft</th></tr></thead>
+          <tbody>${thrRows}</tbody></table>
+        </div>
+        <p class="prose prose--muted" style="margin-top:12px"><strong>${esc(t('notStandard'))}</strong></p>
+      </div>
+    </section>`;
+
+  return verdictCard + `<div class="grid grid--2">${factorCard}${stationCard}</div>`
+       + windCard + aviationCard + thrCard;
+}
+
 const ISO = { cos: 0.98, kx: 0.16, kz: 0.5 };
 const isoProject = (x, y, z) => [(x - z) * ISO.cos, x * ISO.kx + z * ISO.kz - y];
 
@@ -1326,7 +1666,7 @@ function renderAll() {
 
   const map = {
     home: viewHome, overview: viewOverview, regional: viewRegional, analysis: viewAnalysis,
-    imagery: viewImagery, forecast: viewForecast, alerts: viewAlerts, news: viewNews,
+    lae: viewLae, imagery: viewImagery, forecast: viewForecast, alerts: viewAlerts, news: viewNews,
   };
   view.innerHTML = (map[state.route] || viewHome)();
 
@@ -1383,6 +1723,7 @@ function bindGlobalOnce() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     renderAll();
     if (state.route === 'analysis' && !state.analysis) loadAnalysis(false);
+    if (state.route === 'lae' && !state.lae) loadLae(false);
   });
 
   document.body.addEventListener('click', (ev) => {
@@ -1413,6 +1754,11 @@ function bindGlobalOnce() {
     if (ev.target.closest('[data-analysis-refresh]')) {
       state.analysis = null;
       loadAnalysis(true);
+      return;
+    }
+    if (ev.target.closest('[data-lae-refresh]')) {
+      state.lae = null;
+      loadLae(true);
       return;
     }
 
@@ -1465,4 +1811,8 @@ function bindGlobalOnce() {
   // render. If the user lands directly on the analysis route, fetch it at once.
   if (state.route === 'analysis') loadAnalysis(false);
   else setTimeout(() => loadAnalysis(false), 1200);
+  // The LAE assessment is the heaviest of all (vector wind field plus two
+  // external aviation feeds) and is only needed on its own view, so it is never
+  // prefetched — but landing straight on #/lae must still fetch it.
+  if (state.route === 'lae') loadLae(false);
 })();

@@ -543,6 +543,45 @@ async function handleApi(req, res, u) {
     }
   }
 
+  if (u.pathname === '/api/wind') {
+    try {
+      const r = await analysis.runWind({ cacheDir: CACHE_DIR });
+      return sendJson(res, 200, r);
+    } catch (err) {
+      stats.errors++;
+      stats.lastError = `${new Date().toISOString()} wind: ${err.message}`;
+      return sendJson(res, 502, { ok: false, error: err.message });
+    }
+  }
+
+  if (u.pathname === '/api/lae') {
+    // Number(null) is 0 and 0 is finite, so an absent parameter has to be tested
+    // for explicitly — otherwise it silently clamps to the 10 m floor.
+    const altParam = q.get('alt');
+    const altRaw = (altParam == null || altParam === '') ? NaN : Number(altParam);
+    const altitudeM = Number.isFinite(altRaw) ? Math.max(10, Math.min(3000, altRaw)) : 120;
+    try {
+      const lang = safeLang(q.get('lang'));
+      const wRes = await getData('warnsum', lang, {});
+      const warnObj = wRes.value || {};
+      const warnings = Array.isArray(warnObj)
+        ? []
+        : Object.values(warnObj).filter((x) => x && typeof x === 'object');
+
+      const r = await analysis.runLae({
+        cacheDir: CACHE_DIR,
+        getRhrread: () => getData('rhrread', 'tc', {}).then((x) => x.value),
+        warnings,
+        altitudeM,
+      });
+      return sendJson(res, 200, r);
+    } catch (err) {
+      stats.errors++;
+      stats.lastError = `${new Date().toISOString()} lae: ${err.message}`;
+      return sendJson(res, 502, { ok: false, error: err.message });
+    }
+  }
+
   return sendJson(res, 404, { ok: false, error: 'unknown api route' });
 }
 

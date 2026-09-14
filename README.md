@@ -147,6 +147,42 @@ node scripts/check-interp.js   # 11 checks
 
 ---
 
+## LAE operations product
+
+A go/no-go assessment for low-altitude operations, from four independent sources:
+
+| Source | Provides |
+|---|---|
+| HKO `latest_10min_wind.csv` (30 stations) | 10-min mean wind, direction, maximum gust |
+| METAR / TAF via aviationweather.gov | visibility, **ceiling**, wind, QNH |
+| HKO `warnsum` | typhoon, rainstorm, thunderstorm, monsoon warnings |
+| HKO `rhrread.lightning` | convective activity by district |
+
+The district feeds carry no visibility and no ceiling at all — the automatic
+network does not measure either — which is why the product needs both families of
+data rather than one.
+
+**Direction is never interpolated as a scalar.** 350° and 010° average to 180° as
+numbers, the exact opposite direction. The field is interpolated as u and v and
+recombined, and the test suite asserts the scalar alternative would have been 180°
+wrong, because Hong Kong's prevailing easterlies straddle north routinely.
+
+**Wind is extrapolated to the operating altitude** (default 120 m) with a power
+law, `v(z) = v10 * (z/10)^alpha`. This is an engineering approximation and is
+documented as one.
+
+Every factor is scored independently and the verdict is the worst, since an
+operation is bounded by its most limiting constraint. Thresholds are stated
+explicitly in `lib/lae.js` and are **not an approved standard** — the UI says so
+too. Full method, validation and nine documented limitations:
+`docs/LAE_PRODUCT.md`.
+
+```
+node scripts/check-lae.js      # 41 checks
+```
+
+---
+
 ## Layout
 
 ```
@@ -158,15 +194,20 @@ hko-local/
 │  ├─ png.js          PNG codec (terrarium DEM in, RGBA raster out)
 │  ├─ dem.js          terrain tiles -> mosaic -> void fill -> analysis grid
 │  ├─ interp.js       IDW, kriging, variogram, leave-one-out cross-validation
-│  ├─ analysis.js     post-processing pipeline + estimator selection
-│  ├─ stations.js     station coordinates (server side)
-│  └─ colormap.js     temperature ramp -> RGBA
+│  ├─ analysis.js     post-processing pipeline, vector wind field, LAE assembly
+│  ├─ wind.js         compass parsing, u/v vector algebra, CSV edge cases
+│  ├─ aviation.js     METAR / TAF decoding, worst-case merging
+│  ├─ lae.js          go/no-go model, thresholds, wind-profile extrapolation
+│  ├─ stations.js     observation + wind station coordinates
+│  └─ colormap.js     temperature and wind ramps -> RGBA
 ├─ scripts/
 │  ├─ check-dem.js    16 checks: codec, georeferencing, DEM accuracy, alignment
 │  ├─ check-interp.js 11 checks: synthetic control + live LOO
+│  ├─ check-lae.js    41 checks: vector wind, CSV edge cases, METAR/TAF
 │  └─ debug-*.js      ad-hoc diagnostics used while building
 ├─ docs/
-│  └─ ANALYSIS_METHOD.md   method, validation results, limitations
+│  ├─ ANALYSIS_METHOD.md   analysis method, validation, limitations
+│  └─ LAE_PRODUCT.md       LAE product method, thresholds, limitations
 ├─ public/
 │  ├─ index.html      SPA shell: masthead, nav, modules, footer
 │  ├─ styles.css      stylesheet (design tokens matched to HKO)
@@ -214,6 +255,8 @@ browser ──▶ localhost:8787 ──┬──▶ data.weather.gov.hk   (weath
 | `GET /api/status` | uptime, cache stats, last upstream error |
 | `GET /api/analysis` | high-resolution analysis: grid, scores, selection, field stats |
 | `GET /analysis/field.png` | the analysis raster (RGBA, sea transparent) |
+| `GET /api/wind` | vector wind field, station observations, vector LOO validation |
+| `GET /api/lae?alt=120` | full LAE assessment + decoded METAR/TAF + wind field |
 | `GET /icons/pic{nn}.png` | proxied + disk-cached weather icon |
 | `GET /imagery/{radar,satellite,lightning}` | proxied live imagery, 60 s cache |
 
@@ -245,6 +288,8 @@ Seven hash-routed views, no framework:
 | `#/home` | **all homepage modules in the Observatory's order** |
 | `#/overview` | current conditions, forecast text, key readings |
 | `#/regional` | SVG station map + sortable table + 3-D isometric chart |
+| `#/analysis` | high-resolution analysis: raster overlay, estimator comparison |
+| `#/lae` | **LAE go/no-go**: verdict, factor table, wind arrows, METAR/TAF |
 | `#/imagery` | radar, satellite, lightning |
 | `#/forecast` | 9-day cards, sea and soil temperature |
 | `#/alerts` | warnings, warning statements, special tips |

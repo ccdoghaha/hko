@@ -293,6 +293,32 @@ table.tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
 
 .empty { color: var(--ink-4); font-size: 14px; padding: 6px 0; }
 
+/* ---------- LAE verdict ---------- */
+
+.verdict { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border-radius: var(--radius); border-left: 8px solid; }
+.verdict__badge { font-size: 26px; font-weight: 800; letter-spacing: 1px; white-space: nowrap; }
+.verdict__text { font-size: 15.5px; line-height: 1.6; }
+.verdict--go      { background: #e9f7ef; border-color: var(--green); color: #14532d; }
+.verdict--caution { background: #fff7e6; border-color: var(--amber); color: #7a4600; }
+.verdict--nogo    { background: #fdecea; border-color: var(--red);   color: #8a1d12; }
+.verdict--unknown { background: var(--panel); border-color: var(--ink-4); color: var(--ink-2); }
+
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; color: #fff; }
+.pill--go      { background: var(--green); }
+.pill--caution { background: var(--amber); }
+.pill--nogo    { background: var(--red); }
+.pill--unknown { background: var(--ink-4); }
+
+table.tbl tbody tr.row--nogo { background: #fdf3f2; }
+table.tbl tbody tr.row--caution { background: #fffdf5; }
+
+.rawbox {
+  background: #12202e; color: #cfe6f5; padding: 10px 13px; border-radius: 4px;
+  font-family: ui-monospace, Consolas, monospace; font-size: 12.5px;
+  white-space: pre-wrap; word-break: break-word; margin: 8px 0 0;
+}
+.mapwrap .war { pointer-events: none; }
+
 /* ---------- social / embeds ---------- */
 
 .social { display: flex; flex-wrap: wrap; gap: 10px; }
