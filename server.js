@@ -682,7 +682,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-function listen(port) {
+function listen(port, host = '127.0.0.1') {
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
       console.error(`\n[!] Port ${port} is already in use.`);
@@ -692,13 +692,17 @@ function listen(port) {
     throw err;
   });
 
-  server.listen(port, '127.0.0.1', () => {
+  server.listen(port, host, () => {
     const line = '='.repeat(58);
     console.log(line);
     console.log('  HKO 本地天氣站  /  HKO local weather station');
     console.log(line);
-    console.log(`  Local    http://localhost:${port}/`);
-    console.log(`  Health   http://localhost:${port}/api/status`);
+    console.log(`  Listening http://${host}:${port}/`);
+    if (host !== '127.0.0.1') {
+      console.log(`  NOTE: bound to ${host}, not loopback — this gateway has no`);
+      console.log(`        authentication and should sit behind a reverse proxy.`);
+    }
+    console.log(`  Health   http://${host}:${port}/api/status`);
     console.log(`  Data     HKO Open Data API (data.weather.gov.hk)`);
     console.log(line);
     console.log('  Ctrl+C to stop.');
@@ -707,11 +711,14 @@ function listen(port) {
 
 if (require.main === module) {
   const port = Number(process.argv[2] || process.env.PORT || DEFAULT_PORT);
+  // Loopback by default. A container or reverse-proxy deployment sets HOST, but
+  // this service has no auth, so exposing it is a deliberate act.
+  const host = process.env.HOST || '127.0.0.1';
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
     console.error(`Invalid port: ${process.argv[2]}`);
     process.exit(1);
   }
-  listen(port);
+  listen(port, host);
 }
 
 module.exports = { server, getData };

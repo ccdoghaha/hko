@@ -183,6 +183,28 @@ node scripts/check-lae.js      # 41 checks
 
 ---
 
+## Deployment and operations
+
+Measured resource profile: **~73 MB RSS, 2.1 MB cache, 6,185 lines, zero
+dependencies**. Response times 1–16 ms for cached endpoints, 94–146 ms for the
+interpolations. The single expensive operation is the first-ever terrain build
+(~45 s, 48 tiles), after which it is cached on disk permanently.
+
+```
+node server.js 8787          # HOST defaults to 127.0.0.1
+docker build -t hko-local . && docker run -d -p 127.0.0.1:8787:8787 -v hko-cache:/app/.cache hko-local
+```
+
+`HOST` must be set explicitly to expose the service; the startup banner warns
+when it is, because there is no authentication. The service writes only to
+`.cache`, and that growth is bounded — the terrain tile set is fixed for a fixed
+bounding box.
+
+Runbook, failure modes, monitoring signals and capacity notes:
+`docs/DEPLOYMENT_AND_OPS.md`.
+
+---
+
 ## Layout
 
 ```
@@ -190,6 +212,8 @@ hko-local/
 ├─ server.js          zero-dependency HTTP server: static host, API gateway, caches
 ├─ start.bat          Windows launcher (prompts for port, opens browser)
 ├─ start.sh           POSIX launcher
+├─ Dockerfile         container build (zero dependencies, healthcheck, volume)
+├─ .dockerignore
 ├─ lib/
 │  ├─ png.js          PNG codec (terrarium DEM in, RGBA raster out)
 │  ├─ dem.js          terrain tiles -> mosaic -> void fill -> analysis grid
@@ -204,10 +228,13 @@ hko-local/
 │  ├─ check-dem.js    16 checks: codec, georeferencing, DEM accuracy, alignment
 │  ├─ check-interp.js 11 checks: synthetic control + live LOO
 │  ├─ check-lae.js    41 checks: vector wind, CSV edge cases, METAR/TAF
+│  ├─ check-bind.js    5 checks: loopback default, HOST override
+│  ├─ bench.js        endpoint latency + payload baseline
 │  └─ debug-*.js      ad-hoc diagnostics used while building
 ├─ docs/
-│  ├─ ANALYSIS_METHOD.md   analysis method, validation, limitations
-│  └─ LAE_PRODUCT.md       LAE product method, thresholds, limitations
+│  ├─ ANALYSIS_METHOD.md      analysis method, validation, limitations
+│  ├─ LAE_PRODUCT.md          LAE product method, thresholds, limitations
+│  └─ DEPLOYMENT_AND_OPS.md   measured resource profile, deployment, runbook
 ├─ public/
 │  ├─ index.html      SPA shell: masthead, nav, modules, footer
 │  ├─ styles.css      stylesheet (design tokens matched to HKO)

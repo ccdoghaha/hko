@@ -1,0 +1,9 @@
+# Build and runtime artefacts that should not be baked into an image.
+.git
+.gitignore
+.gitattributes
+.cache
+node_modules
+Dockerfile
+.dockerignore
+*.log
