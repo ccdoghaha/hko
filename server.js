@@ -30,21 +30,55 @@ const CACHE_DIR = path.join(ROOT, '.cache');
 const ICON_DIR = path.join(CACHE_DIR, 'icons');
 
 const HKO_API = 'https://data.weather.gov.hk/weatherAPI/opendata/weather.php';
+const HKO_OPEN = 'https://data.weather.gov.hk/weatherAPI/opendata/opendata.php';
+const HKO_EQ = 'https://data.weather.gov.hk/weatherAPI/opendata/earthquake.php';
 const HKO_ICON_BASE = 'https://www.hko.gov.hk/images/HKOWxIconOutline';
 const UA = 'hko-local/1.0 (local development gateway; contact: local operator)';
 
 const DEFAULT_PORT = 8787;
 const UPSTREAM_TIMEOUT_MS = 20000;
 
-/** dataType -> freshness window in ms */
-const DATA_TYPES = {
-  rhrread: 5 * 60 * 1000,
-  flw: 10 * 60 * 1000,
-  fnd: 60 * 60 * 1000,
-  warnsum: 60 * 1000,
-  warningInfo: 60 * 1000,
-  swt: 60 * 1000,
+/**
+ * Upstream sources, keyed by dataType.
+ *
+ * The Observatory splits its open data across three services:
+ *   weather.php     the six live products (observations, forecasts, warnings)
+ *   opendata.php    dated and climatological products (climate, astronomy, tides,
+ *                   visibility, yesterday's readings)
+ *   earthquake.php  the earthquake service
+ *
+ * `ttl` is the freshness window. `extra` holds fixed query parameters; the tokens
+ * 'yesterday' / 'lastYear' / 'thisYear' / 'thisMonth' are resolved per request,
+ * because a dated product needs a concrete date and hard-coding one would rot.
+ */
+const SOURCES = {
+  /* --- weather.php: live products --- */
+  rhrread: { url: HKO_API, ttl: 5 * 60 * 1000 },
+  flw: { url: HKO_API, ttl: 10 * 60 * 1000 },
+  fnd: { url: HKO_API, ttl: 60 * 60 * 1000 },
+  warnsum: { url: HKO_API, ttl: 60 * 1000 },
+  warningInfo: { url: HKO_API, ttl: 60 * 1000 },
+  swt: { url: HKO_API, ttl: 60 * 1000 },
+
+  /* --- opendata.php: dated + climatological --- */
+  LTMV: { url: HKO_OPEN, ttl: 10 * 60 * 1000, extra: { rformat: 'json' } },
+  RYES: { url: HKO_OPEN, ttl: 6 * 60 * 60 * 1000, extra: { rformat: 'json', station: 'HKO', date: 'yesterday' } },
+  CLMTEMP: { url: HKO_OPEN, ttl: 24 * 60 * 60 * 1000, extra: { rformat: 'json', station: 'HKO', year: 'lastYear' } },
+  CLMMAXT: { url: HKO_OPEN, ttl: 24 * 60 * 60 * 1000, extra: { rformat: 'json', station: 'HKO', year: 'lastYear' } },
+  CLMMINT: { url: HKO_OPEN, ttl: 24 * 60 * 60 * 1000, extra: { rformat: 'json', station: 'HKO', year: 'lastYear' } },
+  SRS: { url: HKO_OPEN, ttl: 12 * 60 * 60 * 1000, extra: { rformat: 'json', year: 'thisYear', month: 'thisMonth' } },
+  MRS: { url: HKO_OPEN, ttl: 12 * 60 * 60 * 1000, extra: { rformat: 'json', year: 'thisYear', month: 'thisMonth' } },
+  HHOT: { url: HKO_OPEN, ttl: 6 * 60 * 60 * 1000, extra: { rformat: 'json', station: 'CCH', year: 'thisYear', month: 'thisMonth' } },
+
+  /* --- earthquake.php --- */
+  qem: { url: HKO_EQ, ttl: 5 * 60 * 1000 },
 };
+
+/** The live products on weather.php — what the home bundle fans out to. */
+const LIVE_TYPES = ['rhrread', 'flw', 'fnd', 'warnsum', 'warningInfo', 'swt'];
+
+/** The dated/climatological products behind the secondary pages. */
+const PRODUCT_TYPES = ['LTMV', 'RYES', 'CLMTEMP', 'CLMMAXT', 'CLMMINT', 'SRS', 'MRS', 'HHOT', 'qem'];
 
 const LANGS = new Set(['tc', 'sc', 'en']);
 
@@ -81,8 +115,31 @@ function isFresh(entry, ttl) {
   return entry && Date.now() - entry.ts < ttl;
 }
 
+/**
+ * Resolve a relative date token into the concrete value the API expects.
+ * Kept relative so the service does not silently keep asking for a stale year.
+ */
+function resolveParam(v) {
+  const now = new Date();
+  const p2 = (n) => String(n).padStart(2, '0');
+  switch (v) {
+    case 'yesterday': {
+      const d = new Date(now.getTime() - 86400000);
+      return `${d.getFullYear()}${p2(d.getMonth() + 1)}${p2(d.getDate())}`;
+    }
+    case 'lastYear': return String(now.getFullYear() - 1);
+    case 'thisYear': return String(now.getFullYear());
+    case 'thisMonth': return String(now.getMonth() + 1);
+    default: return String(v);
+  }
+}
+
 async function fetchUpstream(type, lang) {
-  const u = `${HKO_API}?dataType=${encodeURIComponent(type)}&lang=${encodeURIComponent(lang)}`;
+  const src = SOURCES[type];
+  if (!src) throw new Error(`unknown dataType ${type}`);
+  const qs = new URLSearchParams({ dataType: type, lang });
+  for (const [k, v] of Object.entries(src.extra || {})) qs.set(k, resolveParam(v));
+  const u = `${src.url}?${qs.toString()}`;
   const res = await fetch(u, {
     headers: { 'User-Agent': UA, Accept: 'application/json' },
     signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
@@ -93,7 +150,10 @@ async function fetchUpstream(type, lang) {
   try {
     parsed = JSON.parse(text);
   } catch {
-    throw new Error(`upstream ${type} returned non-JSON payload`);
+    // HKO answers a bad request with an HTML help paragraph and HTTP 200, so a
+    // parse failure here means the parameters are wrong, not that the service is
+    // down. Surfacing it verbatim saves a lot of guessing.
+    throw new Error(`upstream ${type} returned non-JSON payload: ${text.slice(0, 120)}`);
   }
   stats.upstream++;
   return parsed;
@@ -106,7 +166,7 @@ async function fetchUpstream(type, lang) {
  */
 async function getData(type, lang, { force = false } = {}) {
   const key = `${type}:${lang}`;
-  const ttl = DATA_TYPES[type] ?? 5 * 60 * 1000;
+  const ttl = (SOURCES[type] && SOURCES[type].ttl) ?? 5 * 60 * 1000;
   const hit = cacheGet(key);
 
   if (!force && isFresh(hit, ttl)) {
@@ -417,8 +477,12 @@ async function handleApi(req, res, u) {
 
   if (u.pathname === '/api/weather') {
     const type = String(q.get('type') || '');
-    if (!Object.prototype.hasOwnProperty.call(DATA_TYPES, type)) {
-      return sendJson(res, 400, { ok: false, error: `unsupported dataType "${type}"`, allowed: Object.keys(DATA_TYPES) });
+    if (!Object.prototype.hasOwnProperty.call(SOURCES, type)) {
+      return sendJson(res, 400, {
+        ok: false,
+        error: `unsupported dataType "${type}"`,
+        allowed: Object.keys(SOURCES),
+      });
     }
     const lang = safeLang(q.get('lang'));
     const force = q.get('force') === '1';
@@ -437,7 +501,7 @@ async function handleApi(req, res, u) {
   if (u.pathname === '/api/bundle') {
     const lang = safeLang(q.get('lang'));
     const force = q.get('force') === '1';
-    const types = Object.keys(DATA_TYPES);
+    const types = LIVE_TYPES;
 
     const results = await Promise.all(
       types.map(async (t) => {
@@ -496,7 +560,7 @@ async function handleApi(req, res, u) {
   if (u.pathname === '/api/home') {
     const lang = safeLang(q.get('lang'));
     const force = q.get('force') === '1';
-    const types = Object.keys(DATA_TYPES);
+    const types = LIVE_TYPES;
     const today = hkToday();
 
     const [weatherResults, lunarSettled, newsSettled] = await Promise.all([
@@ -533,6 +597,40 @@ async function handleApi(req, res, u) {
       if (!r.ok) payload.errors.push({ type: `news:${k}`, error: r.error });
     }
     return sendJson(res, 200, payload);
+  }
+
+  if (u.pathname === '/api/products') {
+    const force = q.get('force') === '1';
+    const lang = LANGS.has(q.get('lang')) ? q.get('lang') : 'tc';
+
+    // One product on demand, or all of them for the secondary pages. The type is
+    // checked against the table, so the endpoint cannot be pointed at an
+    // arbitrary upstream URL.
+    const only = q.get('type');
+    if (only && !PRODUCT_TYPES.includes(only)) {
+      return sendJson(res, 400, { ok: false, error: `unknown product type: ${only}` });
+    }
+    const types = only ? [only] : PRODUCT_TYPES;
+
+    const out = { ok: true, lang, requestedAt: new Date().toISOString(), stale: false, errors: [], meta: {} };
+    const settled = await Promise.all(types.map(async (t) => {
+      try {
+        const r = await getData(t, lang, { force });
+        return [t, { ok: true, data: r.value, stale: r.stale, ts: r.ts, error: r.error || null }];
+      } catch (err) {
+        stats.errors++;
+        stats.lastError = `${new Date().toISOString()} products:${t}: ${err.message}`;
+        return [t, { ok: false, data: null, stale: true, ts: Date.now(), error: err.message }];
+      }
+    }));
+
+    for (const [t, r] of settled) {
+      out[t] = r.data;
+      out.meta[t] = { ok: r.ok, stale: r.stale, fetchedAt: new Date(r.ts).toISOString(), error: r.error };
+      if (!r.ok) out.errors.push({ type: t, error: r.error });
+      if (r.stale) out.stale = true;
+    }
+    return sendJson(res, 200, out);
   }
 
   if (u.pathname === '/api/analysis') {

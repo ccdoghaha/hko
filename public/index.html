@@ -15,13 +15,13 @@
 <!-- ================= masthead ================= -->
 <header class="masthead">
   <div class="masthead__row">
-    <div class="brand">
+    <a class="brand" href="#/home" aria-label="主頁">
       <span class="brand__mark" aria-hidden="true"></span>
       <span class="brand__text">
         <strong data-i18n="siteTitle">本地天氣站</strong>
         <small data-i18n="siteSub">資料來源：香港天文台開放數據</small>
       </span>
-    </div>
+    </a>
 
     <div class="masthead__right">
       <div class="datetime" id="dateStrip">
@@ -52,15 +52,15 @@
 <!-- ================= top-level section nav ================= -->
 <nav class="hkonav" aria-label="Sections">
   <div class="hkonav__inner">
-    <a href="https://www.hko.gov.hk/tc/wxinfo/currwx/current.htm" target="_blank" rel="noopener" data-i18n="navWeather">天氣</a>
-    <a href="https://www.hko.gov.hk/tc/cis/climahk.htm" target="_blank" rel="noopener" data-i18n="navClimate">氣候</a>
-    <a href="https://www.hko.gov.hk/tc/gts/eqinfo.htm" target="_blank" rel="noopener" data-i18n="navGeo">地球物理</a>
-    <a href="https://www.hko.gov.hk/tc/gts/time.htm" target="_blank" rel="noopener" data-i18n="navAstro">天文及授時</a>
-    <a href="https://www.hko.gov.hk/tc/radiation/real_time.htm" target="_blank" rel="noopener" data-i18n="navRad">輻射監測</a>
-    <a href="https://www.hko.gov.hk/tc/community/community_uc.htm" target="_blank" rel="noopener" data-i18n="navCommunity">社群</a>
-    <a href="https://www.hko.gov.hk/tc/education/edu.htm" target="_blank" rel="noopener" data-i18n="navLearn">學習</a>
-    <a href="https://www.hko.gov.hk/tc/whatsnew/index.htm" target="_blank" rel="noopener" data-i18n="navMedia">媒體及消息</a>
-    <a href="https://www.hko.gov.hk/tc/aboutus/aboutus.htm" target="_blank" rel="noopener" data-i18n="navAbout">關於我們</a>
+    <a href="#/home" data-i18n="navWeather">天氣</a>
+    <a href="#/climate" data-i18n="navClimate">氣候</a>
+    <a href="#/earthquake" data-i18n="navGeo">地球物理</a>
+    <a href="#/astronomy" data-i18n="navAstro">天文及授時</a>
+    <a href="#/product/radiation" data-i18n="navRad">輻射監測</a>
+    <a href="#/product/community" data-i18n="navCommunity">社群</a>
+    <a href="#/product/learning" data-i18n="navLearn">學習</a>
+    <a href="#/news" data-i18n="navMedia">媒體及消息</a>
+    <a href="#/product/about" data-i18n="navAbout">關於我們</a>
   </div>
 </nav>
 
@@ -87,15 +87,15 @@
 <footer class="foot">
   <div class="foot__inner">
     <ul class="foot__links">
-      <li><a href="https://www.hko.gov.hk/tc/cis/climahk.htm" target="_blank" rel="noopener" data-i18n="fClimate">香港氣候</a></li>
-      <li><a href="https://www.hko.gov.hk/tc/wxinfo/pastwx/mws.htm" target="_blank" rel="noopener" data-i18n="fSummary">每月天氣摘要</a></li>
-      <li><a href="https://www.hko.gov.hk/tc/whatsnew/index.htm" target="_blank" rel="noopener" data-i18n="fNew">新增項目</a></li>
-      <li><a href="https://www.hko.gov.hk/tc/abouthko/opendata_intro.htm" target="_blank" rel="noopener" data-i18n="fOpen">公開資料</a></li>
-      <li><a href="https://www.hko.gov.hk/tc/abouthko/related.htm" target="_blank" rel="noopener" data-i18n="fRelated">相關網址</a></li>
-      <li><a href="https://www.hko.gov.hk/tc/abouthko/userguide.htm" target="_blank" rel="noopener" data-i18n="fGuide">快速用戶指南</a></li>
-      <li><a href="https://www.hko.gov.hk/tc/cont.htm" target="_blank" rel="noopener" data-i18n="fContact">聯絡我們</a></li>
-      <li><a href="https://www.hko.gov.hk/tc/important_notice.htm" target="_blank" rel="noopener" data-i18n="fNotice">重要告示</a></li>
-      <li><a href="https://www.hko.gov.hk/tc/privacy.htm" target="_blank" rel="noopener" data-i18n="fPrivacy">私隱政策</a></li>
+      <li><a href="#/climate" data-i18n="fClimate">香港氣候</a></li>
+      <li><a href="#/product/climateSummary" data-i18n="fSummary">每月天氣摘要</a></li>
+      <li><a href="#/news" data-i18n="fNew">新增項目</a></li>
+      <li><a href="#/product/opendataintro" data-i18n="fOpen">公開資料</a></li>
+      <li><a href="#/product/related" data-i18n="fRelated">相關網址</a></li>
+      <li><a href="#/product/userguide" data-i18n="fGuide">快速用戶指南</a></li>
+      <li><a href="#/product/contact" data-i18n="fContact">聯絡我們</a></li>
+      <li><a href="#/product/notice" data-i18n="fNotice">重要告示</a></li>
+      <li><a href="#/product/privacy" data-i18n="fPrivacy">私隱政策</a></li>
     </ul>
     <p data-i18n="footNote">本機示範應用。天氣資料由香港天文台開放數據 API 提供，版權屬香港天文台所有。此介面為獨立實作，並非天文台官方網站。</p>
     <p class="foot__meta"><span id="footMeta">—</span></p>

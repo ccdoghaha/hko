@@ -23,6 +23,33 @@ const I18N = {
     pickerScope: '涵蓋', pickerStations: '個地點', pickerMax: '最高', pickerMin: '最低', pickerMean: '平均',
     pickerNoData: '沒有資料', pickerNotPublished: '開放數據未提供', colStation: '地點', calm: '靜風',
     pickerSingle: '單站讀數（非網絡）',
+    // secondary product pages
+    uvTitle: '紫外線資訊', uvLevel: '強度', uvFeedNote: '紫外線指數由京士柏氣象站單一測站提供，並非全港網絡。',
+    visTitle: '香港水域能見度', visibility: '能見度', visLow: '低', visMid: '中', visHigh: '高',
+    visSource: '資料來源：LTMV 十分鐘平均能見度',
+    reportTitle: '天氣報告',
+    yestTitle: '昨日天氣及輻射水平資料', yestStation: '香港天文台總部', yestSource: '資料來源：RYES',
+    colElement: '項目', colValue: '數值',
+    climateTitle: '過去天氣及氣候', climateIntro: '以下為天文台總部的逐日氣候數據，取自開放數據中的氣候產品。',
+    climMean: '本月平均', climMax: '本月最高', climMin: '本月最低', climDays: '有數據日數',
+    climTemp: '日平均氣溫', climMaxT: '日最高氣溫', climMinT: '日最低氣溫',
+    kpTitle: '京士柏氣象站', kpNote: '京士柏為天文台轄下測站，提供紫外線及風的讀數。',
+    windSpeed: '風速',
+    tcTitle: '熱帶氣旋警告（本港地區）', noTc: '現時沒有熱帶氣旋警告。', tcNote: '資料來源：rhrread 熱帶氣旋信息',
+    rainstormTitle: '大雨及雷暴區域資訊', districtsWithRain: '有雨地區', maxRainfall: '最大雨量',
+    colDistrict: '地區', rainfall: '雨量', noRain: '過去一小時全港沒有錄得雨量。',
+    rainstormNote: '資料來源：rhrread 分區雨量及閃電資訊',
+    lightningTitle: '閃電位置資訊服務', lightningActive: '現時有閃電活動', lightningNone: '現時沒有閃電活動',
+    lightningImg: '閃電位置圖', lightningNote: '資料來源：閃電位置圖像',
+    sunTitle: '太陽', moonTitle: '月亮', sunrise: '日出', sunset: '日落', moonrise: '月出', moonset: '月落',
+    transit: '中天', colDate: '日期', astroNote: '資料來源：SRS / MRS',
+    tideTitle: '潮汐', tideHigh: '最高潮位', tideLow: '最低潮位', tideNote: '資料來源：HHOT 長洲潮汐站 · 單位：米（海圖基準面以上）',
+    eqTitle: '最新地震', eqNote: '資料來源：qem 地震服務 · 只顯示最近一次報告',
+    productUnavailable: '此產品暫時無法取得', unknownProduct: '未知產品',
+    unknownProductBody: '找不到這個產品的資料。', backHome: '返回主頁',
+    productPolicy: '此產品在開放數據 API 中沒有對應的機器可讀介面，因此本站不會顯示其內容。本站只顯示可從公開數據取得的資料，不會複製或轉載天文台的圖像及文字。',
+    seeOverview: '查看天氣總覽', seeImagery: '查看天氣圖像', productNote: '本頁由本機實作，並非天文台官方網站。',
+    whyNoNews: '為何只顯示標題？', headlinesOnly: '只顯示標題，不轉載文章內容',
     fClimate: '香港氣候', fSummary: '每月天氣摘要', fNew: '新增項目', fOpen: '公開資料',
     fRelated: '相關網址', fGuide: '快速用戶指南', fContact: '聯絡我們', fNotice: '重要告示', fPrivacy: '私隱政策',
     loading: '載入中…', refresh: '即時更新', refreshing: '更新中…',
@@ -92,6 +119,32 @@ const I18N = {
     pickerScope: '涵盖', pickerStations: '个地点', pickerMax: '最高', pickerMin: '最低', pickerMean: '平均',
     pickerNoData: '没有数据', pickerNotPublished: '开放数据未提供', colStation: '地点', calm: '静风',
     pickerSingle: '单站读数（非网络）',
+    uvTitle: '紫外线信息', uvLevel: '强度', uvFeedNote: '紫外线指数由京士柏气象站单一测站提供，并非全港网络。',
+    visTitle: '香港水域能见度', visibility: '能见度', visLow: '低', visMid: '中', visHigh: '高',
+    visSource: '数据来源：LTMV 十分钟平均能见度',
+    reportTitle: '天气报告',
+    yestTitle: '昨日天气及辐射水平资料', yestStation: '香港天文台总部', yestSource: '数据来源：RYES',
+    colElement: '项目', colValue: '数值',
+    climateTitle: '过去天气及气候', climateIntro: '以下为天文台总部的逐日气候数据，取自开放数据中的气候产品。',
+    climMean: '本月平均', climMax: '本月最高', climMin: '本月最低', climDays: '有数据日数',
+    climTemp: '日平均气温', climMaxT: '日最高气温', climMinT: '日最低气温',
+    kpTitle: '京士柏气象站', kpNote: '京士柏为天文台辖下测站，提供紫外线及风的读数。',
+    windSpeed: '风速',
+    tcTitle: '热带气旋警告（本港地区）', noTc: '现时没有热带气旋警告。', tcNote: '数据来源：rhrread 热带气旋信息',
+    rainstormTitle: '大雨及雷暴区域信息', districtsWithRain: '有雨地区', maxRainfall: '最大雨量',
+    colDistrict: '地区', rainfall: '雨量', noRain: '过去一小时全港没有录得雨量。',
+    rainstormNote: '数据来源：rhrread 分区雨量及闪电信息',
+    lightningTitle: '闪电位置信息服务', lightningActive: '现时有闪电活动', lightningNone: '现时没有闪电活动',
+    lightningImg: '闪电位置图', lightningNote: '数据来源：闪电位置图像',
+    sunTitle: '太阳', moonTitle: '月亮', sunrise: '日出', sunset: '日落', moonrise: '月出', moonset: '月落',
+    transit: '中天', colDate: '日期', astroNote: '数据来源：SRS / MRS',
+    tideTitle: '潮汐', tideHigh: '最高潮位', tideLow: '最低潮位', tideNote: '数据来源：HHOT 长洲潮汐站 · 单位：米（海图基准面以上）',
+    eqTitle: '最新地震', eqNote: '数据来源：qem 地震服务 · 只显示最近一次报告',
+    productUnavailable: '此产品暂时无法取得', unknownProduct: '未知产品',
+    unknownProductBody: '找不到这个产品的资料。', backHome: '返回主页',
+    productPolicy: '此产品在开放数据 API 中没有对应的机器可读接口，因此本站不会显示其内容。本站只显示可从公开数据取得的资料，不会复制或转载天文台的图像及文字。',
+    seeOverview: '查看天气总览', seeImagery: '查看天气图像', productNote: '本页由本机实作，并非天文台官方网站。',
+    whyNoNews: '为何只显示标题？', headlinesOnly: '只显示标题，不转载文章内容',
     fClimate: '香港气候', fSummary: '每月天气摘要', fNew: '新增项目', fOpen: '公开资料',
     fRelated: '相关网址', fGuide: '快速用户指南', fContact: '联络我们', fNotice: '重要告示', fPrivacy: '私隐政策',
     loading: '加载中…', refresh: '即时更新', refreshing: '更新中…',
@@ -161,6 +214,32 @@ const I18N = {
     pickerScope: 'Coverage', pickerStations: 'stations', pickerMax: 'Max', pickerMin: 'Min', pickerMean: 'Mean',
     pickerNoData: 'No data', pickerNotPublished: 'Not in the open-data feed', colStation: 'Station', calm: 'Calm',
     pickerSingle: 'Single-station readings (not a network)',
+    uvTitle: 'UV information', uvLevel: 'Level', uvFeedNote: 'The UV index comes from a single station (King\'s Park), not a territory-wide network.',
+    visTitle: 'Visibility in HK waters', visibility: 'Visibility', visLow: 'Low', visMid: 'Moderate', visHigh: 'High',
+    visSource: 'Source: LTMV 10-minute mean visibility',
+    reportTitle: 'Weather report',
+    yestTitle: "Yesterday's weather and radiation", yestStation: 'HKO Headquarters', yestSource: 'Source: RYES',
+    colElement: 'Element', colValue: 'Value',
+    climateTitle: 'Past weather and climate', climateIntro: 'Daily climate values at the Observatory headquarters, from the climate products in the open data set.',
+    climMean: 'Month mean', climMax: 'Month max', climMin: 'Month min', climDays: 'Days with data',
+    climTemp: 'Daily mean temperature', climMaxT: 'Daily maximum temperature', climMinT: 'Daily minimum temperature',
+    kpTitle: "King's Park station", kpNote: "King's Park is an Observatory station reporting UV and wind.",
+    windSpeed: 'Wind speed',
+    tcTitle: 'Tropical cyclone warning (local)', noTc: 'No tropical cyclone warning is in force.', tcNote: 'Source: rhrread tropical cyclone message',
+    rainstormTitle: 'Rainstorm and thunderstorm areas', districtsWithRain: 'Districts with rain', maxRainfall: 'Max rainfall',
+    colDistrict: 'District', rainfall: 'Rainfall', noRain: 'No rainfall was recorded anywhere in the past hour.',
+    rainstormNote: 'Source: rhrread district rainfall and lightning',
+    lightningTitle: 'Lightning location service', lightningActive: 'Lightning is currently active', lightningNone: 'No lightning activity at present',
+    lightningImg: 'Lightning location map', lightningNote: 'Source: lightning location imagery',
+    sunTitle: 'Sun', moonTitle: 'Moon', sunrise: 'Sunrise', sunset: 'Sunset', moonrise: 'Moonrise', moonset: 'Moonset',
+    transit: 'Transit', colDate: 'Date', astroNote: 'Source: SRS / MRS',
+    tideTitle: 'Tides', tideHigh: 'Highest tide', tideLow: 'Lowest tide', tideNote: 'Source: HHOT Cheung Chau tide station · metres above chart datum',
+    eqTitle: 'Latest earthquake', eqNote: 'Source: qem earthquake service · most recent report only',
+    productUnavailable: 'This product is not available at the moment', unknownProduct: 'Unknown product',
+    unknownProductBody: 'No information found for this product.', backHome: 'Back to home',
+    productPolicy: 'This product has no machine-readable interface in the open data API, so this site does not display its content. Only data obtainable from the published open data is shown; the Observatory\'s imagery and text are not copied or republished.',
+    seeOverview: 'Weather overview', seeImagery: 'Weather imagery', productNote: 'This page is a local implementation, not the official HKO website.',
+    whyNoNews: 'Why headlines only?', headlinesOnly: 'headlines only; article bodies are not republished',
     fClimate: 'HK Climate', fSummary: 'Monthly Summary', fNew: "What's New", fOpen: 'Open Data',
     fRelated: 'Related Sites', fGuide: 'User Guide', fContact: 'Contact Us', fNotice: 'Important Notices', fPrivacy: 'Privacy Policy',
     loading: 'Loading…', refresh: 'Refresh', refreshing: 'Refreshing…',
@@ -332,10 +411,21 @@ const state = {
   picker: { param: 'temp', station: null },
   wind: null,
   windInFlight: null,
+  products: null,
+  productsInFlight: null,
+  productKey: null,
 };
 
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
-const ROUTES = ['home', 'overview', 'regional', 'analysis', 'lae', 'imagery', 'forecast', 'alerts', 'news'];
+
+/** Routes whose content comes from the dated/climatological product bundle. */
+const PRODUCT_ROUTES = ['visibility', 'yesterday', 'climate', 'astronomy', 'tides', 'earthquake'];
+
+const ROUTES = [
+  'home', 'overview', 'regional', 'analysis', 'lae', 'imagery', 'forecast', 'alerts', 'news',
+  'rainfall', 'uv', 'visibility', 'report', 'yesterday', 'climate', 'kp',
+  'tc', 'rainstorm', 'lightning', 'astronomy', 'tides', 'earthquake', 'product',
+];
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -364,6 +454,12 @@ function parseCompactDate(s) {
   return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
 }
 function fmtDM(s) { const d = parseCompactDate(s); return d ? `${d.getMonth() + 1}/${d.getDate()}` : '—'; }
+
+/** Today (or a given date) in Hong Kong as YYYY-MM-DD — the API's date format. */
+function hkDateStr(d = new Date()) {
+  const p2 = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
+}
 function relTime(ts) {
   if (!ts) return '—';
   const mins = Math.round((Date.now() - ts) / 60000);
@@ -937,9 +1033,11 @@ function viewHome() {
     </section>`;
 
   /* --- ps7: news --- */
+  // Headlines only, rendered as text rather than links. The article bodies are
+  // the Observatory's copyright, so they are neither copied nor deep-linked here.
   const newsHtml = whatsnew.length
-    ? `<ul class="newslist">${whatsnew.map((n) => `<li><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.text)}</a><span class="ext">↗</span></li>`).join('')}</ul>`
-    : `<p class="empty">${esc(t('noFeed'))} <a href="https://www.hko.gov.hk/tc/whatsnew/index.htm" target="_blank" rel="noopener">${esc(t('viewOnHko'))}</a></p>`;
+    ? `<ul class="newslist">${whatsnew.map((n) => `<li><span class="newslist__h">${esc(n.text)}</span></li>`).join('')}</ul>`
+    : `<p class="empty">${esc(t('noFeed'))} <a href="#/product/news">${esc(t('whyNoNews'))}</a></p>`;
 
   const ps7 = `
     <section class="card">
@@ -953,7 +1051,7 @@ function viewHome() {
     <section class="card">
       <h2 class="card__title">${esc(t('hkClimate'))}</h2>
       <div class="card__body">
-        <p class="prose">${esc(t('climateSummary'))}: <a href="https://www.hko.gov.hk/tc/wxinfo/pastwx/mws.htm" target="_blank" rel="noopener">${esc(t('viewOnHko'))} ↗</a></p>
+        <p class="prose">${esc(t('climateSummary'))}: <a href="#/climate">${esc(t('climTemp'))}</a></p>
         ${f.generalSituation ? `<p class="prose prose--muted">${esc(f.generalSituation)}</p>` : ''}
       </div>
     </section>`;
@@ -1242,14 +1340,14 @@ function viewNews() {
   const block = (key, titleKey) => {
     const entry = bag[key] || {};
     const items = entry.items || [];
-    const src = `https://www.hko.gov.hk/tc/${key === 'hkonews' ? 'hkonews' : key}/index.htm`;
+    // Headlines as text: the bodies are the Observatory's copyright.
     const inner = items.length
-      ? `<ul class="newslist">${items.map((n) => `<li><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.text)}</a><span class="ext">↗</span></li>`).join('')}</ul>`
+      ? `<ul class="newslist">${items.map((n) => `<li><span class="newslist__h">${esc(n.text)}</span></li>`).join('')}</ul>`
       : `<p class="empty">${esc(t('noFeed'))}</p>`;
     return `<section class="card">
       <h2 class="card__title">${esc(t(titleKey))}</h2>
       <div class="card__body">${inner}</div>
-      <p class="card__note"><a href="${esc(src)}" target="_blank" rel="noopener">${esc(t('viewOnHko'))} ↗</a></p>
+      <p class="card__note">RSS: rss.weather.gov.hk · ${esc(t('headlinesOnly'))}</p>
     </section>`;
   };
   return block('whatsnew', 'latestNews') + block('blog', 'weatherBlog')
@@ -1809,68 +1907,540 @@ function renderStatus() {
 }
 
 /* ------------------------------------------------------------------ *
+ * secondary products
+ *
+ * The Observatory splits its open data across three services; the dated and
+ * climatological products on opendata.php plus the earthquake service are loaded
+ * once, on demand, and reused by every page that needs them.
+ * ------------------------------------------------------------------ */
+
+function ensureProducts() {
+  if (state.products || state.productsInFlight) return;
+  state.productsInFlight = fetch(`/api/products?lang=${state.lang}`)
+    .then((r) => r.json())
+    .then((d) => { state.products = d; state.productsInFlight = null; renderAll(); })
+    .catch(() => { state.productsInFlight = null; });
+}
+
+/** Raw product payload, or null while it is still loading / unavailable. */
+function prod(key) {
+  return (state.products && state.products[key]) || null;
+}
+function prodFailed(key) {
+  const m = state.products && state.products.meta && state.products.meta[key];
+  return !!(m && !m.ok);
+}
+function prodError(key) {
+  const m = state.products && state.products.meta && state.products.meta[key];
+  return m ? m.error : null;
+}
+
+/** A loading/error card used when a product has not arrived or failed. */
+function productShell(titleKey, key, bodyFn) {
+  const raw = prod(key);
+  if (!raw) {
+    return `<section class="card">
+      <h2 class="card__title">${esc(t(titleKey))}</h2>
+      <div class="card__body">
+        ${prodFailed(key)
+          ? `<p class="empty">${esc(t('productUnavailable'))}: ${esc(prodError(key) || '')}</p>`
+          : '<div class="skeleton" style="width:60%"></div><div class="skeleton" style="width:40%"></div>'}
+      </div>
+    </section>`;
+  }
+  return bodyFn(raw);
+}
+
+/* ---- 雨量分佈圖 ---- */
+function viewRainfall() {
+  state.regional.dataset = 'rain';
+  return viewRegional();
+}
+
+/* ---- 紫外線資訊 ---- */
+function viewUv() {
+  const uv = uvValue();
+  const all = ((rhr().uvindex && rhr().uvindex.data) || []);
+  const rows = all.map((d) => `<tr><td>${esc(d.place)}</td><td class="num">${esc(d.value)}</td><td>${esc(d.desc || '')}</td></tr>`).join('');
+  const rec = (rhr().uvindex && rhr().uvindex.recordDesc) || '';
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('uvTitle'))}</h2>
+      <div class="card__body">
+        <div class="hero">
+          <div>
+            <div class="hero__temp">${uv ? esc(uv.value) : '—'}</div>
+            <div class="hero__desc">${esc(uv ? uv.desc : '')}</div>
+          </div>
+        </div>
+        ${rec ? `<p class="prose prose--muted" style="margin-top:12px">${esc(rec)}</p>` : ''}
+        <div class="tablewrap" style="margin-top:12px">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('colStation'))}</th><th style="text-align:right">${esc(t('uvindex'))}</th><th>${esc(t('uvLevel'))}</th></tr></thead>
+            <tbody>${rows || `<tr><td colspan="3" class="empty">${esc(t('pickerNoData'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+        <p class="paramrow__hint">${esc(t('uvFeedNote'))}</p>
+      </div>
+    </section>`;
+}
+
+/* ---- 香港水域能見度 (LTMV) ---- */
+function viewVisibility() {
+  return productShell('visTitle', 'LTMV', (raw) => {
+    const rows = (raw.data || []).map((r) => {
+      const km = parseFloat(String(r[2]));
+      return `<tr><td>${esc(r[1])}</td><td class="num">${esc(r[2])}</td>
+        <td><span class="tempchip" style="background:${visColor(km)}">${Number.isFinite(km) ? esc(km) : '—'}</span></td></tr>`;
+    }).join('');
+    const at = (raw.data && raw.data[0] && raw.data[0][0]) || '';
+    const tstr = at ? `${at.slice(0, 4)}-${at.slice(4, 6)}-${at.slice(6, 8)} ${at.slice(8, 10)}:${at.slice(10, 12)}` : '—';
+    return `<section class="card">
+      <h2 class="card__title">${esc(t('visTitle'))}</h2>
+      <div class="card__body">
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('colStation'))}</th><th style="text-align:right">${esc(t('visibility'))}</th><th></th></tr></thead>
+            <tbody>${rows || `<tr><td colspan="3" class="empty">${esc(t('pickerNoData'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+        <div class="chartlegend">
+          <span>${esc(t('visLow'))} &lt; 5 km</span><span>${esc(t('visMid'))} 5–20 km</span><span>${esc(t('visHigh'))} &gt; 20 km</span>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('recordTime'))}: ${esc(tstr)} · ${esc(t('visSource'))}</p>
+    </section>`;
+  });
+}
+
+/** Green/amber/red for visibility in km. */
+function visColor(km) {
+  if (!Number.isFinite(km)) return 'var(--ink-4)';
+  if (km < 5) return 'var(--red)';
+  if (km < 20) return 'var(--amber)';
+  return 'var(--green)';
+}
+
+/* ---- 天氣報告 ---- */
+function viewReport() {
+  const f = flw();
+  const st = heroStation();
+  const recTime = (rhr().temperature && rhr().temperature.recordTime) || rhr().updateTime;
+  const icon = currentIcon();
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('reportTitle'))}</h2>
+      <div class="card__body">
+        <div class="hero">
+          ${icon ? `<img class="hero__icon" src="${esc(iconUrl(icon))}" alt="" width="108" height="108">` : ''}
+          <div>
+            <div class="hero__temp">${st && st.value != null ? esc(st.value) : '—'}<sup>${esc(t('unitC'))}</sup></div>
+            <div class="hero__desc">${esc(st ? st.place : '—')}</div>
+            <div class="hero__meta">${esc(t('recordTime'))}: ${esc(fmtTime(recTime))}</div>
+          </div>
+        </div>
+        <p class="prose" style="margin-top:14px">${esc(f.generalSituation || t('pickerNoData'))}</p>
+        <p class="prose prose--muted">${esc(f.forecastDesc || '')}</p>
+      </div>
+      ${f.updateTime ? `<p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(f.updateTime))}</p>` : ''}
+    </section>
+    ${viewAlerts()}`;
+}
+
+/* ---- 昨日天氣及輻射水平資料 (RYES) ---- */
+const RYES_LABELS = {
+  HKOReadingsMaxTemp: ['昨日最高氣溫', '昨日最高气温', 'Max temperature'],
+  HKOReadingsMinTemp: ['昨日最低氣溫', '昨日最低气温', 'Min temperature'],
+  HKOReadingsMaxRH: ['昨日最高相對濕度', '昨日最高相对湿度', 'Max humidity'],
+  HKOReadingsMinRH: ['昨日最低相對濕度', '昨日最低相对湿度', 'Min humidity'],
+  HKOReadingsMinGrassTemp: ['昨日最低草溫', '昨日最低草温', 'Min grass temperature'],
+  HKOReadingsRainfall: ['昨日雨量', '昨日雨量', 'Rainfall'],
+  HKOReadingsAccumRainfall: ['本年至今累積雨量', '本年至今累积雨量', 'Accumulated rainfall this year'],
+  HKOReadingsAvgRainfall: ['同期平均雨量', '同期平均雨量', 'Average rainfall for the period'],
+  HKOReadingsSunshine: ['昨日日照', '昨日日照', 'Sunshine duration'],
+  HKOReadingsEvaporation: ['昨日蒸發量', '昨日蒸发量', 'Evaporation'],
+  HKOReadingsSolarRadiation: ['昨日太陽輻射', '昨日太阳辐射', 'Solar radiation'],
+  HKOReadingsMaxGrassTemp: ['昨日最高草溫', '昨日最高草温', 'Max grass temperature'],
+  HKOReadingsMeanTemp: ['昨日平均氣溫', '昨日平均气温', 'Mean temperature'],
+  HKOReadingsMeanRH: ['昨日平均相對濕度', '昨日平均相对湿度', 'Mean humidity'],
+  HKOReadingsMeanPressure: ['昨日平均氣壓', '昨日平均气压', 'Mean pressure'],
+};
+
+function viewYesterday() {
+  return productShell('yestTitle', 'RYES', (raw) => {
+    const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+    const rows = Object.entries(raw).map(([k, v]) => {
+      const lab = RYES_LABELS[k];
+      const name = lab ? lab[li] : k.replace(/^HKOReadings/, '').replace(/([A-Z])/g, ' $1').trim();
+      return `<tr><td>${esc(name)}</td><td class="num">${esc(String(v))}</td></tr>`;
+    }).join('');
+    return `<section class="card">
+      <h2 class="card__title">${esc(t('yestTitle'))}</h2>
+      <div class="card__body">
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('colElement'))}</th><th style="text-align:right">${esc(t('colValue'))}</th></tr></thead>
+            <tbody>${rows || `<tr><td colspan="2" class="empty">${esc(t('pickerNoData'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('yestStation'))} · ${esc(t('yestSource'))}</p>
+    </section>`;
+  });
+}
+
+/* ---- 過去天氣 (CLMTEMP / CLMMAXT / CLMMINT) ---- */
+function climateTable(key, label) {
+  return productShell(key, key, (raw) => {
+    const data = raw.data || [];
+    const mine = data.filter((r) => String(r[1]) === String(new Date().getMonth() + 1));
+    const vals = mine.map((r) => parseFloat(r[3])).filter((v) => Number.isFinite(v));
+    const mean = vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length) : null;
+    const hi = vals.length ? Math.max(...vals) : null;
+    const lo = vals.length ? Math.min(...vals) : null;
+    const rows = mine.slice(0, 31).map((r) => `<tr><td>${esc(String(r[1]))}-${esc(String(r[2]))}</td>
+      <td class="num">${esc(String(r[3]))}</td><td>${esc(String(r[4]) === 'C' ? '' : String(r[4]))}</td></tr>`).join('');
+    const units = (raw.type && raw.type[1]) || '';
+    return `<section class="card">
+      <h2 class="card__title">${esc(label)}</h2>
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('climMean'))}</div><div class="metric__v">${mean == null ? '—' : esc(mean.toFixed(1))}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('climMax'))}</div><div class="metric__v">${hi == null ? '—' : esc(hi)}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('climMin'))}</div><div class="metric__v">${lo == null ? '—' : esc(lo)}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('climDays'))}</div><div class="metric__v">${vals.length}</div></div>
+        </div>
+        <div class="tablewrap" style="margin-top:12px;max-height:320px;overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('colDate'))}</th><th style="text-align:right">${esc(t('colValue'))}</th><th></th></tr></thead>
+            <tbody>${rows || `<tr><td colspan="3" class="empty">${esc(t('pickerNoData'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${esc(units)}</p>
+    </section>`;
+  });
+}
+
+function viewClimate() {
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('climateTitle'))}</h2>
+      <div class="card__body"><p class="prose">${esc(t('climateIntro'))}</p></div>
+    </section>`
+    + climateTable('CLMTEMP', t('climTemp'))
+    + climateTable('CLMMAXT', t('climMaxT'))
+    + climateTable('CLMMINT', t('climMinT'));
+}
+
+/* ---- 京士柏氣象站 ---- */
+function viewKp() {
+  const uvRow = (((rhr().uvindex || {}).data) || [])[0] || null;
+  const temp = tempStations().find((d) => /京士柏|King's Park/i.test(d.place)) || null;
+  if (!state.wind) ensureWind();
+  const wind = (state.wind && state.wind.stations || []).find((s) => s.id === 'HKP') || null;
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('kpTitle'))}</h2>
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('temp'))}</div><div class="metric__v">${temp ? esc(temp.value) : '—'}<small>${esc(t('unitC'))}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('uvindex'))}</div><div class="metric__v">${uvRow ? esc(uvRow.value) : '—'}</div><div class="metric__sub">${esc(uvRow ? uvRow.desc : '')}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('windSpeed'))}</div><div class="metric__v">${wind ? esc(wind.speedKmh) : '—'}<small>km/h</small></div><div class="metric__sub">${esc(wind ? (wind.calm ? t('calm') : wind.dirName || '') : '')}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('gust'))}</div><div class="metric__v">${wind && wind.gustKmh != null ? esc(wind.gustKmh) : '—'}<small>km/h</small></div></div>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('kpNote'))}</p>
+    </section>`;
+}
+
+/* ---- 熱帶氣旋警告 ---- */
+function viewTc() {
+  const msg = rhr().tcmessage || '';
+  const warn = warningList().filter((w) => /TC|WT/.test(String(w.code || '')));
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('tcTitle'))}</h2>
+      <div class="card__body">
+        ${msg ? `<p class="prose">${esc(msg)}</p>`
+              : `<p class="empty">${esc(t('noTc'))}</p>`}
+        ${warn.length ? warn.map((w) => `<div class="alert alert--severe"><p class="alert__h">${esc(w.name || w.code)}</p><p class="alert__b">${esc(w.contents || '')}</p></div>`).join('') : ''}
+      </div>
+      <p class="card__note">${esc(t('tcNote'))}</p>
+    </section>`;
+}
+
+/* ---- 大雨及雷暴區域資訊 ---- */
+function viewRainstorm() {
+  const rain = rainStations().map((d) => ({ place: d.place, value: Number(d.max) || 0 }));
+  const wet = rain.filter((r) => r.value > 0).sort((a, b) => b.value - a.value);
+  const active = lightningActive();
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('rainstormTitle'))}</h2>
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('districtsWithRain'))}</div><div class="metric__v">${wet.length}<small>/ ${rain.length}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('maxRainfall'))}</div><div class="metric__v">${wet.length ? esc(wet[0].value.toFixed(1)) : '0'}<small>mm</small></div><div class="metric__sub">${esc(wet.length ? wet[0].place : '')}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('lightning'))}</div><div class="metric__v">${active ? '⚡' : '—'}</div></div>
+        </div>
+        <div class="tablewrap" style="margin-top:12px">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('colDistrict'))}</th><th style="text-align:right">${esc(t('rainfall'))} (mm)</th></tr></thead>
+            <tbody>${wet.length ? wet.map((r) => `<tr><td>${esc(r.place)}</td><td class="num">${esc(r.value.toFixed(1))}</td></tr>`).join('')
+              : `<tr><td colspan="2" class="empty">${esc(t('noRain'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('rainstormNote'))}</p>
+    </section>`;
+}
+
+/* ---- 閃電位置資訊服務 ---- */
+function viewLightning() {
+  const active = lightningActive();
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('lightningTitle'))}</h2>
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('lightning'))}</div><div class="metric__v">${active ? '⚡' : '—'}</div>
+            <div class="metric__sub">${esc(active ? t('lightningActive') : t('lightningNone'))}</div></div>
+        </div>
+        <div class="imagery" style="margin-top:14px">
+          <div class="imgcard"><div class="imgcard__h">${esc(t('lightningImg'))}</div><img src="/imagery/lightning" alt="${esc(t('lightningImg'))}"></div>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('lightningNote'))} · 1 min cache</p>
+    </section>`;
+}
+
+/* ---- 太陽及月亮 (SRS / MRS) ---- */
+function astroTable(titleKey, key, riseKey, setKey) {
+  return productShell(titleKey, key, (raw) => {
+    const today = hkDateStr();
+    const data = raw.data || [];
+    const todays = data.find((r) => String(r[0]) === today) || data[0] || null;
+    const rows = data.slice(0, 31).map((r) => {
+      const on = String(r[0]) === today;
+      return `<tr class="${on ? 'row--selected' : ''}"><td>${esc(String(r[0]))}</td>
+        <td class="num">${esc(String(r[1] ?? '—'))}</td><td class="num">${esc(String(r[2] ?? '—'))}</td><td class="num">${esc(String(r[3] ?? '—'))}</td></tr>`;
+    }).join('');
+    return `<section class="card">
+      <h2 class="card__title">${esc(t(titleKey))}</h2>
+      <div class="card__body">
+        ${todays ? `<div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t(riseKey))}</div><div class="metric__v">${esc(String(todays[1] ?? '—'))}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('transit'))}</div><div class="metric__v">${esc(String(todays[2] ?? '—'))}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t(setKey))}</div><div class="metric__v">${esc(String(todays[3] ?? '—'))}</div></div>
+        </div>` : ''}
+        <div class="tablewrap" style="margin-top:12px;max-height:300px;overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('colDate'))}</th><th style="text-align:right">${esc(t(riseKey))}</th><th style="text-align:right">${esc(t('transit'))}</th><th style="text-align:right">${esc(t(setKey))}</th></tr></thead>
+            <tbody>${rows || `<tr><td colspan="4" class="empty">${esc(t('pickerNoData'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('astroNote'))}</p>
+    </section>`;
+  });
+}
+
+function viewAstronomy() {
+  return astroTable('sunTitle', 'SRS', 'sunrise', 'sunset')
+    + astroTable('moonTitle', 'MRS', 'moonrise', 'moonset');
+}
+
+/* ---- 潮汐 (HHOT) ---- */
+function viewTides() {
+  return productShell('tideTitle', 'HHOT', (raw) => {
+    const data = raw.data || [];
+    const today = new Date().getDate();
+    const todays = data.find((r) => Number(r[1]) === today) || data[0] || null;
+    const hours = todays ? todays.slice(2).map(Number).filter(Number.isFinite) : [];
+    const hi = hours.length ? Math.max(...hours) : null;
+    const lo = hours.length ? Math.min(...hours) : null;
+    const hiAt = hi == null ? null : hours.indexOf(hi);
+    const loAt = lo == null ? null : hours.indexOf(lo);
+    const rows = data.slice(0, 31).map((r) => {
+      const h = r.slice(2).map(Number);
+      const valid = h.filter(Number.isFinite);
+      const mx = valid.length ? Math.max(...valid) : null;
+      const mn = valid.length ? Math.min(...valid) : null;
+      return `<tr class="${Number(r[1]) === today ? 'row--selected' : ''}"><td>${esc(String(r[0]))}-${esc(String(r[1]))}</td>
+        <td class="num">${mn == null ? '—' : esc(mn.toFixed(2))}</td><td class="num">${mx == null ? '—' : esc(mx.toFixed(2))}</td></tr>`;
+    }).join('');
+    // simple sparkline of the selected day
+    const spark = hours.length
+      ? (() => {
+        const w = 720, hgt = 130, pad = 10;
+        const lo2 = Math.min(...hours), hi2 = Math.max(...hours);
+        const span = (hi2 - lo2) || 1;
+        const pts = hours.map((v, i) => {
+          const x = pad + (i * (w - 2 * pad)) / Math.max(1, hours.length - 1);
+          const y = hgt - pad - ((v - lo2) / span) * (hgt - 2 * pad);
+          return `${x.toFixed(1)},${y.toFixed(1)}`;
+        }).join(' ');
+        return `<svg viewBox="0 0 ${w} ${hgt}" style="width:100%;height:auto;display:block">
+          <polyline points="${pts}" fill="none" stroke="#1b5397" stroke-width="2"/>
+        </svg>`;
+      })()
+      : '';
+    return `<section class="card">
+      <h2 class="card__title">${esc(t('tideTitle'))}</h2>
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('tideHigh'))}</div><div class="metric__v">${hi == null ? '—' : esc(hi.toFixed(2))}<small>m</small></div><div class="metric__sub">${hiAt == null ? '' : `${String(hiAt).padStart(2, '0')}:00`}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('tideLow'))}</div><div class="metric__v">${lo == null ? '—' : esc(lo.toFixed(2))}<small>m</small></div><div class="metric__sub">${loAt == null ? '' : `${String(loAt).padStart(2, '0')}:00`}</div></div>
+        </div>
+        <div class="chartbox" style="margin-top:10px">${spark}</div>
+        <div class="tablewrap" style="max-height:280px;overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('colDate'))}</th><th style="text-align:right">${esc(t('tideLow'))}</th><th style="text-align:right">${esc(t('tideHigh'))}</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('tideNote'))}</p>
+    </section>`;
+  });
+}
+
+/* ---- 地震 (qem) ---- */
+function viewEarthquake() {
+  return productShell('eqTitle', 'qem', (raw) => {
+    return `<section class="card">
+      <h2 class="card__title">${esc(t('eqTitle'))}</h2>
+      <div class="card__body">
+        <div class="verdict verdict--${Number(raw.mag) >= 6 ? 'nogo' : (Number(raw.mag) >= 5 ? 'caution' : 'go')}">
+          <div class="verdict__badge">M ${esc(String(raw.mag))}</div>
+          <div class="verdict__text">${esc(raw.region || '')}<br>
+            <span style="font-size:13px">${esc(raw.ptime || '')} · ${esc(String(raw.lat))}, ${esc(String(raw.lon))}</span></div>
+        </div>
+        <p class="paramrow__hint" style="margin-top:12px">${esc(t('eqNote'))}</p>
+      </div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(raw.updateTime))}</p>
+    </section>`;
+  });
+}
+
+/* ---- product without an open-data source ---- */
+function viewProduct() {
+  const key = state.productKey;
+  const info = key && PRODUCT_INFO[key];
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  if (!info) {
+    return `<section class="card">
+      <h2 class="card__title">${esc(t('unknownProduct'))}</h2>
+      <div class="card__body"><p class="empty">${esc(t('unknownProductBody'))}</p>
+        <p><a href="#/home">${esc(t('backHome'))}</a></p></div>
+    </section>`;
+  }
+  return `<section class="card">
+      <h2 class="card__title">${esc(info.n[li])}</h2>
+      <div class="card__body">
+        <p class="prose">${esc(info.why[li])}</p>
+        <p class="prose prose--muted">${esc(t('productPolicy'))}</p>
+        <p><a href="#/overview">${esc(t('seeOverview'))}</a> · <a href="#/imagery">${esc(t('seeImagery'))}</a></p>
+      </div>
+      <p class="card__note">${esc(t('productNote'))}</p>
+    </section>`;
+}
+
+/* ------------------------------------------------------------------ *
  * sidebar navigation
  *
  * HKO's homepage is a left navigation tree, not a horizontal tab bar. The
- * grouping and labels below mirror that information architecture; every entry
- * either opens a view in this SPA or links out to the Observatory's own page.
+ * grouping and labels below mirror that information architecture.
+ *
+ * Every entry resolves to a route inside this SPA — nothing navigates away.
+ * Where a product has no open-data source the entry still points at a local
+ * page (see PRODUCT_INFO) rather than the Observatory's own site.
  * ------------------------------------------------------------------ */
 
-const HKO = 'https://www.hko.gov.hk/tc';
-const MAPS = 'https://maps.weather.gov.hk';
+/* Products the Observatory publishes that are NOT in its open-data API. Each
+ * gets its own local route so nothing navigates away from localhost, and each
+ * states plainly what is missing rather than rendering an empty shell. */
+const PRODUCT_INFO = {
+  photos: { n: ['天氣照片', '天气照片', 'Weather photos'], why: ['公開數據不提供照片影像', '开放数据不提供照片影像', 'The open data API does not serve photo imagery'] },
+  upperair: { n: ['香港高空氣象觀測', '香港高空气象观测', 'Upper-air observations'], why: ['探空及雷達風資料不經開放數據發布', '探空及雷达风资料不经开放数据发布', 'Radiosonde and wind-profiler data are not published through open data'] },
+  extended: { n: ['延伸預報', '延伸预报', 'Extended forecast'], why: ['概率預報不經開放數據發布', '概率预报不经开放数据发布', 'Probabilistic forecast products are not published through open data'] },
+  ocf: { n: ['自動分區天氣預報', '自动分区天气预报', 'Automatic regional forecast'], why: ['地圖產品不提供機器可讀介面', '地图产品不提供机器可读接口', 'The map products expose no machine-readable API'] },
+  ncrf: { n: ['兩小時降雨預報', '两小时降雨预报', '2-hour rainfall nowcast'], why: ['臨近預報圖像不經開放數據發布', '临近预报图像不经开放数据发布', 'Nowcast imagery is not published through open data'] },
+  uvfcst: { n: ['紫外線指數預測', '紫外线指数预测', 'UV index forecast'], why: ['僅實測紫外線指數在開放數據內', '仅实测紫外线指数在开放数据内', 'Only the observed UV index is in open data, not the forecast'] },
+  scs: { n: ['華南海域天氣報告', '南海海域天气报告', 'South China Sea forecast'], why: ['海洋預報不經開放數據發布', '海洋预报不经开放数据发布', 'Marine forecasts are not published through open data'] },
+  marine: { n: ['船舶天氣預報', '船舶天气预报', 'Marine forecast'], why: ['同上：海洋產品不經開放數據發布', '同上：海洋产品不经开放数据发布', 'As above: marine products are not in the open data feed'] },
+  mariners: { n: ['航運界天氣資料', '航运界天气资料', 'Mariners weather'], why: ['航海專用產品不經開放數據發布', '航海专用产品不经开放数据发布', 'Mariner-specific products are not published through open data'] },
+  portmet: { n: ['香港海港氣象服務', '香港海港气象服务', 'HK port meteorological service'], why: ['港口服務為獨立系統', '港口服务为独立系统', 'The port service is a separate system'] },
+  seagallery: { n: ['我的海洋天氣圖像廊', '我的海洋天气图像廊', 'Marine weather gallery'], why: ['圖像廊不提供機器可讀介面', '图像廊不提供机器可读接口', 'The gallery exposes no machine-readable API'] },
+  wxchart: { n: ['天氣圖', '天气图', 'Weather chart'], why: ['分析天氣圖不經開放數據發布', '分析天气图不经开放数据发布', 'Analysed synoptic charts are not published through open data'] },
+  sanddust: { n: ['沙塵天氣資訊', '沙尘天气信息', 'Sandstorm information'], why: ['按事件發布，非固定時序', '按事件发布，非固定时序', 'Published per event rather than as a feed'] },
+  trajectory: { n: ['反軌跡路線圖', '反轨迹路线图', 'Backward trajectory'], why: ['模式輸出不在開放數據內', '模式输出不在开放数据内', 'Model output is not in the open data feed'] },
+  earthwx: { n: ['地球天氣', '地球天气', 'Earth weather'], why: ['三維可視化為獨立應用', '三维可视化为独立应用', 'The 3D viewer is a separate application'] },
+  radiation: { n: ['輻射監測', '辐射监测', 'Radiation monitoring'], why: ['環境輻射數據另有來源', '环境辐射数据另有来源', 'Ambient radiation data has a separate source'] },
+  community: { n: ['社群', '社群', 'Community'], why: ['非氣象資料', '非气象数据', 'Not meteorological data'] },
+  learning: { n: ['學習', '学习', 'Learning'], why: ['非氣象資料', '非气象数据', 'Not meteorological data'] },
+  about: { n: ['關於我們', '关于我们', 'About Us'], why: ['機構資料', '机构资料', 'Institutional information'] },
+  opendataintro: { n: ['公開資料', '公开资料', 'Open Data'], why: ['本站已直接使用開放數據', '本站已直接使用开放数据', 'This site already consumes the open data directly'] },
+  related: { n: ['相關網址', '相关网址', 'Related Sites'], why: ['外部連結', '外部链接', 'External links'] },
+  userguide: { n: ['快速用戶指南', '快速用户指南', 'User Guide'], why: ['使用說明', '使用说明', 'Usage documentation'] },
+  contact: { n: ['聯絡我們', '联络我们', 'Contact Us'], why: ['聯絡資料', '联络资料', 'Contact details'] },
+  notice: { n: ['重要告示', '重要告示', 'Important Notices'], why: ['法律告示', '法律告示', 'Legal notices'] },
+  privacy: { n: ['私隱政策', '私隐政策', 'Privacy Policy'], why: ['法律告示', '法律告示', 'Legal notices'] },
+  climateSummary: { n: ['每月天氣摘要', '每月天气摘要', 'Monthly Summary'], why: ['摘要文章不在開放數據內', '摘要文章不在开放数据内', 'Summary articles are not in the open data set'] },
+  news: { n: ['消息及文章', '消息及文章', 'News and articles'], why: ['文章內容屬天文台版權，本站只顯示標題', '文章内容属天文台版权，本站只显示标题', 'Article bodies are the Observatory\'s copyright; this site shows headlines only'] },
+};
 
-// [ 繁, 简, EN, destination ]  destination '#/x' = local view, else external
+// [ 繁, 简, EN, destination ]  '#/x' = local view, '#/product/x' = local product page
 const SIDEBAR_TREE = [
   ['天氣', '天气', 'Weather', [
     ['本港天氣', '本港天气', 'Local weather', [
       ['分區天氣', '分区天气', 'Regional weather', '#/regional'],
-      ['天氣照片', '天气照片', 'Weather photos', `${HKO}/wxinfo/ts/index_webcam.htm`],
-      ['雨量分佈圖', '雨量分布图', 'Rainfall map', '#/regional'],
-      ['紫外線資訊', '紫外线信息', 'UV information', `${HKO}/wxinfo/uvinfo/uvinfo.html`],
-      ['香港水域能見度', '香港水域能见度', 'Visibility in HK waters', `${HKO}/vis/vis_index.shtml`],
-      ['天氣報告', '天气报告', 'Weather report', '#/home'],
-      ['昨日天氣及輻射水平資料', '昨日天气及辐射水平资料', "Yesterday's weather and radiation", `${HKO}/wxinfo/pastwx/ryes.htm`],
-      ['過去天氣', '过去天气', 'Past weather', `${HKO}/wxinfo/pastwx/past.htm`],
-      ['香港高空氣象觀測', '香港高空气象观测', 'Upper-air observations', `${HKO}/out_photo/upper-air-weather.htm`],
-      ['京士柏氣象站', '京士柏气象站', "King's Park meteorological station", `${HKO}/wxinfo/aws/kpinfo.htm`],
+      ['天氣照片', '天气照片', 'Weather photos', '#/product/photos'],
+      ['雨量分佈圖', '雨量分布图', 'Rainfall map', '#/rainfall'],
+      ['紫外線資訊', '紫外线信息', 'UV information', '#/uv'],
+      ['香港水域能見度', '香港水域能见度', 'Visibility in HK waters', '#/visibility'],
+      ['天氣報告', '天气报告', 'Weather report', '#/report'],
+      ['昨日天氣及輻射水平資料', '昨日天气及辐射水平资料', "Yesterday's weather", '#/yesterday'],
+      ['過去天氣', '过去天气', 'Past weather', '#/climate'],
+      ['香港高空氣象觀測', '香港高空气象观测', 'Upper-air observations', '#/product/upperair'],
+      ['京士柏氣象站', '京士柏气象站', "King's Park station", '#/kp'],
     ]],
     ['天氣預測', '天气预测', 'Weather forecast', [
       ['本港地區天氣預報', '本港地区天气预报', 'Local weather forecast', '#/forecast'],
       ['九天天氣預報', '九天天气预报', '9-day forecast', '#/forecast'],
       ['特別天氣提示', '特别天气提示', 'Special weather tips', '#/alerts'],
-      ['延伸預報', '延伸预报', 'Extended forecast', `${HKO}/probfcst/tempfcst.htm`],
-      ['自動分區天氣預報', '自动分区天气预报', 'Automatic regional forecast', `${MAPS}/ocf/index_uc.html`],
-      ['兩小時降雨預報', '两小时降雨预报', '2-hour rainfall nowcast', `${MAPS}/ocf/index_uc.html?data=ncrf`],
-      ['一小時閃電預報', '一小时闪电预报', '1-hour lightning nowcast', '#/imagery'],
-      ['紫外線指數預測', '紫外线指数预测', 'UV index forecast', `${HKO}/wxinfo/uvinfo/uvinfo.html`],
-      ['華南海域天氣報告', '南海海域天气报告', 'South China Sea forecast', `${HKO}/wxinfo/currwx/ffish.htm`],
-      ['船舶天氣預報', '船舶天气预报', 'Marine forecast', `${HKO}/wxinfo/currwx/fmar.htm`],
+      ['延伸預報', '延伸预报', 'Extended forecast', '#/product/extended'],
+      ['自動分區天氣預報', '自动分区天气预报', 'Automatic regional forecast', '#/product/ocf'],
+      ['兩小時降雨預報', '两小时降雨预报', '2-hour rainfall nowcast', '#/product/ncrf'],
+      ['一小時閃電預報', '一小时闪电预报', '1-hour lightning nowcast', '#/lightning'],
+      ['紫外線指數預測', '紫外线指数预测', 'UV index forecast', '#/product/uvfcst'],
+      ['華南海域天氣報告', '南海海域天气报告', 'South China Sea forecast', '#/product/scs'],
+      ['船舶天氣預報', '船舶天气预报', 'Marine forecast', '#/product/marine'],
     ]],
     ['天氣警告', '天气警告', 'Warnings', [
       ['今日天氣警告', '今日天气警告', "Today's warnings", '#/alerts'],
       ['詳細警告資料', '详细警告资料', 'Warning details', '#/alerts'],
-      ['大雨及雷暴區域資訊', '大雨及雷暴区域信息', 'Rainstorm and thunderstorm areas', `${HKO}/rhr/main.html`],
-      ['熱帶氣旋警告（本港地區）', '热带气旋警告（本港地区）', 'Tropical cyclone warning', `${HKO}/wxinfo/currwx/tc.htm`],
-      ['各類警告詳細資料', '各类警告详细资料', 'All warning bulletins', `${HKO}/wservice/warning/details.htm`],
-      ['漁民天氣', '渔民天气', 'Fishermen weather', `${HKO}/fishermen/main.htm`],
+      ['大雨及雷暴區域資訊', '大雨及雷暴区域信息', 'Rainstorm and thunderstorm areas', '#/rainstorm'],
+      ['熱帶氣旋警告（本港地區）', '热带气旋警告（本港地区）', 'Tropical cyclone warning', '#/tc'],
+      ['各類警告詳細資料', '各类警告详细资料', 'All warning bulletins', '#/alerts'],
+      ['漁民天氣', '渔民天气', 'Fishermen weather', '#/product/marine'],
     ]],
     ['航運天氣', '航运天气', 'Marine weather', [
-      ['航運界天氣資料', '航运界天气资料', 'Mariners weather', `${HKO}/wservice/tsheet/pms/mariners.htm`],
-      ['香港海港氣象服務', '香港海港气象服务', 'HK port meteorological service', `${HKO}/wservice/tsheet/pms/index.htm`],
-      ['我的海洋天氣圖像廊', '我的海洋天气图像廊', 'Marine weather gallery', `${MAPS}/sea/index_uc.htm`],
+      ['航運界天氣資料', '航运界天气资料', 'Mariners weather', '#/product/mariners'],
+      ['香港海港氣象服務', '香港海港气象服务', 'HK port met service', '#/product/portmet'],
+      ['我的海洋天氣圖像廊', '我的海洋天气图像廊', 'Marine weather gallery', '#/product/seagallery'],
       ['航空天氣', '航空天气', 'Aviation weather', '#/lae'],
     ]],
     ['天氣監測圖像', '天气监测图像', 'Monitoring imagery', [
       ['雷達圖像', '雷达图像', 'Radar imagery', '#/imagery'],
-      ['閃電位置資訊服務', '闪电位置信息服务', 'Lightning location service', '#/imagery'],
+      ['閃電位置資訊服務', '闪电位置信息服务', 'Lightning location service', '#/lightning'],
       ['氣象衛星圖片', '气象卫星图片', 'Satellite imagery', '#/imagery'],
-      ['天氣圖', '天气图', 'Weather chart', '#/imagery'],
-      ['沙塵天氣資訊', '沙尘天气信息', 'Sandstorm information', `${HKO}/wxinfo/sanddust/sdawx.html`],
-      ['反軌跡路線圖', '反轨迹路线图', 'Backward trajectory', `${HKO}/wxinfo/trajectory/trajectory.shtml`],
+      ['天氣圖', '天气图', 'Weather chart', '#/product/wxchart'],
+      ['沙塵天氣資訊', '沙尘天气信息', 'Sandstorm information', '#/product/sanddust'],
+      ['反軌跡路線圖', '反轨迹路线图', 'Backward trajectory', '#/product/trajectory'],
     ]],
     ['地理信息系統天氣服務', '地理信息系统天气服务', 'GIS weather services', [
-      ['地球天氣', '地球天气', 'Earth weather', `${MAPS}/wxviewer/index.html?lang=tc`],
+      ['地球天氣', '地球天气', 'Earth weather', '#/product/earthwx'],
     ]],
+  ]],
+  ['天文、潮汐及地球物理', '天文、潮汐及地球物理', 'Astronomy, tides & geophysics', [
+    ['太陽及月亮', '太阳及月亮', 'Sun and moon', '#/astronomy'],
+    ['潮汐', '潮汐', 'Tides', '#/tides'],
+    ['地震', '地震', 'Earthquakes', '#/earthquake'],
   ]],
   ['本站分析', '本站分析', 'Local analysis', [
     ['天氣總覽', '天气总览', 'Overview', '#/overview'],
@@ -1878,6 +2448,7 @@ const SIDEBAR_TREE = [
     ['最新消息', '最新消息', 'News', '#/news'],
   ]],
 ];
+
 
 /** Collapsed group paths, persisted so a reload keeps the tree as the user left it. */
 const collapsedGroups = new Set(
@@ -1893,15 +2464,7 @@ function renderSidebar() {
   if (!host) return;
   const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
 
-  const item = (n, path) => {
-    const dest = n[3];
-    const ext = !String(dest).startsWith('#/');
-    const attrs = ext
-      ? `href="${esc(dest)}" target="_blank" rel="noopener"`
-      : `href="${esc(dest)}"`;
-    const hint = ext ? ` <span class="side__ext" aria-hidden="true">↗</span>` : '';
-    return `<li><a class="side__link" ${attrs} data-path="${esc(path)}">${esc(n[li])}${hint}</a></li>`;
-  };
+  const item = (n, path) => `<li><a class="side__link" href="${esc(n[3])}" data-path="${esc(path)}">${esc(n[li])}</a></li>`;
 
   const group = (n, depth, parentPath) => {
     const path = parentPath ? `${parentPath}/${n[li]}` : n[li];
@@ -1958,8 +2521,10 @@ function renderI18nChrome() {
  * ------------------------------------------------------------------ */
 
 function parseHash() {
-  const m = String(location.hash || '').match(/^#\/([a-z]+)/i);
+  const m = String(location.hash || '').match(/^#\/([a-z]+)(?:\/([a-z0-9]+))?/i);
   const r = m ? m[1].toLowerCase() : 'home';
+  // '#/product/<key>' carries the product to explain; every other route ignores it
+  state.productKey = (r === 'product' && m && m[2]) ? m[2].toLowerCase() : null;
   return ROUTES.includes(r) ? r : 'home';
 }
 
@@ -1986,6 +2551,10 @@ function renderAll() {
   const map = {
     home: viewHome, overview: viewOverview, regional: viewRegional, analysis: viewAnalysis,
     lae: viewLae, imagery: viewImagery, forecast: viewForecast, alerts: viewAlerts, news: viewNews,
+    rainfall: viewRainfall, uv: viewUv, visibility: viewVisibility, report: viewReport,
+    yesterday: viewYesterday, climate: viewClimate, kp: viewKp, tc: viewTc,
+    rainstorm: viewRainstorm, lightning: viewLightning, astronomy: viewAstronomy,
+    tides: viewTides, earthquake: viewEarthquake, product: viewProduct,
   };
   view.innerHTML = (map[state.route] || viewHome)();
 
@@ -2105,6 +2674,7 @@ function bindGlobalOnce() {
     renderAll();
     if (state.route === 'analysis' && !state.analysis) loadAnalysis(false);
     if (state.route === 'lae' && !state.lae) loadLae(false);
+    if (PRODUCT_ROUTES.includes(state.route)) ensureProducts();
   });
 
   document.body.addEventListener('click', (ev) => {
@@ -2238,4 +2808,9 @@ function bindGlobalOnce() {
   // external aviation feeds) and is only needed on its own view, so it is never
   // prefetched — but landing straight on #/lae must still fetch it.
   if (state.route === 'lae') loadLae(false);
+  // The dated/climatological products are small but there are nine of them, so
+  // they are warmed once in the background after first paint. Landing directly on
+  // a page that needs them still triggers the fetch.
+  if (PRODUCT_ROUTES.includes(state.route)) ensureProducts();
+  else setTimeout(() => ensureProducts(), 2000);
 })();

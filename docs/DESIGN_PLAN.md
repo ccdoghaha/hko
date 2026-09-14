@@ -224,7 +224,40 @@ lightning ───────────────────────�
 
 ---
 
-## 7. Deliberately not done
+## 7. Data sources across three services
+
+The Observatory does not publish its open data from one place. It runs three
+services, and a product only exists on one of them:
+
+| service | carries |
+|---|---|
+| `weather.php` | the six live products — observations, local forecast, 9-day forecast, warning summary, warning info, special tips |
+| `opendata.php` | dated and climatological products — visibility (`LTMV`), yesterday's readings (`RYES`), daily climate (`CLMTEMP`/`CLMMAXT`/`CLMMINT`), sunrise/sunset (`SRS`), moonrise/set (`MRS`), hourly tides (`HHOT`) |
+| `earthquake.php` | the earthquake service (`qem`) |
+
+This shape drives three decisions:
+
+1. **A source table, not a list of type names.** `SOURCES` maps each dataType to
+   its service URL, freshness window and fixed parameters, so adding a product is
+   one line and no handler changes.
+2. **Relative date tokens.** `RYES` needs a concrete `date` and the climate
+   products need a `year`. These are stored as `'yesterday'` / `'lastYear'` and
+   resolved per request; hard-coding a date would rot silently.
+3. **A parse failure means bad parameters, not an outage.** These services answer
+   a malformed request with an HTML help page and HTTP 200. So a JSON parse
+   failure is surfaced verbatim rather than treated as the service being down —
+   which is what actually caught three wrong parameter guesses during
+   development.
+
+Products the API does not carry at all (weather photos, upper-air observations,
+the marine forecasts, the nowcast and probabilistic products, the 3-D viewer) get
+a local page that names the product and says why it is absent. That is a
+deliberate choice over two worse options: silently omitting the entry, or routing
+the user off-site.
+
+---
+
+## 8. Deliberately not done
 
 - **No authentication.** Single-user local gateway. Adding auth would be
   pretending to a security posture this does not have; instead it binds loopback
@@ -242,7 +275,7 @@ lightning ───────────────────────�
 
 ---
 
-## 8. Future work, in order of value
+## 9. Future work, in order of value
 
 1. **Per-window LAE assessment.** The TAF worst-case currently over-warns outside
    the actual hazard windows. Time-stepping per TEMPO/BECMG window would be more
@@ -260,9 +293,10 @@ lightning ───────────────────────�
 
 ---
 
-## 9. How to verify any of this
+## 10. How to verify any of this
 
 ```
+node scripts/check-ui.js        # 18 — DOM ids, i18n coverage, sidebar tree, routes
 node scripts/check-dem.js       # 16 — PNG codec, georeferencing, DEM, alignment
 node scripts/check-interp.js    # 11 — estimator selection, synthetic control
 node scripts/check-lae.js       # 41 — vector wind, CSV edge cases, METAR/TAF
@@ -271,4 +305,4 @@ node scripts/check-bind.js      #  5 — loopback default, HOST override
 node scripts/bench.js           # latency and payload baseline
 ```
 
-98 checks. Every claim in this document is exercised by one of them.
+116 checks. Every claim in this document is exercised by one of them.

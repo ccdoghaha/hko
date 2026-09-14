@@ -120,8 +120,8 @@ const tree = js.slice(treeStart, treeEnd);
 
 // Leaves are 4-element tuples [tc, sc, en, destination]. Labels are single- or
 // double-quoted (English labels contain apostrophes) and destinations are either
-// a quoted route/URL or a template literal built from the HKO/MAPS base.
-const destRe = /,\s*(?:'(#\/[a-z]+)'|'(https:\/\/[^']+)'|`\$\{(HKO|MAPS)\}([^`]*)`)/g;
+// a quoted route (`#/x`, `#/product/x`, or a URL) or a template literal.
+const destRe = /,\s*(?:'(#[a-z0-9/]+)'|'(https:\/\/[^']+)'|`\$\{(HKO|MAPS)\}([^`]*)`)/g;
 const dests = [...tree.matchAll(destRe)].map((m) => (
   m[1] ? { kind: 'route', to: m[1] }
     : m[2] ? { kind: 'url', to: m[2] }
@@ -131,6 +131,23 @@ const dests = [...tree.matchAll(destRe)].map((m) => (
 const badDest = dests.filter((d) => d.kind === 'url' && !/^https:\/\/[a-z.]+\/\S+/.test(d.to));
 check('sidebar leaves well-formed', dests.length > 30 && badDest.length === 0,
   `${dests.length} destinations` + (badDest.length ? `; BAD: ${badDest.map((d) => d.to).join(',')}` : ', all valid'));
+
+// Every '#/product/<key>' must have an entry in PRODUCT_INFO, and every local
+// route must be one the router knows. Both fail silently otherwise: the page
+// renders an "unknown product" shell or silently falls back to home.
+const ROUTES_SRC = (js.match(/const ROUTES = \[([\s\S]*?)\];/) || [])[1] || '';
+const routes = [...ROUTES_SRC.matchAll(/'([a-z]+)'/g)].map((m) => m[1]);
+const localDests = uniq(dests.filter((d) => d.kind === 'route').map((d) => d.to));
+const badRoutes = localDests.filter((r) => !routes.includes(r.split('/')[1]));
+check('every sidebar route is known', badRoutes.length === 0,
+  badRoutes.length ? `UNKNOWN: ${badRoutes.join(',')}` : `${localDests.length} local routes, all known`);
+
+const prodBlock = js.slice(js.indexOf('const PRODUCT_INFO'), js.indexOf('\n};', js.indexOf('const PRODUCT_INFO')));
+const definedKeys = new Set([...prodBlock.matchAll(/^\s{2}([A-Za-z][A-Za-z0-9_]*):\s*\{/gm)].map((m) => m[1]));
+const usedKeys = uniq(localDests.filter((r) => r.startsWith('#/product/')).map((r) => r.split('/')[2]));
+const missingProductKeys = usedKeys.filter((k) => !definedKeys.has(k));
+check('every product key is defined', missingProductKeys.length === 0,
+  missingProductKeys.length ? `MISSING: ${missingProductKeys.join(',')}` : `${usedKeys.length} product keys, all defined`);
 
 /* ------------------------------------------------------------------ *
  * 5. picker wiring

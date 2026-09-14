@@ -73,7 +73,8 @@ a:hover { text-decoration: underline; }
   flex-wrap: wrap;
 }
 
-.brand { display: flex; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand:hover strong { text-decoration: underline; }
 .brand__mark {
   width: 46px; height: 46px; border-radius: 50%; flex: 0 0 auto;
   background: radial-gradient(circle at 34% 30%, #ffe08a 0 30%, #f5a623 32% 62%, var(--blue) 64% 100%);
@@ -370,6 +371,7 @@ table.tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .newslist a { color: var(--ink-2); }
 .newslist a:hover { color: var(--blue); }
 .newslist .ext { font-size: 11px; color: var(--ink-4); margin-left: 5px; }
+.newslist__h { color: var(--ink-2); }
 
 .empty { color: var(--ink-4); font-size: 14px; padding: 6px 0; }
 

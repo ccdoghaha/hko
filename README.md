@@ -217,13 +217,35 @@ The sidebar mirrors HKO's grouping and labels and is expandable per section
 (collapse state persists):
 
 ```
-天氣           本港天氣 · 天氣預測 · 天氣警告 · 航運天氣 · 天氣監測圖像 · 地理信息系統天氣服務
-本站分析       天氣總覽 · 高解析度分析 · 最新消息
+天氣                    本港天氣 · 天氣預測 · 天氣警告 · 航運天氣 · 天氣監測圖像 · 地理信息系統天氣服務
+天文、潮汐及地球物理     太陽及月亮 · 潮汐 · 地震
+本站分析                天氣總覽 · 高解析度分析 · 最新消息
 ```
 
-40 entries: **17 open a view in this SPA**, **23 link out to the Observatory's own
-page** (marked ↗) where this project has no equivalent product. That split is
-deliberate rather than pretending to cover everything.
+**All 43 entries are local routes.** Nothing in the sidebar, the top section bar
+or the footer navigates to hko.gov.hk — 89 links on the page, zero external.
+Where HKO publishes a product the open-data API does not carry, the entry still
+resolves to a local page that names the product and states plainly why it is not
+shown, rather than an empty shell or a redirect away.
+
+That gives **22 pages backed by live data**:
+
+| page | source |
+|---|---|
+| 主頁 · 總覽 · 分區天氣 · 雨量分佈圖 | `rhrread` (+ wind CSV) |
+| 天氣報告 · 九天預報 | `flw`, `fnd` |
+| 警告及提示 · 熱帶氣旋警告 | `warnsum`, `warningInfo`, `swt`, `tcmessage` |
+| 大雨及雷暴區域資訊 · 閃電位置 | `rhrread` rainfall + lightning |
+| 紫外線資訊 · 京士柏氣象站 | `rhrread` uvindex |
+| **香港水域能見度** | **`LTMV`** |
+| **昨日天氣及輻射水平資料** | **`RYES`** |
+| **過去天氣及氣候** | **`CLMTEMP` / `CLMMAXT` / `CLMMINT`** |
+| **太陽及月亮** | **`SRS` / `MRS`** |
+| **潮汐** | **`HHOT`** |
+| **地震** | **`qem`** |
+| 高解析度分析 · 低空作業 | computed (see below) |
+
+and **15 further product pages** that explain what is not in the open data.
 
 Homepage modules in HKO's order, with two working widgets:
 
@@ -242,7 +264,8 @@ chrome would be worse than no chrome.
 Design tokens (palette, type scale, container width, module order) were read from
 the live page's computed styles and re-implemented in an original stylesheet.
 HKO's HTML, CSS, JS, images and article text are their copyright and are not
-copied; imagery and news are linked, not embedded.
+copied. News appears as **headlines only** — the article bodies are not
+republished, and the headlines are rendered as text rather than deep links.
 
 ---
 
@@ -340,9 +363,10 @@ hko-local/
 │  │                            METAR/TAF decoding, ceiling semantics
 │  ├─ check-db.js               25 checks: schema, idempotency, retention guard,
 │  │                            backup, integrity, durability across reopen
-│  ├─ check-ui.js               16 checks: DOM id resolution (shell vs script),
+│  ├─ check-ui.js               18 checks: DOM id resolution (shell vs script),
 │  │                            i18n key coverage in all 3 languages, sidebar tree
-│  │                            integrity, picker wiring, layout structure
+│  │                            integrity, product-key + route resolution, picker
+│  │                            wiring, layout structure
 │  ├─ check-bind.js              5 checks: loopback default, HOST override, warning
 │  ├─ bench.js                  endpoint latency + payload baseline
 │  ├─ debug-dem.js              ad-hoc: landmark sampling vs published heights
@@ -414,7 +438,9 @@ browser ──▶ localhost:8787 ──┬──▶ data.weather.gov.hk   (weath
 | `GET /` | SPA shell |
 | `GET /api/home?lang=tc` | **everything the homepage needs** in one response |
 | `GET /api/bundle?lang=tc` | the six weather data types only |
-| `GET /api/weather?type=rhrread&lang=tc` | a single data type |
+| `GET /api/weather?type=rhrread&lang=tc` | a single data type (all 15 types accepted) |
+| `GET /api/products?lang=tc` | **the nine dated/climatological products** in one response |
+| `GET /api/products?type=LTMV` | one product only |
 | `GET /api/lunar?date=2026-09-14&lang=tc` | lunar date + solar term |
 | `GET /api/news?kind=whatsnew` | news headlines (RSS) |
 | `GET /api/status` | uptime, cache stats, last upstream error |
