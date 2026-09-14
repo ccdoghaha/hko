@@ -50,6 +50,26 @@ const I18N = {
     productPolicy: '此產品在開放數據 API 中沒有對應的機器可讀介面，因此本站不會顯示其內容。本站只顯示可從公開數據取得的資料，不會複製或轉載天文台的圖像及文字。',
     seeOverview: '查看天氣總覽', seeImagery: '查看天氣圖像', productNote: '本頁由本機實作，並非天文台官方網站。',
     whyNoNews: '為何只顯示標題？', headlinesOnly: '只顯示標題，不轉載文章內容',
+    // archive-backed pages
+    histTitle: '觀測歷史', histIntro: '本站會把每次最新的觀測寫入本機資料庫，以下為已儲存的時間序列。資料自本站啟動後開始累積。',
+    histSource: '資料', histObs: '地面觀測', histWind: '風觀測', histMetric: '項目',
+    histPoints: '資料點', histWhen: '時間', histEmpty: '此測站尚未有足夠的歷史資料。',
+    histNote: '資料來源：本機 SQLite 存檔（.cache/archive.db）',
+    verdictTitle: '作業評估記錄', verdictIntro: '每次低空作業評估的結果都會存檔，可追溯當時的判斷原因。',
+    verdictTotal: '記錄數', verdictCol: '判定', verdictWhy: '原因',
+    verdictBlockers: '阻礙', verdictCautions: '注意', verdictEmpty: '尚未有評估記錄。',
+    verdictNote: '資料來源：本機存檔 · 判定為本機模型輸出，非天文台官方評估',
+    runsTitle: '分析執行記錄', runsIntro: '每次高解析度分析都會記錄所選的插值方法及交叉驗證分數，如方法選擇有變化可在此看到。',
+    runsTotal: '執行次數', runsEstimators: '曾選用方法', runsRmse: 'RMSE 範圍',
+    runsDrift: '曾選用多於一種方法 — 表示網絡或資料情況有變化。',
+    runsEstimator: '所選方法', runsCorrection: '地形訂正', runsStations: '測站數',
+    runsField: '分析場 (°C)', runsGrid: '網格', runsEmpty: '尚未有分析記錄。',
+    runsNote: '資料來源：本機存檔 · 方法由交叉驗證自動選出',
+    runsYes: '有幫助', runsNo: '無幫助',
+    laeAlt: '作業高度',
+    warnRefTitle: '警告類型參考', warnRefIntro: '以下是天文台警告的種類及其含義。最後一欄為一般市場慣例，並非投資建議 — 是否停市由交易所決定。',
+    warnCode: '代碼', warnName: '名稱', warnMeaning: '含義', warnMarket: '市場慣例',
+    warnInForce: '生效中', warnHalt: '一般停市', warnRefNote: '資料來源：HKO 開放數據 API 說明書（警告代碼）+ rhrread 即時警告狀態',
     fClimate: '香港氣候', fSummary: '每月天氣摘要', fNew: '新增項目', fOpen: '公開資料',
     fRelated: '相關網址', fGuide: '快速用戶指南', fContact: '聯絡我們', fNotice: '重要告示', fPrivacy: '私隱政策',
     loading: '載入中…', refresh: '即時更新', refreshing: '更新中…',
@@ -145,6 +165,25 @@ const I18N = {
     productPolicy: '此产品在开放数据 API 中没有对应的机器可读接口，因此本站不会显示其内容。本站只显示可从公开数据取得的资料，不会复制或转载天文台的图像及文字。',
     seeOverview: '查看天气总览', seeImagery: '查看天气图像', productNote: '本页由本机实作，并非天文台官方网站。',
     whyNoNews: '为何只显示标题？', headlinesOnly: '只显示标题，不转载文章内容',
+    histTitle: '观测历史', histIntro: '本站会把每次最新观测写入本机数据库，以下为已储存的时间序列。资料自本站启动后开始累积。',
+    histSource: '资料', histObs: '地面观测', histWind: '风观测', histMetric: '项目',
+    histPoints: '数据点', histWhen: '时间', histEmpty: '此测站尚未有足够的历史资料。',
+    histNote: '数据来源：本机 SQLite 存档（.cache/archive.db）',
+    verdictTitle: '作业评估记录', verdictIntro: '每次低空作业评估的结果都会存档，可追溯当时的判断原因。',
+    verdictTotal: '记录数', verdictCol: '判定', verdictWhy: '原因',
+    verdictBlockers: '阻碍', verdictCautions: '注意', verdictEmpty: '尚未有评估记录。',
+    verdictNote: '数据来源：本机存档 · 判定为本机模型输出，非天文台官方评估',
+    runsTitle: '分析执行记录', runsIntro: '每次高分辨率分析都会记录所选的插值方法及交叉验证分数，如方法选择有变化可在此看到。',
+    runsTotal: '执行次数', runsEstimators: '曾选用方法', runsRmse: 'RMSE 范围',
+    runsDrift: '曾选用多于一种方法 — 表示网络或资料情况有变化。',
+    runsEstimator: '所选方法', runsCorrection: '地形订正', runsStations: '测站数',
+    runsField: '分析场 (°C)', runsGrid: '网格', runsEmpty: '尚未有分析记录。',
+    runsNote: '数据来源：本机存档 · 方法由交叉验证自动选出',
+    runsYes: '有帮助', runsNo: '无帮助',
+    laeAlt: '作业高度',
+    warnRefTitle: '警告类型参考', warnRefIntro: '以下是天文台警告的种类及其含义。最后一栏为一般市场惯例，并非投资建议 — 是否停市由交易所决定。',
+    warnCode: '代码', warnName: '名称', warnMeaning: '含义', warnMarket: '市场惯例',
+    warnInForce: '生效中', warnHalt: '一般停市', warnRefNote: '数据来源：HKO 开放数据 API 说明书（警告代码）+ rhrread 即时警告状态',
     fClimate: '香港气候', fSummary: '每月天气摘要', fNew: '新增项目', fOpen: '公开资料',
     fRelated: '相关网址', fGuide: '快速用户指南', fContact: '联络我们', fNotice: '重要告示', fPrivacy: '私隐政策',
     loading: '加载中…', refresh: '即时更新', refreshing: '更新中…',
@@ -240,6 +279,25 @@ const I18N = {
     productPolicy: 'This product has no machine-readable interface in the open data API, so this site does not display its content. Only data obtainable from the published open data is shown; the Observatory\'s imagery and text are not copied or republished.',
     seeOverview: 'Weather overview', seeImagery: 'Weather imagery', productNote: 'This page is a local implementation, not the official HKO website.',
     whyNoNews: 'Why headlines only?', headlinesOnly: 'headlines only; article bodies are not republished',
+    histTitle: 'Observation history', histIntro: 'Every fresh observation is written to a local database. Below is the stored time series, which accumulates from the moment the service starts.',
+    histSource: 'Series', histObs: 'Surface observations', histWind: 'Wind observations', histMetric: 'Metric',
+    histPoints: 'Data points', histWhen: 'Time', histEmpty: 'Not enough history recorded for this station yet.',
+    histNote: 'Source: local SQLite archive (.cache/archive.db)',
+    verdictTitle: 'LAE assessment log', verdictIntro: 'Every low-altitude assessment is archived, so the reasoning behind a past decision can be traced.',
+    verdictTotal: 'Records', verdictCol: 'Verdict', verdictWhy: 'Reason',
+    verdictBlockers: 'Blockers', verdictCautions: 'Cautions', verdictEmpty: 'No assessments recorded yet.',
+    verdictNote: 'Source: local archive · verdicts are this model\'s output, not an official HKO assessment',
+    runsTitle: 'Analysis run log', runsIntro: 'Each high-resolution analysis records the interpolation method it selected and its cross-validation score, so a change in method selection is visible here.',
+    runsTotal: 'Runs', runsEstimators: 'Methods used', runsRmse: 'RMSE range',
+    runsDrift: 'More than one method has been selected — the network or the data conditions have changed.',
+    runsEstimator: 'Selected method', runsCorrection: 'Terrain correction', runsStations: 'Stations',
+    runsField: 'Field (°C)', runsGrid: 'Grid', runsEmpty: 'No analysis runs recorded yet.',
+    runsNote: 'Source: local archive · method chosen automatically by cross-validation',
+    runsYes: 'helped', runsNo: 'no help',
+    laeAlt: 'Altitude',
+    warnRefTitle: 'Warning reference', warnRefIntro: 'The Observatory\'s warning types and what each means. The final column reflects ordinary market practice and is not advice — the exchange decides whether to suspend trading.',
+    warnCode: 'Code', warnName: 'Name', warnMeaning: 'Meaning', warnMarket: 'Market practice',
+    warnInForce: 'in force', warnHalt: 'usual halt', warnRefNote: 'Source: HKO Open Data API documentation (warning codes) + live warning status from rhrread',
     fClimate: 'HK Climate', fSummary: 'Monthly Summary', fNew: "What's New", fOpen: 'Open Data',
     fRelated: 'Related Sites', fGuide: 'User Guide', fContact: 'Contact Us', fNotice: 'Important Notices', fPrivacy: 'Privacy Policy',
     loading: 'Loading…', refresh: 'Refresh', refreshing: 'Refreshing…',
@@ -414,6 +472,13 @@ const state = {
   products: null,
   productsInFlight: null,
   productKey: null,
+  archive: {
+    stations: null, stationsInFlight: false,
+    series: null, seriesKey: null, pending: null,
+    kind: 'observation', station: null, metric: 'temperature_c',
+    lae: null, laePending: false,
+    analysis: null, analysisPending: false,
+  },
 };
 
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
@@ -425,6 +490,7 @@ const ROUTES = [
   'home', 'overview', 'regional', 'analysis', 'lae', 'imagery', 'forecast', 'alerts', 'news',
   'rainfall', 'uv', 'visibility', 'report', 'yesterday', 'climate', 'kp',
   'tc', 'rainstorm', 'lightning', 'astronomy', 'tides', 'earthquake', 'product',
+  'history', 'verdicts', 'runs', 'warningref',
 ];
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -2341,6 +2407,288 @@ function viewProduct() {
 }
 
 /* ------------------------------------------------------------------ *
+ * archive-backed views
+ *
+ * The service records every observation, analysis run and LAE verdict into
+ * SQLite. These pages are the reason that history exists: the JSON endpoints were
+ * there, but nothing in the UI showed what had been recorded.
+ * ------------------------------------------------------------------ */
+
+function ensureArchiveStations() {
+  if (state.archive.stations || state.archive.stationsInFlight) return;
+  state.archive.stationsInFlight = fetch('/api/history?kind=stations')
+    .then((r) => r.json())
+    .then((d) => { state.archive.stations = d; state.archive.stationsInFlight = false; renderAll(); })
+    .catch(() => { state.archive.stationsInFlight = false; });
+}
+
+/**
+ * Fetch one series. Keyed by kind+station so switching back to a series already
+ * loaded is instant, and so two views cannot fight over one slot.
+ */
+function ensureSeries(kind, station) {
+  const key = `${kind}:${station || ''}`;
+  if (state.archive.seriesKey === key && state.archive.series) return;
+  if (state.archive.pending === key) return;
+  state.archive.pending = key;
+  const qs = new URLSearchParams({ kind, limit: '500' });
+  if (station) qs.set('station', station);
+  fetch(`/api/history?${qs.toString()}`)
+    .then((r) => r.json())
+    .then((d) => {
+      if (state.archive.pending !== key) return;   // a newer request superseded this one
+      state.archive.series = d;
+      state.archive.seriesKey = key;
+      state.archive.pending = null;
+      renderAll();
+    })
+    .catch(() => { state.archive.pending = null; });
+}
+
+function ensureLog(kind) {
+  if (state.archive[kind] || state.archive[`${kind}Pending`]) return;
+  state.archive[`${kind}Pending`] = true;
+  fetch(`/api/history?kind=${kind}&limit=200`)
+    .then((r) => r.json())
+    .then((d) => { state.archive[kind] = d; state.archive[`${kind}Pending`] = false; renderAll(); })
+    .catch(() => { state.archive[`${kind}Pending`] = false; });
+}
+
+/** Inline SVG line chart from a numeric series. No library, no canvas sizing. */
+function sparkline(values, opts = {}) {
+  const vals = values.filter((v) => Number.isFinite(v));
+  if (vals.length < 2) return '';
+  const w = 900, h = opts.height || 160, pad = 14;
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  const span = (hi - lo) || 1;
+  const x = (i) => pad + (i * (w - 2 * pad)) / (vals.length - 1);
+  const y = (v) => h - pad - ((v - lo) / span) * (h - 2 * pad);
+  const pts = vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const area = `${pad},${h - pad} ${pts} ${(w - pad).toFixed(1)},${h - pad}`;
+  const color = opts.color || '#1b5397';
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block" role="img">
+    <polygon points="${area}" fill="${color}" opacity="0.12"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+    <text x="${pad}" y="12" font-size="11" fill="#666">${esc(String(hi))}</text>
+    <text x="${pad}" y="${h - 3}" font-size="11" fill="#666">${esc(String(lo))}</text>
+  </svg>`;
+}
+
+const SERIES_METRICS = [
+  { k: 'temperature_c', n: ['氣溫', '气温', 'Temperature'], unit: '°C', color: '#c0392b' },
+  { k: 'humidity_pct', n: ['相對濕度', '相对湿度', 'Humidity'], unit: '%', color: '#1b5397' },
+  { k: 'rainfall_mm', n: ['雨量', '雨量', 'Rainfall'], unit: 'mm', color: '#1f8a4c' },
+  { k: 'speed_kmh', n: ['風速', '风速', 'Wind speed'], unit: 'km/h', color: '#3f777d' },
+  { k: 'gust_kmh', n: ['陣風', '阵风', 'Gust'], unit: 'km/h', color: '#e0a415' },
+];
+
+/* ---- 觀測歷史 ---- */
+function viewHistory() {
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  ensureArchiveStations();
+
+  const bag = state.archive.series;
+  const windMode = state.archive.kind === 'wind';
+  const stationList = ((state.archive.stations && (windMode ? state.archive.stations.wind : state.archive.stations.observation)) || []);
+  if (!state.archive.station && stationList.length) state.archive.station = stationList[0].id;
+
+  const metrics = windMode
+    ? SERIES_METRICS.filter((m) => m.k === 'speed_kmh' || m.k === 'gust_kmh')
+    : SERIES_METRICS.filter((m) => m.k === 'temperature_c' || m.k === 'humidity_pct' || m.k === 'rainfall_mm');
+  if (!metrics.some((m) => m.k === state.archive.metric)) state.archive.metric = metrics[0].k;
+
+  if (state.archive.station) ensureSeries(windMode ? 'wind' : 'observation', state.archive.station);
+
+  const items = (bag && bag.items) || [];
+  const metric = metrics.find((m) => m.k === state.archive.metric) || metrics[0];
+  const vals = items.map((r) => Number(r[metric.k])).filter((v) => Number.isFinite(v));
+  const mean = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+
+  const rows = items.slice().reverse().slice(0, 400).map((r) => {
+    const v = Number(r[metric.k]);
+    return `<tr><td>${esc(fmtTime(r.observed_at))}</td>
+      <td class="num">${Number.isFinite(v) ? esc(v.toFixed(metric.unit === 'mm' ? 1 : 0)) : '—'}${metric.unit ? ' ' + esc(metric.unit) : ''}</td></tr>`;
+  }).join('');
+
+  const stationOpts = stationList.map((s) => `<option value="${esc(s.id)}" ${s.id === state.archive.station ? 'selected' : ''}>${esc(s.name)} (${s.n})</option>`).join('');
+
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('histTitle'))}</h2>
+      <div class="card__body">
+        <p class="prose prose--muted">${esc(t('histIntro'))}</p>
+        <div class="paramrow" style="margin-top:12px">
+          <span class="paramrow__lab">${esc(t('histSource'))}</span>
+          <select data-arch-source aria-label="${esc(t('histSource'))}">
+            <option value="observation" ${!windMode ? 'selected' : ''}>${esc(t('histObs'))}</option>
+            <option value="wind" ${windMode ? 'selected' : ''}>${esc(t('histWind'))}</option>
+          </select>
+          <span class="paramrow__lab">${esc(t('pickerStation'))}</span>
+          <select data-arch-station aria-label="${esc(t('pickerStation'))}">${stationOpts || `<option>—</option>`}</select>
+          <span class="paramrow__lab">${esc(t('histMetric'))}</span>
+          <select data-arch-metric aria-label="${esc(t('histMetric'))}">
+            ${metrics.map((m) => `<option value="${esc(m.k)}" ${m.k === metric.k ? 'selected' : ''}>${esc(m.n[li])}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      ${items.length ? `<div class="card__body" style="padding-top:0">${sparkline(items.map((r) => Number(r[metric.k])), { color: metric.color })}</div>` : ''}
+      ${vals.length ? `<div class="card__body" style="padding-top:0"><div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('histPoints'))}</div><div class="metric__v">${vals.length}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('pickerMax'))}</div><div class="metric__v">${esc(Math.max(...vals).toFixed(1))}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('pickerMin'))}</div><div class="metric__v">${esc(Math.min(...vals).toFixed(1))}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('pickerMean'))}</div><div class="metric__v">${mean == null ? '—' : esc(mean.toFixed(1))}</div></div>
+        </div></div>` : ''}
+      <div class="card__body" style="padding-top:0">
+        ${rows ? `<div class="tablewrap" style="max-height:300px;overflow-y:auto"><table class="tbl">
+            <thead><tr><th>${esc(t('histWhen'))}</th><th style="text-align:right">${esc(metric.n[li])}</th></tr></thead>
+            <tbody>${rows}</tbody></table></div>`
+          : `<p class="empty">${esc(t('histEmpty'))}</p>`}
+      </div>
+      <p class="card__note">${esc(t('histNote'))}</p>
+    </section>`;
+}
+
+/* ---- 評估記錄 ---- */
+function viewVerdicts() {
+  ensureLog('lae');
+  const d = state.archive.lae;
+  const items = (d && d.items) || [];
+  const counts = items.reduce((a, r) => { a[r.verdict] = (a[r.verdict] || 0) + 1; return a; }, {});
+  const rows = items.map((r) => {
+    const cls = r.verdict === 'NO-GO' ? 'row--nogo' : (r.verdict === 'CAUTION' ? 'row--caution' : '');
+    const bl = (r.blockers || []).length;
+    const ca = (r.cautions || []).length;
+    return `<tr class="${cls}">
+      <td>${esc(fmtTime(r.generated_at))}</td>
+      <td class="num">${esc(r.altitude_m)} m</td>
+      <td><span class="pill pill--${r.verdict === 'NO-GO' ? 'nogo' : (r.verdict === 'CAUTION' ? 'caution' : 'go')}">${esc(r.verdict)}</span></td>
+      <td>${esc(r.summary || '')}</td>
+      <td class="num">${bl}</td><td class="num">${ca}</td>
+    </tr>`;
+  }).join('');
+
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('verdictTitle'))}</h2>
+      <div class="card__body">
+        <p class="prose prose--muted">${esc(t('verdictIntro'))}</p>
+        ${items.length ? `<div class="metrics" style="margin-top:12px">
+          <div class="metric"><div class="metric__k">${esc(t('verdictTotal'))}</div><div class="metric__v">${items.length}</div></div>
+          <div class="metric"><div class="metric__k">NO-GO</div><div class="metric__v">${counts['NO-GO'] || 0}</div></div>
+          <div class="metric"><div class="metric__k">CAUTION</div><div class="metric__v">${counts.CAUTION || 0}</div></div>
+          <div class="metric"><div class="metric__k">GO</div><div class="metric__v">${counts.GO || 0}</div></div>
+        </div>` : ''}
+        <div class="tablewrap" style="margin-top:12px;max-height:420px;overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('histWhen'))}</th><th style="text-align:right">${esc(t('laeAlt'))}</th>
+              <th>${esc(t('verdictCol'))}</th><th>${esc(t('verdictWhy'))}</th>
+              <th style="text-align:right">${esc(t('verdictBlockers'))}</th><th style="text-align:right">${esc(t('verdictCautions'))}</th></tr></thead>
+            <tbody>${rows || `<tr><td colspan="6" class="empty">${esc(t('verdictEmpty'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('verdictNote'))}</p>
+    </section>`;
+}
+
+/* ---- 分析記錄 ---- */
+function viewRuns() {
+  ensureLog('analysis');
+  const d = state.archive.analysis;
+  const items = (d && d.items) || [];
+  const sel = items.reduce((a, r) => { a[r.selected_estimator] = (a[r.selected_estimator] || 0) + 1; return a; }, {});
+  const drift = Object.keys(sel).length;
+  const rmses = items.map((r) => Number(r.rmse)).filter(Number.isFinite);
+
+  const rows = items.map((r) => `<tr>
+      <td>${esc(fmtTime(r.generated_at))}</td>
+      <td>${esc(r.selected_estimator)}</td>
+      <td class="num">${r.rmse == null ? '—' : esc(Number(r.rmse).toFixed(3))}</td>
+      <td class="num">${esc(r.correction_helped ? t('runsYes') : t('runsNo'))}</td>
+      <td class="num">${esc(r.stations)}</td>
+      <td class="num">${r.field_min == null ? '—' : esc(r.field_min)}–${r.field_max == null ? '—' : esc(r.field_max)}</td>
+      <td>${esc(r.grid_cols)}×${esc(r.grid_rows)}</td>
+    </tr>`).join('');
+
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('runsTitle'))}</h2>
+      <div class="card__body">
+        <p class="prose prose--muted">${esc(t('runsIntro'))}</p>
+        ${items.length ? `<div class="metrics" style="margin-top:12px">
+          <div class="metric"><div class="metric__k">${esc(t('runsTotal'))}</div><div class="metric__v">${items.length}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('runsEstimators'))}</div><div class="metric__v">${drift}</div>
+            <div class="metric__sub">${esc(Object.entries(sel).map(([k, v]) => `${k}×${v}`).join(' · '))}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('runsRmse'))}</div>
+            <div class="metric__v">${rmses.length ? esc(Math.min(...rmses).toFixed(2)) : '—'}<small>–${rmses.length ? esc(Math.max(...rmses).toFixed(2)) : '—'}</small></div></div>
+        </div>` : ''}
+        ${drift > 1 ? `<p class="paramrow__hint">${esc(t('runsDrift'))}</p>` : ''}
+        <div class="tablewrap" style="margin-top:12px;max-height:420px;overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('histWhen'))}</th><th>${esc(t('runsEstimator'))}</th>
+              <th style="text-align:right">RMSE (K)</th><th style="text-align:right">${esc(t('runsCorrection'))}</th>
+              <th style="text-align:right">${esc(t('runsStations'))}</th><th style="text-align:right">${esc(t('runsField'))}</th>
+              <th>${esc(t('runsGrid'))}</th></tr></thead>
+            <tbody>${rows || `<tr><td colspan="7" class="empty">${esc(t('runsEmpty'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('runsNote'))}</p>
+    </section>`;
+}
+
+/* ---- 警告類型參考 ---- */
+/* The 16 warning codes the API's warnsum uses, with what each means. The market
+ * column reflects the ordinary Hong Kong practice of suspending trading under
+ * Signal 8+ or the black rainstorm warning. It is stated as general practice, not
+ * as advice — the exchange decides, not this software. */
+const WARNING_TYPES = [
+  { code: 'WTCSGNL', n: ['熱帶氣旋警告信號', '热带气旋警告信号', 'Tropical Cyclone Warning Signal'], d: ['T1/T3 強風，T8 烈風，T9/T10 颶風', 'T1/T3 强风，T8 烈风，T9/T10 飓风', 'T1/T3 strong wind, T8 gale, T9/T10 hurricane'], halt: true },
+  { code: 'WRAINR', n: ['黑色暴雨警告信號', '黑色暴雨警告信号', 'Black Rainstorm Warning'], d: ['廣泛地區雨量超過 70 毫米', '广泛地区雨量超过 70 毫米', 'Over 70 mm of rain widely'], halt: true },
+  { code: 'WRAINB', n: ['紅色暴雨警告信號', '红色暴雨警告信号', 'Red Rainstorm Warning'], d: ['雨量超過 50 毫米', '雨量超过 50 毫米', 'Over 50 mm of rain'], halt: false },
+  { code: 'WRAINA', n: ['黃色暴雨警告信號', '黄色暴雨警告信号', 'Amber Rainstorm Warning'], d: ['雨量超過 30 毫米', '雨量超过 30 毫米', 'Over 30 mm of rain'], halt: false },
+  { code: 'WRAIN', n: ['暴雨警告信號（總類）', '暴雨警告信号（总类）', 'Rainstorm Warning Signal'], d: ['暴雨警告的母類別', '暴雨警告的母类别', 'Parent category for rainstorm signals'], halt: false },
+  { code: 'WTS', n: ['雷暴警告', '雷暴警告', 'Thunderstorm Warning'], d: ['香港境內有雷暴', '香港境内有雷暴', 'Thunderstorms within Hong Kong'], halt: false },
+  { code: 'WMSGNL', n: ['強烈季候風信號', '强烈季候风信号', 'Strong Monsoon Signal'], d: ['季候風風力達強風程度', '季候风风力达强风程度', 'Monsoon winds reaching strong force'], halt: false },
+  { code: 'WLP', n: ['山泥傾瀉警告', '山泥倾泻警告', 'Landslip Warning'], d: ['持續大雨後山泥傾瀉風險', '持续大雨后山泥倾泻风险', 'Landslip risk after prolonged rain'], halt: false },
+  { code: 'WFNTSA', n: ['新界北水浸特別報告', '新界北水浸特别报告', 'Flooding in N. New Territories'], d: ['新界北部水浸', '新界北部水浸', 'Flooding in northern New Territories'], halt: false },
+  { code: 'WHOT', n: ['酷熱天氣警告', '酷热天气警告', 'Very Hot Weather Warning'], d: ['氣溫達 33 度或以上', '气温达 33 度或以上', 'Temperature reaching 33 °C or above'], halt: false },
+  { code: 'WCOLD', n: ['寒冷天氣警告', '寒冷天气警告', 'Cold Weather Warning'], d: ['氣溫顯著下降', '气温显著下降', 'A marked drop in temperature'], halt: false },
+  { code: 'WFROST', n: ['霜凍警告', '霜冻警告', 'Frost Warning'], d: ['高地或新界北部可能結霜', '高地或新界北部可能结霜', 'Frost likely on high ground or in the north'], halt: false },
+  { code: 'WFIRE', n: ['火災危險警告（總類）', '火灾危险警告（总类）', 'Fire Danger Warning'], d: ['火災危險的母類別', '火灾危险的母类别', 'Parent category for fire danger'], halt: false },
+  { code: 'WFIRER', n: ['紅色火災危險警告', '红色火灾危险警告', 'Red Fire Danger Warning'], d: ['火災危險性極高', '火灾危险性极高', 'Extremely high fire risk'], halt: false },
+  { code: 'WFIREY', n: ['黃色火災危險警告', '黄色火灾危险警告', 'Yellow Fire Danger Warning'], d: ['火災危險性高', '火灾危险性高', 'High fire risk'], halt: false },
+  { code: 'WTMW', n: ['海嘯警告', '海啸警告', 'Tsunami Warning'], d: ['海嘯可能影響香港', '海啸可能影响香港', 'A tsunami may affect Hong Kong'], halt: true },
+];
+
+function viewWarningRef() {
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  const rows = WARNING_TYPES.map((w) => {
+    // whether this code is in force right now, from the live warning summary
+    const live = warningList().some((x) => String(x.code || '').toUpperCase() === w.code);
+    return `<tr class="${live ? 'row--selected' : ''}">
+      <td><code>${esc(w.code)}</code></td>
+      <td>${esc(w.n[li])}${live ? ` <span class="pill pill--nogo">${esc(t('warnInForce'))}</span>` : ''}</td>
+      <td>${esc(w.d[li])}</td>
+      <td>${w.halt ? `<span class="pill pill--caution">${esc(t('warnHalt'))}</span>` : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  return `<section class="card">
+      <h2 class="card__title">${esc(t('warnRefTitle'))}</h2>
+      <div class="card__body">
+        <p class="prose prose--muted">${esc(t('warnRefIntro'))}</p>
+        <div class="tablewrap" style="margin-top:12px;max-height:520px;overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('warnCode'))}</th><th>${esc(t('warnName'))}</th>
+              <th>${esc(t('warnMeaning'))}</th><th>${esc(t('warnMarket'))}</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('warnRefNote'))}</p>
+    </section>
+    ${viewAlerts()}`;
+}
+
+/* ------------------------------------------------------------------ *
  * sidebar navigation
  *
  * HKO's homepage is a left navigation tree, not a horizontal tab bar. The
@@ -2416,7 +2764,7 @@ const SIDEBAR_TREE = [
       ['詳細警告資料', '详细警告资料', 'Warning details', '#/alerts'],
       ['大雨及雷暴區域資訊', '大雨及雷暴区域信息', 'Rainstorm and thunderstorm areas', '#/rainstorm'],
       ['熱帶氣旋警告（本港地區）', '热带气旋警告（本港地区）', 'Tropical cyclone warning', '#/tc'],
-      ['各類警告詳細資料', '各类警告详细资料', 'All warning bulletins', '#/alerts'],
+      ['各類警告詳細資料', '各类警告详细资料', 'All warning bulletins', '#/warningref'],
       ['漁民天氣', '渔民天气', 'Fishermen weather', '#/product/marine'],
     ]],
     ['航運天氣', '航运天气', 'Marine weather', [
@@ -2445,6 +2793,9 @@ const SIDEBAR_TREE = [
   ['本站分析', '本站分析', 'Local analysis', [
     ['天氣總覽', '天气总览', 'Overview', '#/overview'],
     ['高解析度分析', '高分辨率分析', 'High-resolution analysis', '#/analysis'],
+    ['觀測歷史', '观测历史', 'Observation history', '#/history'],
+    ['作業評估記錄', '作业评估记录', 'LAE assessment log', '#/verdicts'],
+    ['分析執行記錄', '分析执行记录', 'Analysis run log', '#/runs'],
     ['最新消息', '最新消息', 'News', '#/news'],
   ]],
 ];
@@ -2555,6 +2906,7 @@ function renderAll() {
     yesterday: viewYesterday, climate: viewClimate, kp: viewKp, tc: viewTc,
     rainstorm: viewRainstorm, lightning: viewLightning, astronomy: viewAstronomy,
     tides: viewTides, earthquake: viewEarthquake, product: viewProduct,
+    history: viewHistory, verdicts: viewVerdicts, runs: viewRuns, warningref: viewWarningRef,
   };
   view.innerHTML = (map[state.route] || viewHome)();
 
@@ -2760,6 +3112,21 @@ function bindGlobalOnce() {
       renderAll();
       return;
     }
+
+    // archive history controls
+    const asrc = ev.target.closest('[data-arch-source]');
+    if (asrc) {
+      state.archive.kind = asrc.value;
+      state.archive.station = null;          // stations differ between the two sources
+      state.archive.series = null;
+      state.archive.seriesKey = null;
+      renderAll();
+      return;
+    }
+    const ast = ev.target.closest('[data-arch-station]');
+    if (ast) { state.archive.station = ast.value || null; renderAll(); return; }
+    const amt = ev.target.closest('[data-arch-metric]');
+    if (amt) { state.archive.metric = amt.value; renderAll(); return; }
   });
 
   const form = $('#stationSearch');

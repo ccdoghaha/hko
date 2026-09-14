@@ -243,9 +243,23 @@ That gives **22 pages backed by live data**:
 | **太陽及月亮** | **`SRS` / `MRS`** |
 | **潮汐** | **`HHOT`** |
 | **地震** | **`qem`** |
+| **觀測歷史 · 作業評估記錄 · 分析執行記錄** | **local SQLite archive** |
+| **警告類型參考** | **API doc warning codes + live status** |
 | 高解析度分析 · 低空作業 | computed (see below) |
 
 and **15 further product pages** that explain what is not in the open data.
+
+The three archive-backed pages are worth calling out: the service writes every
+observation, analysis run and LAE verdict to SQLite, and those pages are the
+reason that history exists. `觀測歷史` charts a stored station series (surface or
+wind) with an inline SVG sparkline; `作業評估記錄` is the go/no-go audit trail with
+the blockers and cautions recorded at the time; `分析執行記錄` shows which
+interpolation method each run selected, so method drift is visible.
+
+`警告類型參考` lists all 16 warning codes the API uses with what each means, marks
+which are **in force right now**, and flags the three that normally halt HKEX
+trading (Signal 8+, black rainstorm, tsunami) — stated as general market practice,
+not as advice.
 
 Homepage modules in HKO's order, with two working widgets:
 
@@ -441,6 +455,8 @@ browser ──▶ localhost:8787 ──┬──▶ data.weather.gov.hk   (weath
 | `GET /api/weather?type=rhrread&lang=tc` | a single data type (all 15 types accepted) |
 | `GET /api/products?lang=tc` | **the nine dated/climatological products** in one response |
 | `GET /api/products?type=LTMV` | one product only |
+| `GET /api/history?kind=stations` | stations the archive actually holds, with row counts |
+| `GET /api/history?kind=observation&station=HKO` | archived station series (`wind`, `lae`, `analysis`, `aviation` too) |
 | `GET /api/lunar?date=2026-09-14&lang=tc` | lunar date + solar term |
 | `GET /api/news?kind=whatsnew` | news headlines (RSS) |
 | `GET /api/status` | uptime, cache stats, last upstream error |

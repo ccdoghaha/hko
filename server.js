@@ -719,10 +719,13 @@ async function handleApi(req, res, u) {
           return sendJson(res, 200, { ok: true, kind, station, limit, items: store.windSeries(station, { limit }) });
         case 'aviation':
           return sendJson(res, 200, { ok: true, kind, limit, items: store.verification(limit) });
+        case 'stations':
+          // What the archive actually holds, not what the live network reports.
+          return sendJson(res, 200, { ok: true, kind, ...store.archiveStations() });
         default:
           return sendJson(res, 400, {
             ok: false, error: `unknown kind "${kind}"`,
-            allowed: ['lae', 'analysis', 'observation', 'wind', 'aviation'],
+            allowed: ['lae', 'analysis', 'observation', 'wind', 'aviation', 'stations'],
           });
       }
     } catch (err) {
