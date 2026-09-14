@@ -90,7 +90,58 @@ a:hover { text-decoration: underline; }
 .datetime__sep { color: var(--ink-4); margin: 0 6px; }
 .datebox__term { color: var(--teal); font-weight: 700; }
 
-/* toolbar buttons — HKO exposes text size / share / search / menu / language */
+/* ---------- banner carousel ---------- */
+
+.banner {
+  position: relative; margin-bottom: 16px; border-radius: var(--radius);
+  overflow: hidden; border: 1px solid var(--line); min-height: 104px;
+}
+.banner__slide {
+  display: none; align-items: center; gap: 16px;
+  padding: 16px 20px; text-decoration: none; color: #fff;
+  background: linear-gradient(120deg, var(--blue-2), var(--blue) 60%, var(--teal));
+}
+.banner__slide.is-on { display: flex; }
+.banner__slide:hover { text-decoration: none; filter: brightness(1.06); }
+.banner__slide.banner--warn { background: linear-gradient(120deg, #a5342a, var(--red) 70%); }
+.banner__slide.banner--rain { background: linear-gradient(120deg, #1f8a4c, #17693a); }
+.banner__slide.banner--wind { background: linear-gradient(120deg, var(--teal), #2c5a5f); }
+.banner__slide.banner--field { background: linear-gradient(120deg, #5a3a8a, #3f2a63); }
+.banner__icon { width: 58px; height: 58px; flex: 0 0 auto; }
+.banner__mark { width: 58px; height: 58px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; opacity: .9; }
+.banner__mark svg { width: 34px; height: 34px; }
+.banner__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.banner__kicker { font-size: 12px; opacity: .85; letter-spacing: .6px; }
+.banner__title { font-size: 21px; font-weight: 700; line-height: 1.25; }
+.banner__body { font-size: 13.5px; opacity: .92; }
+.banner__nav {
+  position: absolute; right: 12px; bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.banner__btn {
+  width: 24px; height: 24px; border: 1px solid rgba(255,255,255,.5);
+  background: rgba(255,255,255,.14); color: #fff; border-radius: 3px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+}
+.banner__btn:hover { background: rgba(255,255,255,.32); }
+.banner__dots { display: flex; gap: 5px; }
+.banner__dot {
+  width: 8px; height: 8px; border-radius: 50%; padding: 0; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.75); background: transparent;
+}
+.banner__dot.is-on { background: #fff; }
+
+@media (prefers-reduced-motion: reduce) { .banner__slide { transition: none; } }
+
+/* ---------- inline SVG icons ---------- */
+
+.ic { display: inline-block; vertical-align: -2px; flex: 0 0 auto; }
+.ic-slot { display: inline-flex; align-items: center; margin-right: 5px; }
+.ic-slot--box { margin: 0; padding: 0 6px; color: var(--ink-3); }
+.navbar-menu { display: inline-flex; align-items: center; }
+.navbar-menu:hover .ic-slot { color: var(--blue); }
+
+/* ---------- toolbar (HKO exposes text size / share / search / menu / language) ---------- */
 .toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 
 .navbar-menu {
@@ -461,8 +512,10 @@ table.tbl tbody tr.row--caution { background: #fffdf5; }
   position: absolute; top: 50%; transform: translateY(-50%);
   width: 30px; height: 42px; border: 1px solid var(--line);
   background: rgba(255, 255, 255, .93); color: var(--blue);
-  cursor: pointer; font-size: 15px; line-height: 1; border-radius: 3px;
+  cursor: pointer; border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
 }
+.fcarousel__nav svg { width: 18px; height: 18px; }
 .fcarousel__nav:hover { background: var(--blue); color: #fff; }
 .fcarousel__nav--prev { left: -12px; }
 .fcarousel__nav--next { right: -12px; }

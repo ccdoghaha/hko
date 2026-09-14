@@ -29,12 +29,21 @@
       </div>
 
       <div class="toolbar">
-        <button type="button" class="navbar-menu" id="btnFont" data-i18n="tbFont" title="文字大小">文字大小</button>
-        <button type="button" class="navbar-menu" id="btnShare" data-i18n="tbShare" title="分享">分享</button>
-        <button type="button" class="navbar-menu" id="btnSearch" data-i18n="tbSearch" title="搜尋">搜尋</button>
-        <button type="button" class="navbar-menu" id="btnMenu" data-i18n="tbMenu" title="選單" aria-expanded="true">選單</button>
+        <button type="button" class="navbar-menu" id="btnFont" title="文字大小">
+          <span class="ic-slot" data-icon="font"></span><span data-i18n="tbFont">文字大小</span>
+        </button>
+        <button type="button" class="navbar-menu" id="btnShare" title="分享">
+          <span class="ic-slot" data-icon="share"></span><span data-i18n="tbShare">分享</span>
+        </button>
+        <button type="button" class="navbar-menu" id="btnSearch" title="搜尋">
+          <span class="ic-slot" data-icon="search"></span><span data-i18n="tbSearch">搜尋</span>
+        </button>
+        <button type="button" class="navbar-menu" id="btnMenu" title="選單" aria-expanded="true">
+          <span class="ic-slot" data-icon="menu"></span><span data-i18n="tbMenu">選單</span>
+        </button>
 
         <nav class="langs" aria-label="Language">
+          <span class="ic-slot ic-slot--box" data-icon="globe"></span>
           <button type="button" data-lang="tc" class="lang is-active">繁</button>
           <button type="button" data-lang="sc" class="lang">简</button>
           <button type="button" data-lang="en" class="lang">EN</button>

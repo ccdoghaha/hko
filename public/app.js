@@ -81,6 +81,8 @@ const I18N = {
     marineVis: '能見度', marineWind: '離島及海港測站風',
     upperAirProxy: '高空探測不在開放數據內。以下為地面測站讀數，僅作參考 — 高空風由本機分析經冪律外推估算。',
     fieldStats: '分析場範圍', analysisField: '分析場',
+    bannerRange: '全港溫度範圍', bannerWind: '風勢', bannerRain: '雨量', bannerField: '高解析度分析場',
+    warnBannerBody: '現時有警告生效 — 點擊查看詳情',
     fClimate: '香港氣候', fSummary: '每月天氣摘要', fNew: '新增項目', fOpen: '公開資料',
     fRelated: '相關網址', fGuide: '快速用戶指南', fContact: '聯絡我們', fNotice: '重要告示', fPrivacy: '私隱政策',
     loading: '載入中…', refresh: '即時更新', refreshing: '更新中…',
@@ -206,6 +208,8 @@ const I18N = {
     marineVis: '能见度', marineWind: '离岛及海港测站风',
     upperAirProxy: '高空探测不在开放数据内。以下为地面测站读数，仅作参考 — 高空风由本机分析经幂律外推估算。',
     fieldStats: '分析场范围', analysisField: '分析场',
+    bannerRange: '全港温度范围', bannerWind: '风势', bannerRain: '雨量', bannerField: '高分辨率分析场',
+    warnBannerBody: '现时有警告生效 — 点击查看详情',
     fClimate: '香港气候', fSummary: '每月天气摘要', fNew: '新增项目', fOpen: '公开资料',
     fRelated: '相关网址', fGuide: '快速用户指南', fContact: '联络我们', fNotice: '重要告示', fPrivacy: '私隐政策',
     loading: '加载中…', refresh: '即时更新', refreshing: '更新中…',
@@ -331,6 +335,8 @@ const I18N = {
     marineVis: 'Visibility', marineWind: 'Island and harbour station wind',
     upperAirProxy: 'Upper-air soundings are not in the open data. The surface readings below are shown for reference only — the altitude wind is extrapolated from them by this service.',
     fieldStats: 'Field range', analysisField: 'Analysis field',
+    bannerRange: 'Territory temperature range', bannerWind: 'Wind', bannerRain: 'Rainfall', bannerField: 'High-resolution field',
+    warnBannerBody: 'A warning is in force — click for details',
     fClimate: 'HK Climate', fSummary: 'Monthly Summary', fNew: "What's New", fOpen: 'Open Data',
     fRelated: 'Related Sites', fGuide: 'User Guide', fContact: 'Contact Us', fNotice: 'Important Notices', fPrivacy: 'Privacy Policy',
     loading: 'Loading…', refresh: 'Refresh', refreshing: 'Refreshing…',
@@ -1109,9 +1115,9 @@ function viewHome() {
       <h2 class="card__title">${esc(t('nineDay'))}</h2>
       <div class="card__body">
         <div class="fcarousel">
-          <button type="button" class="fcarousel__nav fcarousel__nav--prev" data-carousel="-1" aria-label="previous">‹</button>
+          <button type="button" class="fcarousel__nav fcarousel__nav--prev" data-carousel="-1" aria-label="previous">${svgIcon('prev', 18)}</button>
           <div class="fcarousel__track" id="fcTrack">${days || `<p class="empty">${esc(t('pickerNoData'))}</p>`}</div>
-          <button type="button" class="fcarousel__nav fcarousel__nav--next" data-carousel="1" aria-label="next">›</button>
+          <button type="button" class="fcarousel__nav fcarousel__nav--next" data-carousel="1" aria-label="next">${svgIcon('next', 18)}</button>
         </div>
       </div>
       <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(fnd().updateTime))}</p>
@@ -1155,7 +1161,7 @@ function viewHome() {
       </div>
     </section>`;
 
-  return ps0 + pickerCard() + ps2 + ps5 + ps6 + ps7 + ps9;
+  return bannerHtml() + ps0 + pickerCard() + ps2 + ps5 + ps6 + ps7 + ps9;
 }
 
 /* ------------------------------------------------------------------ *
@@ -2893,6 +2899,194 @@ function viewWarningRef() {
 }
 
 /* ------------------------------------------------------------------ *
+ * inline SVG icons
+ *
+ * HKO's toolbar and controls carry small pictograms (share, search, menu,
+ * language, settings, carousel arrows). Its icons are its own assets, so these
+ * are drawn from scratch here — same affordance, original artwork. They inherit
+ * currentColor so a button's hover state colours the icon with it.
+ * ------------------------------------------------------------------ */
+
+const ICON_PATHS = {
+  share: '<path d="M14 4l5 4-5 4V9.5C10.5 9.5 8 11 6.5 14.5 6 12 7 7.5 14 7z"/>',
+  search: '<circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  globe: '<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><ellipse cx="12" cy="12" rx="3.6" ry="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3.8 12h16.4" fill="none" stroke="currentColor" stroke-width="1.4"/>',
+  font: '<path d="M5 19L11 5h2l6 14h-2.4l-1.5-3.6H8.9L7.4 19z" /><path d="M9.6 13.4h4.8L12 8.2z" fill="#fff"/>',
+  bookmark: '<path d="M7 4h10v16l-5-4-5 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  user: '<circle cx="12" cy="8.5" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  setting: '<circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  prev: '<path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+  next: '<path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+  warning: '<path d="M12 3l9.5 16.5h-19z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1"/>',
+  external: '<path d="M14 4h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M20 4l-9 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+};
+
+function svgIcon(name, size = 15) {
+  const body = ICON_PATHS[name];
+  if (!body) return '';
+  return `<svg class="ic" viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true" focusable="false">${body}</svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * banner carousel
+ *
+ * HKO's homepage opens with a rotating promotional banner. Those banners are
+ * their marketing artwork, so this builds the same module with live-data slides
+ * instead: the current conditions, any warning in force, the extremes of the
+ * network, and the LAE verdict. Same visual slot, original content.
+ * ------------------------------------------------------------------ */
+
+function bannerSlides() {
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  const out = [];
+
+  /* 1. current conditions */
+  const st = heroStation();
+  const range = todayRange();
+  const uv = uvValue();
+  const icon = currentIcon();
+  if (st) {
+    out.push({
+      cls: 'banner--now',
+      icon,
+      kicker: { 0: '天氣實況', 1: '天气实况', 2: 'Current conditions' }[li],
+      title: `${st.place} ${st.value}°C`,
+      body: range
+        ? `${t('maxTemp')} ${range.max}°C · ${t('minTemp')} ${range.min}°C` +
+          (uv ? ` · ${t('uvindex')} ${uv.value}` : '') +
+          (humidityValue() != null ? ` · ${t('humidity')} ${humidityValue()}%` : '')
+        : t('currentWx'),
+      href: '#/report',
+    });
+  }
+
+  /* 2. warnings in force — only when there are any */
+  const warns = warningList();
+  if (warns.length) {
+    out.push({
+      cls: 'banner--warn',
+      icon: null,
+      kicker: t('navAlerts'),
+      title: warns.map((w) => w.name || w.code).join(' · '),
+      body: t('warnBannerBody'),
+      href: '#/alerts',
+    });
+  }
+
+  /* 3. network extremes */
+  const temps = tempStations().map((d) => ({ p: d.place, v: Number(d.value) })).filter((r) => Number.isFinite(r.v));
+  if (temps.length > 1) {
+    const hi = temps.reduce((a, b) => (b.v > a.v ? b : a));
+    const lo = temps.reduce((a, b) => (b.v < a.v ? b : a));
+    out.push({
+      cls: 'banner--range',
+      icon: null,
+      kicker: t('bannerRange'),
+      title: `${hi.p} ${hi.v}°C`,
+      body: `${lo.p} ${lo.v}°C · ${esc(String(temps.length))} ${t('pickerStations')}`,
+      href: '#/regional',
+    });
+  }
+
+  /* 4. wind */
+  const wind = ((state.wind && state.wind.stations) || []);
+  if (wind.length) {
+    const strong = wind.reduce((a, b) => ((b.speedKmh || 0) > (a.speedKmh || 0) ? b : a));
+    out.push({
+      cls: 'banner--wind',
+      icon: null,
+      kicker: t('bannerWind'),
+      title: `${strong.station} ${strong.speedKmh} km/h`,
+      body: `${strong.calm ? t('calm') : (strong.dirName || '')}${strong.gustKmh != null ? ` · ${t('gust')} ${strong.gustKmh} km/h` : ''}`,
+      href: '#/lae',
+    });
+  }
+
+  /* 5. rainfall */
+  const rain = rainStations().map((d) => ({ p: d.place, v: Number(d.max) || 0 })).sort((a, b) => b.v - a.v);
+  if (rain.length) {
+    const wet = rain.filter((r) => r.v > 0);
+    out.push({
+      cls: 'banner--rain',
+      icon: null,
+      kicker: t('bannerRain'),
+      title: wet.length ? `${wet[0].p} ${wet[0].v.toFixed(1)} mm` : t('noRain'),
+      body: `${t('districtsWithRain')} ${wet.length} / ${rain.length}`,
+      href: '#/rainstorm',
+    });
+  }
+
+  /* 6. the analysis, if it has been computed */
+  if (state.analysis && state.analysis.field) {
+    const f = state.analysis.field;
+    out.push({
+      cls: 'banner--field',
+      icon: null,
+      kicker: t('bannerField'),
+      title: `${Number(f.min).toFixed(1)} – ${Number(f.max).toFixed(1)} °C`,
+      body: `${state.analysis.grid.cols}×${state.analysis.grid.rows} @ ${state.analysis.grid.metresPerCell} m`,
+      href: '#/analysis',
+    });
+  }
+
+  return out;
+}
+
+function bannerHtml() {
+  const slides = bannerSlides();
+  if (!slides.length) return '';
+  return `<section class="banner" id="banner" data-banner-count="${slides.length}">
+      ${slides.map((s, i) => `<a class="banner__slide ${s.cls} ${i === 0 ? 'is-on' : ''}" href="${esc(s.href)}" data-slide="${i}">
+        ${s.icon ? `<img class="banner__icon" src="${esc(iconUrl(s.icon))}" alt="" width="58" height="58">` : `<span class="banner__mark">${svgIcon(s.cls === 'banner--warn' ? 'warning' : 'globe', 34)}</span>`}
+        <span class="banner__text">
+          <span class="banner__kicker">${esc(s.kicker)}</span>
+          <span class="banner__title">${esc(s.title)}</span>
+          <span class="banner__body">${esc(s.body)}</span>
+        </span>
+      </a>`).join('')}
+      <div class="banner__nav">
+        <button type="button" class="banner__btn" data-banner="-1" aria-label="previous">${svgIcon('prev', 16)}</button>
+        <span class="banner__dots">${slides.map((_, i) => `<button type="button" class="banner__dot ${i === 0 ? 'is-on' : ''}" data-banner-dot="${i}" aria-label="slide ${i + 1}"></button>`).join('')}</span>
+        <button type="button" class="banner__btn" data-banner="1" aria-label="next">${svgIcon('next', 16)}</button>
+      </div>
+    </section>`;
+}
+
+let bannerTimer = null;
+
+/** Advance the banner. Rotation stops while the tab is hidden so a backgrounded
+ *  page does not burn a timer, and restarts on return. */
+function setBanner(index) {
+  const host = $('#banner');
+  if (!host) return;
+  const slides = $$('.banner__slide', host);
+  if (!slides.length) return;
+  const i = ((index % slides.length) + slides.length) % slides.length;
+  slides.forEach((s, n) => s.classList.toggle('is-on', n === i));
+  $$('.banner__dot', host).forEach((d, n) => d.classList.toggle('is-on', n === i));
+  host.dataset.bannerIndex = String(i);
+}
+
+function bannerStep(dir) {
+  const host = $('#banner');
+  if (!host) return;
+  setBanner(Number(host.dataset.bannerIndex || 0) + dir);
+}
+
+function startBanner() {
+  clearInterval(bannerTimer);
+  bannerTimer = setInterval(() => {
+    if (document.hidden) return;
+    const host = $('#banner');
+    if (!host) return;
+    const n = $$('.banner__slide', host).length;
+    if (n < 2) return;
+    setBanner(Number(host.dataset.bannerIndex || 0) + 1);
+  }, 6000);
+}
+
+/* ------------------------------------------------------------------ *
  * sidebar navigation
  *
  * HKO's homepage is a left navigation tree, not a horizontal tab bar. The
@@ -3114,6 +3308,10 @@ function renderAll() {
   };
   view.innerHTML = (map[state.route] || viewHome)();
 
+  // the banner only exists on the home view; restart its rotation when it appears
+  if ($('#banner')) { setBanner(Number(($('#banner').dataset.bannerIndex) || 0)); startBanner(); }
+  else clearInterval(bannerTimer);
+
   if (state.route === 'regional') {
     const canvas = $('#chart3d');
     if (canvas) {
@@ -3222,6 +3420,16 @@ function toggleSearch() {
   }
 }
 
+/** Fill every .ic-slot with its icon. Done once at boot: the labels are replaced
+ *  by renderI18nChrome on every language change, but the icons are language
+ *  independent and live outside the data-i18n elements. */
+function injectIcons() {
+  $$('.ic-slot').forEach((slot) => {
+    if (slot.firstChild) return;
+    slot.innerHTML = svgIcon(slot.dataset.icon, 15);
+  });
+}
+
 function bindGlobalOnce() {
   window.addEventListener('hashchange', () => {
     state.route = parseHash();
@@ -3281,6 +3489,11 @@ function bindGlobalOnce() {
       if (track) track.scrollBy({ left: Number(car.dataset.carousel) * 396, behavior: 'smooth' });
       return;
     }
+
+    const bnav = ev.target.closest('[data-banner]');
+    if (bnav) { ev.preventDefault(); bannerStep(Number(bnav.dataset.banner)); return; }
+    const bdot = ev.target.closest('[data-banner-dot]');
+    if (bdot) { ev.preventDefault(); setBanner(Number(bdot.dataset.bannerDot)); return; }
 
     const jump = ev.target.closest('[data-pick-jump]');
     if (jump) {
@@ -3365,6 +3578,7 @@ function bindGlobalOnce() {
   state.route = parseHash();
   bindGlobalOnce();
   renderSidebar();
+  injectIcons();
   applyFontSize();
   renderI18nChrome();
   renderStatus();

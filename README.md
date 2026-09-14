@@ -213,6 +213,29 @@ container**, a masthead carrying the Gregorian + lunar date and a toolbar
 **two-column body — a 218 px left navigation tree beside the content**, and a
 footer link set.
 
+### Images and controls
+
+An audit of the live page's asset families showed what visual pieces were still
+missing, and each is now built with original artwork rather than HKO's files
+(their icons, banners and backgrounds are their assets):
+
+| HKO asset family | count | here |
+|---|---|---|
+| `HKOWxIconOutline` weather icons | many | proxied — live data product |
+| `radar` / `satellite` / `lightning` | 5 | proxied — live data products |
+| `images` UI pictograms (share/search/menu/language) | 174 | **replaced with 13 inline SVG icons**, drawn from scratch, inheriting `currentColor` |
+| `common/banner/PromoteBanner` | 18 | **replaced with a live-data banner carousel** — see below |
+| `images/dropdown` group arrows | 208 | CSS caret that rotates on `aria-expanded` |
+| `images/follow` social icons | 16 | not reproduced — third-party brand marks |
+| `images/bg/*` decorative backgrounds | — | CSS gradients instead |
+
+**The banner carousel** is the module that fills HKO's promotional slot. Rather
+than proxy their marketing artwork, it rotates six **live-data** slides — current
+conditions, any warning in force, the territory temperature range, the strongest
+wind station, rainfall, and the computed analysis field — with prev/next buttons,
+clickable dots, 6-second auto-rotation, and rotation paused while the tab is
+hidden so a backgrounded page does not burn a timer.
+
 The sidebar mirrors HKO's grouping and labels and is expandable per section
 (collapse state persists):
 
