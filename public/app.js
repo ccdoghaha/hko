@@ -86,6 +86,12 @@ const I18N = {
     crumbHome: '首頁', crumbLabel: '位置',
     actPrint: '列印', actShare: '分享', actCsv: '下載 CSV', actRefresh: '重新載入',
     actCsvDone: '已下載 CSV', actCsvNone: '本頁沒有可下載的表格',
+    provTitle: '資料來源', provObs: '觀測時間', provObsUnknown: '觀測時間未提供',
+    provFetched: '擷取時間', provStale: '使用快取', provErr: '該來源暫時無法取得',
+    provArchive: '本機存檔', provLocalDb: '本機 SQLite 存檔',
+    provProducts: '天文台產品',
+    provNote: '觀測時間由香港天文台提供；擷取時間為本機伺服器取得資料的時間。兩者不同屬正常情況。',
+    tabTemp: '氣溫', tabRain: '雨量', tabWind: '風',
     fClimate: '香港氣候', fSummary: '每月天氣摘要', fNew: '新增項目', fOpen: '公開資料',
     fRelated: '相關網址', fGuide: '快速用戶指南', fContact: '聯絡我們', fNotice: '重要告示', fPrivacy: '私隱政策',
     loading: '載入中…', refresh: '即時更新', refreshing: '更新中…',
@@ -216,6 +222,12 @@ const I18N = {
     crumbHome: '首页', crumbLabel: '位置',
     actPrint: '打印', actShare: '分享', actCsv: '下载 CSV', actRefresh: '重新加载',
     actCsvDone: '已下载 CSV', actCsvNone: '本页没有可下载的表格',
+    provTitle: '资料来源', provObs: '观测时间', provObsUnknown: '观测时间未提供',
+    provFetched: '获取时间', provStale: '使用缓存', provErr: '该来源暂时无法取得',
+    provArchive: '本机存档', provLocalDb: '本机 SQLite 存档',
+    provProducts: '天文台产品',
+    provNote: '观测时间由香港天文台提供；获取时间为本机服务器取得数据的时间。两者不同属正常情况。',
+    tabTemp: '气温', tabRain: '雨量', tabWind: '风',
     fClimate: '香港气候', fSummary: '每月天气摘要', fNew: '新增项目', fOpen: '公开资料',
     fRelated: '相关网址', fGuide: '快速用户指南', fContact: '联络我们', fNotice: '重要告示', fPrivacy: '私隐政策',
     loading: '加载中…', refresh: '即时更新', refreshing: '更新中…',
@@ -346,6 +358,12 @@ const I18N = {
     crumbHome: 'Home', crumbLabel: 'Breadcrumb',
     actPrint: 'Print', actShare: 'Share', actCsv: 'Download CSV', actRefresh: 'Reload',
     actCsvDone: 'CSV downloaded', actCsvNone: 'No table on this page to download',
+    provTitle: 'Data sources', provObs: 'Observed', provObsUnknown: 'Observation time not supplied',
+    provFetched: 'Retrieved', provStale: 'served from cache', provErr: 'source temporarily unavailable',
+    provArchive: 'Local archive', provLocalDb: 'local SQLite archive',
+    provProducts: 'HKO products',
+    provNote: 'Observation times come from the Hong Kong Observatory; retrieval times are when this local server fetched the data. The two differing is normal.',
+    tabTemp: 'Temperature', tabRain: 'Rainfall', tabWind: 'Wind',
     fClimate: 'HK Climate', fSummary: 'Monthly Summary', fNew: "What's New", fOpen: 'Open Data',
     fRelated: 'Related Sites', fGuide: 'User Guide', fContact: 'Contact Us', fNotice: 'Important Notices', fPrivacy: 'Privacy Policy',
     loading: 'Loading…', refresh: 'Refresh', refreshing: 'Refreshing…',
@@ -519,7 +537,9 @@ const state = {
   windInFlight: null,
   products: null,
   productsInFlight: null,
+  productsAt: null,
   productKey: null,
+  tab: {},
   archive: {
     stations: null, stationsInFlight: false,
     series: null, seriesKey: null, pending: null,
@@ -2032,7 +2052,7 @@ function ensureProducts() {
   if (state.products || state.productsInFlight) return;
   state.productsInFlight = fetch(`/api/products?lang=${state.lang}`)
     .then((r) => r.json())
-    .then((d) => { state.products = d; state.productsInFlight = null; renderAll(); })
+    .then((d) => { state.products = d; state.productsAt = new Date().toISOString(); state.productsInFlight = null; renderAll(); })
     .catch(() => { state.productsInFlight = null; });
 }
 
@@ -2235,13 +2255,17 @@ function climateTable(key, label) {
 }
 
 function viewClimate() {
+  // three separate climate tables were stacked down the page; as tabs they are
+  // one screen and the reader picks the quantity they came for
   return `<section class="card">
       <h2 class="card__title">${esc(t('climateTitle'))}</h2>
       <div class="card__body"><p class="prose">${esc(t('climateIntro'))}</p></div>
     </section>`
-    + climateTable('CLMTEMP', t('climTemp'))
-    + climateTable('CLMMAXT', t('climMaxT'))
-    + climateTable('CLMMINT', t('climMinT'));
+    + tabsCard('climate', 'climateTabs', [
+      { key: 'temp', label: t('climTemp'), body: climateTable('CLMTEMP', t('climTemp')) },
+      { key: 'max', label: t('climMaxT'), body: climateTable('CLMMAXT', t('climMaxT')) },
+      { key: 'min', label: t('climMinT'), body: climateTable('CLMMINT', t('climMinT')) },
+    ]);
 }
 
 /* ---- 京士柏氣象站 ---- */
@@ -3213,6 +3237,209 @@ function downloadCsv() {
 }
 
 /* ------------------------------------------------------------------ *
+ * provenance footnote and back-to-top
+ *
+ * HKO pages close with a source note and an update time. There is real data
+ * behind that here: the bundle carries HKO's own observation time per source
+ * and this server's fetch time per source, plus a staleness flag, so the note
+ * states when the reading was taken, when it was retrieved, and whether either
+ * leg failed.
+ * ------------------------------------------------------------------ */
+
+/** Routes mapped to the upstream sources they actually display. */
+const PAGE_SOURCES = {
+  home: ['rhrread', 'flw', 'fnd', 'warnsum', 'swt'],
+  overview: ['rhrread', 'flw', 'fnd', 'warnsum'],
+  regional: ['rhrread', 'flw'],
+  forecast: ['fnd', 'flw'],
+  alerts: ['warnsum', 'warningInfo'],
+  rainfall: ['rhrread'], uv: ['rhrread'], lightning: ['rhrread'],
+  visibility: ['LTMV'],
+  report: ['rhrread', 'warnsum'], yesterday: ['rhrread'], kp: ['rhrread'],
+  tc: ['warnsum', 'warningInfo'], rainstorm: ['rhrread', 'warnsum'],
+  astronomy: ['SRS', 'MRS'], tides: ['HHOT'],
+  climate: ['CLMTEMP', 'CLMMAXT', 'CLMMINT', 'RYES'],
+  earthquake: ['qem'], analysis: ['rhrread'], lae: ['rhrread', 'fnd'], imagery: ['rhrread'],
+};
+
+/** Source labels, [tc, sc, en] — the page is trilingual, so a hardcoded Chinese
+ *  label would leak Chinese into the English and Simplified views. */
+const SOURCE_LABEL = {
+  rhrread: ['實時天氣報告', '实时天气报告', 'Live readings'],
+  flw: ['本港天氣預報', '本港天气预报', 'Local forecast'],
+  fnd: ['九天天氣預報', '九天天气预报', '9-day forecast'],
+  warnsum: ['警告摘要', '警告摘要', 'Warning summary'],
+  warningInfo: ['警告詳情', '警告详情', 'Warning details'],
+  swt: ['特別天氣提示', '特别天气提示', 'Special weather tips'],
+  SRS: ['日出日落', '日出日落', 'Sunrise / sunset'],
+  MRS: ['月出月落', '月出月落', 'Moonrise / moonset'],
+  HHOT: ['潮汐', '潮汐', 'Tides'],
+  CLMTEMP: ['平均氣溫氣候', '平均气温气候', 'Mean temperature climate'],
+  CLMMAXT: ['最高氣溫氣候', '最高气温气候', 'Maximum temperature climate'],
+  CLMMINT: ['最低氣溫氣候', '最低气温气候', 'Minimum temperature climate'],
+  LTMV: ['能見度', '能见度', 'Visibility'],
+  RYES: ['昨日天氣', '昨日天气', "Yesterday's weather"],
+  qem: ['地震', '地震', 'Earthquake'],
+};
+
+/** Sources that come from the dated/climatological product bundle rather than the
+ *  live weather bundle, so their metadata lives under /api/products. */
+const PRODUCT_SOURCE_KEYS = ['LTMV', 'RYES', 'CLMTEMP', 'CLMMAXT', 'CLMMINT', 'SRS', 'MRS', 'HHOT', 'qem'];
+
+/** Oldest HKO observation time for a source, trying each shape the API uses.
+ *  Most blocks carry updateTime; the live readings block uses iconUpdateTime; and
+ *  the block shape varies by product:
+ *    - RYES has no date-time field. BulletinTime is a time of day ("0015") and
+ *      BulletinDate is a YYYYMMDD string, so they must be combined. Reading
+ *      BulletinTime alone is worse than useless: new Date("0015") parses as the
+ *      year 15 AD and renders as 15-01-01.
+ *    - LTMV, HHOT, SRS and MRS carry no time field at all; the timestamp is the
+ *      first column of each data row, as YYYYMMDDHHMM. These tables run in time
+ *      order, so the last row is the most recent reading.
+ *  Several climatological products genuinely carry no time anywhere, which the
+ *  caller reports as unknown rather than inventing one. */
+function sourceTime(src) {
+  const b = state.bundle || {};
+  const block = b[src];
+  if (block && block.updateTime) return block.updateTime;
+  if (block && block.recordTime) return block.recordTime;
+  if (src === 'rhrread' && b.rhrread && b.rhrread.iconUpdateTime) return b.rhrread.iconUpdateTime;
+  return productObsTime(src);
+}
+
+/** Source label in the current language; falls back to the raw key. */
+function sourceLabel(key) {
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  const e = SOURCE_LABEL[key];
+  return e ? e[li] : key;
+}
+
+/** HKO time out of a product payload, or null when it carries none. */
+function productObsTime(key) {
+  const p = (state.products || {})[key];
+  if (!p || typeof p !== 'object') return null;
+
+  if (p.updateTime) return p.updateTime;
+
+  // RYES: YYYYMMDD + HHMM, two separate fields
+  if (p.BulletinDate) {
+    const d = String(p.BulletinDate);
+    const t = String(p.BulletinTime || '0000').padStart(4, '0');
+    if (/^\d{8}$/.test(d) && /^\d{4}$/.test(t)) {
+      return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}T${t.slice(0, 2)}:${t.slice(2, 4)}:00+08:00`;
+    }
+  }
+
+  // fields/data products: the timestamp is the first column of a row.
+  //   LTMV          -> "202609141710"  (YYYMMDDHHMM)
+  //   SRS, MRS      -> "2026-09-01"    (date only; the table runs per day)
+  //   HHOT          -> "09","30",...   (month and day columns, no year at all,
+  //                                     so no timestamp can honestly be derived
+  //                                     and the caller reports it as unknown)
+  if (Array.isArray(p.data) && p.data.length) {
+    const first = p.data[0];
+    if (Array.isArray(first) && typeof first[0] === 'string') {
+      const s = first[0];
+      if (/^\d{12}$/.test(s)) {
+        return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}T${s.slice(8, 10)}:${s.slice(10, 12)}:00+08:00`;
+      }
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return `${s}T00:00:00+08:00`;
+    }
+  }
+  return null;
+}
+
+function fmtHkt(iso) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d)) return String(iso);
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+function provenance(route) {
+  const srcs = PAGE_SOURCES[route] || [];
+  const meta = (state.bundle && state.bundle.meta) || {};
+  const rows = [];
+  let usedProducts = false;
+
+  for (const s of srcs) {
+    const m = meta[s] || {};
+    const fromProducts = PRODUCT_SOURCE_KEYS.includes(s);
+    if (fromProducts) usedProducts = true;
+    rows.push({
+      label: sourceLabel(s),
+      obs: fmtHkt(sourceTime(s)),
+      // a product source is retrieved by the product request, so its per-source
+      // fetch time would be null; the product row below carries that instead
+      got: fromProducts ? null : fmtHkt(m.fetchedAt),
+      stale: !!m.stale,
+      err: m.error || null,
+    });
+  }
+
+  // one row for the product request itself, since it backs every product source
+  if ((usedProducts || route === 'product') && state.productsAt) {
+    rows.push({ label: t('provProducts'), obs: null, got: fmtHkt(state.productsAt), stale: false });
+  }
+  if (route === 'history' || route === 'verdicts' || route === 'runs') {
+    rows.push({ label: t('provArchive'), obs: null, got: null, archive: true });
+  }
+  if (!rows.length) return '';
+
+  const items = rows.map((r) => {
+    const bits = [`<strong>${esc(r.label)}</strong>`];
+    if (r.archive) bits.push(esc(t('provLocalDb')));
+    else {
+      bits.push(r.obs ? `${esc(t('provObs'))} ${esc(r.obs)}` : esc(t('provObsUnknown')));
+      if (r.got) bits.push(`${esc(t('provFetched'))} ${esc(r.got)}`);
+    }
+    if (r.stale) bits.push(`<span class="prov__stale">${esc(t('provStale'))}</span>`);
+    if (r.err) bits.push(`<span class="prov__stale">${esc(t('provErr'))}</span>`);
+    return `<li>${bits.join(' · ')}</li>`;
+  }).join('');
+
+  return `<div class="prov">
+      <div class="prov__head">${svgIcon('bookmark', 13)} ${esc(t('provTitle'))}</div>
+      <ul class="prov__list">${items}</ul>
+      <p class="prov__note">${esc(t('provNote'))}</p>
+    </div>`;
+}
+
+/** Floating back-to-top control. Shown once the page is scrolled past one screen. */
+function initBackTop() {
+  const b = $('#backTop');
+  if (!b) return;
+  const sync = () => b.classList.toggle('backtop--on', window.scrollY > 400);
+  window.removeEventListener('scroll', initBackTop._h || (() => {}));
+  initBackTop._h = sync;
+  window.addEventListener('scroll', sync, { passive: true });
+  sync();
+}
+
+/* ------------------------------------------------------------------ *
+ * tabs
+ *
+ * A tab strip over stacked sections. Used where a page carries distinct
+ * datasets that were previously all rendered at once. State lives in
+ * state.tab[route] so the selected tab survives a re-render.
+ * ------------------------------------------------------------------ */
+
+function tabsCard(route, id, tabs) {
+  const cur = state.tab[route] || tabs[0].key;
+  const strip = tabs.map((tb) => `<button type="button" role="tab"
+      class="tabs__btn${tb.key === cur ? ' tabs__btn--on' : ''}"
+      aria-selected="${tb.key === cur}"
+      data-tab="${esc(route)}" data-tab-key="${esc(tb.key)}">${esc(tb.label)}</button>`).join('');
+  const panels = tabs.map((tb) => `<div class="tabs__panel" data-tab-panel="${esc(tb.key)}"
+      ${tb.key === cur ? '' : 'hidden'}>${tb.body}</div>`).join('');
+  return `<div class="tabs" id="${esc(id)}">
+      <div class="tabs__strip" role="tablist">${strip}</div>
+      ${panels}
+    </div>`;
+}
+
+/* ------------------------------------------------------------------ *
  * sidebar navigation
  *
  * HKO's homepage is a left navigation tree, not a horizontal tab bar. The
@@ -3432,11 +3659,12 @@ function renderAll() {
     tides: viewTides, earthquake: viewEarthquake, product: viewProduct,
     history: viewHistory, verdicts: viewVerdicts, runs: viewRuns, warningref: viewWarningRef,
   };
-  view.innerHTML = pageChrome(state.route) + (map[state.route] || viewHome)();
+  view.innerHTML = pageChrome(state.route) + (map[state.route] || viewHome)() + provenance(state.route);
 
   // the banner only exists on the home view; restart its rotation when it appears
   if ($('#banner')) { setBanner(Number(($('#banner').dataset.bannerIndex) || 0)); startBanner(); }
   else clearInterval(bannerTimer);
+  initBackTop();
 
   if (state.route === 'regional') {
     const canvas = $('#chart3d');
@@ -3621,13 +3849,36 @@ function bindGlobalOnce() {
     const bdot = ev.target.closest('[data-banner-dot]');
     if (bdot) { ev.preventDefault(); setBanner(Number(bdot.dataset.bannerDot)); return; }
 
+    // tab strip — panels are toggled in place rather than re-rendering, so a
+    // tab switch does not lose scroll position or refetch anything
+    const tabBtn = ev.target.closest('[data-tab]');
+    if (tabBtn) {
+      const route = tabBtn.dataset.tab;
+      const key = tabBtn.dataset.tabKey;
+      state.tab[route] = key;
+      const host = tabBtn.closest('.tabs');
+      if (host) {
+        for (const b of $$('.tabs__btn', host)) {
+          const on = b.dataset.tabKey === key;
+          b.classList.toggle('tabs__btn--on', on);
+          b.setAttribute('aria-selected', String(on));
+        }
+        for (const p of $$('.tabs__panel', host)) {
+          p.hidden = p.dataset.tabPanel !== key;
+        }
+      }
+      return;
+    }
+
+    if (ev.target.closest('#backTop')) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+
     // page action bar — present on every route
     if (ev.target.closest('[data-page-print]')) { window.print(); return; }
     if (ev.target.closest('[data-page-share]')) { sharePage(); return; }
     if (ev.target.closest('[data-page-csv]')) { downloadCsv(); return; }
     if (ev.target.closest('[data-page-refresh]')) {
       // refresh whatever this page actually depends on, not just the bundle
-      state.products = null;
+      state.products = null; state.productsAt = null;
       state.archive.series = null; state.archive.seriesKey = null;
       state.archive.lae = null; state.archive.analysis = null;
       if (state.route === 'analysis') { state.analysis = null; loadAnalysis(true); }

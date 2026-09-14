@@ -225,6 +225,61 @@ const undefinedViews = uniq([...mapBlock.matchAll(/:\s*(view[A-Za-z]+)/g)].map((
 check('every dispatched view is defined', undefinedViews.length === 0,
   undefinedViews.length ? `UNDEFINED: ${undefinedViews.join(', ')}` : 'all view functions exist');
 
+/* ------------------------------------------------------------------ *
+ * 8. provenance footnote and the component set
+ * ------------------------------------------------------------------ */
+
+console.log('\n' + '='.repeat(76));
+console.log('  8. provenance and components');
+console.log('='.repeat(76));
+
+// Every source named in PAGE_SOURCES must have a label. A missing one is not an
+// error the page reports: sourceLabel() falls back to the raw key, so the footer
+// silently reads "LTMV" instead of "能見度" and nothing looks broken.
+const PAGE_SRC_BLOCK = (js.match(/const PAGE_SOURCES = \{([\s\S]*?)\n\};/) || [])[1] || '';
+const pageSrcKeys = uniq([...PAGE_SRC_BLOCK.matchAll(/'([A-Za-z]+)'/g)].map((m) => m[1]));
+const LABEL_BLOCK = (js.match(/const SOURCE_LABEL = \{([\s\S]*?)\n\};/) || [])[1] || '';
+const labelKeys = [...LABEL_BLOCK.matchAll(/^\s{2}([A-Za-z_][A-Za-z0-9_]*):\s*\[/gm)].map((m) => m[1]);
+const unlabelled = pageSrcKeys.filter((k) => !labelKeys.includes(k));
+check('every cited source has a label', unlabelled.length === 0,
+  unlabelled.length ? `NO LABEL: ${unlabelled.join(', ')}` : `${pageSrcKeys.length} sources, all labelled`);
+
+// Labels must be trilingual like every other string, or the English view leaks
+// Chinese source names.
+const labelArity = [...LABEL_BLOCK.matchAll(/^\s{2}([A-Za-z_][A-Za-z0-9_]*):\s*\[([^\]]*)\]/gm)]
+  .map((m) => [m[1], m[2].split(',').length]);
+const badArity = labelArity.filter(([, n]) => n !== 3);
+check('source labels are trilingual', badArity.length === 0,
+  badArity.length ? `WRONG ARITY: ${badArity.map(([k, n]) => `${k}=${n}`).join(', ')}` : `${labelArity.length} labels, all [tc, sc, en]`);
+
+// Product sources are looked up in the /api/products payload, so they must be
+// real HKO dataTypes -- a typo yields a footer row that can never be populated.
+const HK_TYPES = ['rhrread', 'flw', 'fnd', 'warnsum', 'warningInfo', 'swt',
+  'LTMV', 'SRS', 'MRS', 'HHOT', 'CLMTEMP', 'CLMMAXT', 'CLMMINT', 'RYES', 'qem'];
+const PROD_KEYS = ((js.match(/const PRODUCT_SOURCE_KEYS = \[([^\]]*)\]/) || [])[1] || '')
+  .split(',').map((s) => s.trim().replace(/'/g, '')).filter(Boolean);
+const notReal = PROD_KEYS.filter((k) => !HK_TYPES.includes(k));
+check('product sources are real dataTypes', PROD_KEYS.length > 0 && notReal.length === 0,
+  notReal.length ? `NOT A HKO dataType: ${notReal.join(', ')}` : `${PROD_KEYS.length} product sources, all real`);
+
+// The footnote only appears if the render path actually calls it.
+check('render path appends the footnote', /\+ provenance\(state\.route\)/.test(js), 'renderAll calls provenance()');
+
+check('shell has the back-to-top control', /id="backTop"/.test(html), 'index.html #backTop');
+check('script binds the back-to-top control', /\$\('#backTop'\)/.test(js), 'app.js initBackTop()');
+check('stylesheet styles the footnote', /\.prov__list/.test(css), '.prov__list present');
+check('stylesheet styles the tabs', /\.tabs__btn--on/.test(css), '.tabs__btn--on present');
+check('back-to-top is hidden when printing', /@media print \{[\s\S]*?\.backtop/.test(css), '.backtop in @media print');
+
+// A tab group whose keys collide would show the wrong panel.
+const tabGroups = [...js.matchAll(/tabsCard\('([a-z]+)',\s*'[a-zA-Z]+',\s*\[([\s\S]*?)\]\s*\)/g)];
+const dupTabKeys = tabGroups.filter(([, , body]) => {
+  const keys = [...body.matchAll(/key:\s*'([a-z]+)'/g)].map((m) => m[1]);
+  return keys.length !== new Set(keys).size;
+}).map(([, route]) => route);
+check('tab groups have unique keys', dupTabKeys.length === 0,
+  dupTabKeys.length ? `DUPLICATE KEYS: ${dupTabKeys.join(', ')}` : `${tabGroups.length} tab group(s), keys unique`);
+
 console.log('\n' + '='.repeat(76));
 console.log(`  RESULT: ${pass}/${pass + fail} passed`);
 console.log('='.repeat(76) + '\n');

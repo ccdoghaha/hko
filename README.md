@@ -213,6 +213,49 @@ container**, a masthead carrying the Gregorian + lunar date and a toolbar
 **two-column body — a 218 px left navigation tree beside the content**, and a
 footer link set.
 
+### The page component set
+
+Every page is composed from the same parts, applied once in `pageChrome()` at the
+top and `provenance()` at the bottom rather than hand-built per page — so a new
+page inherits them by construction:
+
+| component | what it does |
+|---|---|
+| **breadcrumb** | derived from the sidebar tree, the one place the grouping already lives — renders as `首頁 › 天氣 › 本港天氣 › 分區天氣` |
+| **page title** | a real `<h1>` per page (pages previously had only card-level `h2`s) |
+| **intro line** | one sentence saying what the page shows |
+| **action bar** | Print · Share · Download CSV · Reload |
+| **provenance footnote** | names each source, its observation time, its retrieval time |
+
+**The action buttons are wired, not decorative.** *Print* has its own stylesheet —
+masthead, nav, sidebar, footer, status strip and controls are hidden and cards set
+`break-inside: avoid`, so what comes out of the printer is the data rather than the
+chrome. *Download CSV* serialises the page's first table with RFC 4180 quoting and
+a **UTF-8 BOM**, so Excel opens the CJK columns correctly instead of as mojibake;
+a page with no table says so instead of failing. *Reload* clears whatever that page
+actually depends on — product bundle, archive series, analysis, LAE assessment, or
+the live bundle — rather than always refetching the weather.
+
+**The provenance footnote dates every source it names**, which is harder than it
+sounds because HKO exposes that time in four different shapes. `check-prov.js`
+tests the shipped function against each, including two traps:
+
+| source | shape | trap |
+|---|---|---|
+| most blocks | `updateTime` ISO | — |
+| `rhrread` | `iconUpdateTime` | — |
+| `RYES` | `BulletinDate` + `BulletinTime` | `BulletinTime` is a *time of day* (`"0015"`). Read alone, `new Date("0015")` does not fail — it parses as **the year 15 AD** and renders `15-01-01`. A wrong date that looks like a date is worse than no date |
+| `LTMV` | 12-digit row timestamp | the time is inside the data, not a header field |
+| `SRS`, `MRS` | date only (`"2026-09-01"`) | per-day table, no clock time |
+| `CLMTEMP`, `CLMMAXT`, `CLMMINT`, `HHOT` | none | `HHOT` is a month × day grid with **no year anywhere**, so the footer says "觀測時間未提供" rather than inventing one |
+
+**Tabs** replace stacked sections where a page held several independent datasets
+(the three climate tables). Selection lives in `state.tab[route]`, so it survives a
+re-render. Deliberately *not* applied to the regional page: a hidden `<canvas>`
+measures zero, so tabbing away from the 3-D chart would blank it.
+
+**Back to top** appears after scrolling and is hidden in print.
+
 ### Images and controls
 
 An audit of the live page's asset families showed what visual pieces were still
@@ -245,8 +288,8 @@ The sidebar mirrors HKO's grouping and labels and is expandable per section
 本站分析                天氣總覽 · 高解析度分析 · 最新消息
 ```
 
-**All 43 entries are local routes.** Nothing in the sidebar, the top section bar
-or the footer navigates to hko.gov.hk — 89 links on the page, zero external.
+**All 46 entries are local routes.** Nothing in the sidebar, the top section bar
+or the footer navigates to hko.gov.hk — 98 links on the page, zero external.
 Where HKO publishes a product the open-data API does not carry, the entry still
 resolves to a local page that names the product and states plainly why it is not
 shown, rather than an empty shell or a redirect away.
@@ -417,10 +460,12 @@ hko-local/
 │  │                            METAR/TAF decoding, ceiling semantics
 │  ├─ check-db.js               25 checks: schema, idempotency, retention guard,
 │  │                            backup, integrity, durability across reopen
-│  ├─ check-ui.js               18 checks: DOM id resolution (shell vs script),
+│  ├─ check-ui.js               31 checks: DOM id resolution (shell vs script),
 │  │                            i18n key coverage in all 3 languages, sidebar tree
 │  │                            integrity, product-key + route resolution, picker
-│  │                            wiring, layout structure
+│  │                            wiring, layout structure, route dispatch coverage,
+│  │                            source labelling and the provenance footnote
+│  ├─ check-prov.js             14 checks: provenance time extraction per HKO shape
 │  ├─ check-bind.js              5 checks: loopback default, HOST override, warning
 │  ├─ bench.js                  endpoint latency + payload baseline
 │  ├─ debug-dem.js              ad-hoc: landmark sampling vs published heights
