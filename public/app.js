@@ -83,6 +83,9 @@ const I18N = {
     fieldStats: '分析場範圍', analysisField: '分析場',
     bannerRange: '全港溫度範圍', bannerWind: '風勢', bannerRain: '雨量', bannerField: '高解析度分析場',
     warnBannerBody: '現時有警告生效 — 點擊查看詳情',
+    crumbHome: '首頁', crumbLabel: '位置',
+    actPrint: '列印', actShare: '分享', actCsv: '下載 CSV', actRefresh: '重新載入',
+    actCsvDone: '已下載 CSV', actCsvNone: '本頁沒有可下載的表格',
     fClimate: '香港氣候', fSummary: '每月天氣摘要', fNew: '新增項目', fOpen: '公開資料',
     fRelated: '相關網址', fGuide: '快速用戶指南', fContact: '聯絡我們', fNotice: '重要告示', fPrivacy: '私隱政策',
     loading: '載入中…', refresh: '即時更新', refreshing: '更新中…',
@@ -210,6 +213,9 @@ const I18N = {
     fieldStats: '分析场范围', analysisField: '分析场',
     bannerRange: '全港温度范围', bannerWind: '风势', bannerRain: '雨量', bannerField: '高分辨率分析场',
     warnBannerBody: '现时有警告生效 — 点击查看详情',
+    crumbHome: '首页', crumbLabel: '位置',
+    actPrint: '打印', actShare: '分享', actCsv: '下载 CSV', actRefresh: '重新加载',
+    actCsvDone: '已下载 CSV', actCsvNone: '本页没有可下载的表格',
     fClimate: '香港气候', fSummary: '每月天气摘要', fNew: '新增项目', fOpen: '公开资料',
     fRelated: '相关网址', fGuide: '快速用户指南', fContact: '联络我们', fNotice: '重要告示', fPrivacy: '私隐政策',
     loading: '加载中…', refresh: '即时更新', refreshing: '更新中…',
@@ -337,6 +343,9 @@ const I18N = {
     fieldStats: 'Field range', analysisField: 'Analysis field',
     bannerRange: 'Territory temperature range', bannerWind: 'Wind', bannerRain: 'Rainfall', bannerField: 'High-resolution field',
     warnBannerBody: 'A warning is in force — click for details',
+    crumbHome: 'Home', crumbLabel: 'Breadcrumb',
+    actPrint: 'Print', actShare: 'Share', actCsv: 'Download CSV', actRefresh: 'Reload',
+    actCsvDone: 'CSV downloaded', actCsvNone: 'No table on this page to download',
     fClimate: 'HK Climate', fSummary: 'Monthly Summary', fNew: "What's New", fOpen: 'Open Data',
     fRelated: 'Related Sites', fGuide: 'User Guide', fContact: 'Contact Us', fNotice: 'Important Notices', fPrivacy: 'Privacy Policy',
     loading: 'Loading…', refresh: 'Refresh', refreshing: 'Refreshing…',
@@ -3087,6 +3096,123 @@ function startBanner() {
 }
 
 /* ------------------------------------------------------------------ *
+ * page chrome
+ *
+ * Every page gets the same component set: a breadcrumb, an h1, an intro line and
+ * an action bar (print, copy link, download the page's table as CSV, refresh).
+ * Implemented once here rather than per view, so a new page cannot silently ship
+ * without them. The breadcrumb is derived from the sidebar tree, which is the one
+ * place the grouping already lives.
+ * ------------------------------------------------------------------ */
+
+/** Walk the sidebar tree for the entry whose destination is this route. */
+function crumbFor(route) {
+  const want = `#/${route}`;
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  const found = [];
+  const walk = (nodes, trail) => {
+    for (const n of nodes) {
+      const kids = n[3];
+      if (Array.isArray(kids)) {
+        walk(kids, [...trail, n[li]]);
+      } else if (n[3] === want) {
+        found.push([...trail, n[li]]);
+        return;
+      }
+    }
+  };
+  walk(SIDEBAR_TREE, []);
+  return found[0] || null;
+}
+
+const PAGE_INTRO = {
+  home: ['本頁為天氣實況總覽', '本页为天气实况总览', 'Live conditions at a glance'],
+  overview: ['全港天氣重點一覽', '全港天气重点一览', 'The territory at a glance'],
+  regional: ['按測站瀏覽氣溫、雨量及風', '按测站浏览气温、雨量及风', 'Temperature, rainfall and wind by station'],
+  analysis: ['由測站觀測以統計方法推算出網格分析場', '由测站观测以统计方法推算出网格分析场', 'A gridded field derived from station observations'],
+  lae: ['低空經濟作業的天氣可飛性評估', '低空经济作业的天气可飞性评估', 'Go/no-go assessment for low-altitude operations'],
+  imagery: ['雷達、衛星及閃電的即時圖像', '雷达、卫星及闪电的即时图像', 'Live radar, satellite and lightning imagery'],
+  forecast: ['本港地區天氣預報及九天天氣預報', '本港地区天气预报及九天天气预报', 'Local and 9-day forecasts'],
+  alerts: ['現時生效的天氣警告及特別天氣提示', '现时生效的天气警告及特别天气提示', 'Warnings and special tips in force'],
+  news: ['天文台發布的消息標題', '天文台发布的消息标题', 'HKO news headlines'],
+  rainfall: ['全港十八區過去一小時雨量', '全港十八区过去一小时雨量', 'Past-hour rainfall by district'],
+  uv: ['紫外線指數及強度', '紫外线指数及强度', 'UV index and level'],
+  visibility: ['自動氣象站的十分鐘平均能見度', '自动气象站的十分钟平均能见度', '10-minute mean visibility by AWS'],
+  report: ['天氣報告及現時警告', '天气报告及现时警告', 'Weather report and current warnings'],
+  yesterday: ['天文台總部昨日的觀測摘要', '天文台总部昨日的观测摘要', "Yesterday's readings at HKO headquarters"],
+  climate: ['天文台總部的逐日氣候數據', '天文台总部的逐日气候数据', 'Daily climate values at HKO headquarters'],
+  kp: ['京士柏氣象站的即時讀數', '京士柏气象站的即时读数', "Live readings at King's Park"],
+  tc: ['熱帶氣旋警告信息', '热带气旋警告信息', 'Tropical cyclone warning message'],
+  rainstorm: ['有雨地區及閃電活動', '有雨地区及闪电活动', 'Districts with rain and lightning activity'],
+  lightning: ['閃電位置圖及活動狀態', '闪电位置图及活动状态', 'Lightning location and activity'],
+  astronomy: ['日出、日落、月出及月落時間', '日出、日落、月出及月落时间', 'Sunrise, sunset, moonrise and moonset'],
+  tides: ['長洲潮汐站的逐時潮位', '长洲潮汐站的逐时潮位', 'Hourly tide heights at Cheung Chau'],
+  earthquake: ['最近一次地震報告', '最近一次地震报告', 'The most recent earthquake report'],
+  warningref: ['天文台警告種類及其含義', '天文台警告种类及其含义', 'HKO warning types and their meanings'],
+  history: ['本機存檔的觀測時間序列', '本机存档的观测时间序列', 'Archived observation time series'],
+  verdicts: ['本機存檔的作業評估記錄', '本机存档的作业评估记录', 'Archived LAE assessments'],
+  runs: ['本機存檔的分析執行記錄', '本机存档的分析执行记录', 'Archived analysis runs'],
+};
+
+function pageChrome(route) {
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  const crumb = crumbFor(route);
+  const title = crumb ? crumb[crumb.length - 1] : (PRODUCT_INFO[state.productKey] ? PRODUCT_INFO[state.productKey].n[li] : t('siteTitle'));
+  const intro = PAGE_INTRO[route] ? PAGE_INTRO[route][li] : '';
+
+  const crumbs = [
+    `<a href="#/home">${esc(t('crumbHome'))}</a>`,
+    ...(crumb ? crumb.slice(0, -1).map((c) => `<span>${esc(c)}</span>`) : []),
+    `<span class="crumb__here">${esc(title)}</span>`,
+  ].join('<span class="crumb__sep">›</span>');
+
+  return `<div class="pagehead">
+      <nav class="crumb" aria-label="${esc(t('crumbLabel'))}">${crumbs}</nav>
+      <div class="pagehead__row">
+        <div>
+          <h1 class="pagehead__title">${esc(title)}</h1>
+          ${intro ? `<p class="pagehead__intro">${esc(intro)}</p>` : ''}
+        </div>
+        <div class="pagehead__actions">
+          <button type="button" class="btn" data-page-print>${svgIcon('bookmark', 14)} <span>${esc(t('actPrint'))}</span></button>
+          <button type="button" class="btn" data-page-share>${svgIcon('share', 14)} <span>${esc(t('actShare'))}</span></button>
+          <button type="button" class="btn" data-page-csv>${svgIcon('external', 14)} <span>${esc(t('actCsv'))}</span></button>
+          <button type="button" class="btn" data-page-refresh>${svgIcon('setting', 14)} <span>${esc(t('actRefresh'))}</span></button>
+        </div>
+      </div>
+    </div>`;
+}
+
+/** Serialise the page's first data table to CSV and hand it to the browser.
+ *  Quoting follows RFC 4180: wrap in quotes and double any inner quote. */
+function tableToCsv() {
+  const table = document.querySelector('#view table.tbl');
+  if (!table) return null;
+  const cell = (c) => {
+    const v = (c.innerText || '').replace(/\s+/g, ' ').trim();
+    return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+  };
+  const rows = [...table.querySelectorAll('tr')].map((tr) => [...tr.children].map(cell).join(','));
+  return rows.join('\r\n');
+}
+
+function downloadCsv() {
+  const csv = tableToCsv();
+  if (!csv) { toast(t('actCsvNone')); return; }
+  // a BOM so Excel opens the CJK columns as UTF-8 rather than mojibake
+  const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `hko-${state.route}${state.productKey ? `-${state.productKey}` : ''}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast(t('actCsvDone'));
+}
+
+/* ------------------------------------------------------------------ *
  * sidebar navigation
  *
  * HKO's homepage is a left navigation tree, not a horizontal tab bar. The
@@ -3306,7 +3432,7 @@ function renderAll() {
     tides: viewTides, earthquake: viewEarthquake, product: viewProduct,
     history: viewHistory, verdicts: viewVerdicts, runs: viewRuns, warningref: viewWarningRef,
   };
-  view.innerHTML = (map[state.route] || viewHome)();
+  view.innerHTML = pageChrome(state.route) + (map[state.route] || viewHome)();
 
   // the banner only exists on the home view; restart its rotation when it appears
   if ($('#banner')) { setBanner(Number(($('#banner').dataset.bannerIndex) || 0)); startBanner(); }
@@ -3494,6 +3620,22 @@ function bindGlobalOnce() {
     if (bnav) { ev.preventDefault(); bannerStep(Number(bnav.dataset.banner)); return; }
     const bdot = ev.target.closest('[data-banner-dot]');
     if (bdot) { ev.preventDefault(); setBanner(Number(bdot.dataset.bannerDot)); return; }
+
+    // page action bar — present on every route
+    if (ev.target.closest('[data-page-print]')) { window.print(); return; }
+    if (ev.target.closest('[data-page-share]')) { sharePage(); return; }
+    if (ev.target.closest('[data-page-csv]')) { downloadCsv(); return; }
+    if (ev.target.closest('[data-page-refresh]')) {
+      // refresh whatever this page actually depends on, not just the bundle
+      state.products = null;
+      state.archive.series = null; state.archive.seriesKey = null;
+      state.archive.lae = null; state.archive.analysis = null;
+      if (state.route === 'analysis') { state.analysis = null; loadAnalysis(true); }
+      else if (state.route === 'lae') { state.lae = null; loadLae(true); }
+      else if (PRODUCT_ROUTES.includes(state.route)) { ensureProducts(); renderAll(); }
+      else { loadBundle(true); }
+      return;
+    }
 
     const jump = ev.target.closest('[data-pick-jump]');
     if (jump) {

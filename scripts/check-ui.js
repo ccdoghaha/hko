@@ -197,6 +197,34 @@ check('stylesheet defines the grid', /\.layout\s*\{[^}]*grid-template-columns/.t
 check('stylesheet has sidebar rules', /\.side__head--top/.test(css), '.side__head--top present');
 check('stylesheet has carousel rules', /\.fcarousel__item/.test(css), '.fcarousel__item present');
 
+/* ------------------------------------------------------------------ *
+ * 7. every route has a handler
+ * ------------------------------------------------------------------ */
+
+console.log('\n' + '='.repeat(76));
+console.log('  7. route coverage');
+console.log('='.repeat(76));
+
+// A route listed in ROUTES but missing from the dispatch map falls back to the
+// home view silently -- the URL is valid and the page renders, just the wrong one.
+const ROUTES_ALL = (js.match(/const ROUTES = \[([\s\S]*?)\];/) || [])[1] || '';
+const allRoutes = [...ROUTES_ALL.matchAll(/'([a-z]+)'/g)].map((m) => m[1]);
+const mapBlock = (js.match(/const map = \{([\s\S]*?)\};/) || [])[1] || '';
+const handled = [...mapBlock.matchAll(/([a-z]+):\s*view[A-Za-z]+/g)].map((m) => m[1]);
+const unhandled = allRoutes.filter((r) => !handled.includes(r));
+check('every route has a view', unhandled.length === 0,
+  unhandled.length ? `NO HANDLER: ${unhandled.join(', ')}` : `${allRoutes.length} routes, all dispatched`);
+
+const orphanViews = handled.filter((r) => !allRoutes.includes(r));
+check('every dispatch entry is a declared route', orphanViews.length === 0,
+  orphanViews.length ? `NOT IN ROUTES: ${orphanViews.join(', ')}` : `${handled.length} handlers, all declared`);
+
+// Views must be defined functions, not just named.
+const undefinedViews = uniq([...mapBlock.matchAll(/:\s*(view[A-Za-z]+)/g)].map((m) => m[1]))
+  .filter((fn) => !new RegExp(`function\\s+${fn}\\s*\\(`).test(js));
+check('every dispatched view is defined', undefinedViews.length === 0,
+  undefinedViews.length ? `UNDEFINED: ${undefinedViews.join(', ')}` : 'all view functions exist');
+
 console.log('\n' + '='.repeat(76));
 console.log(`  RESULT: ${pass}/${pass + fail} passed`);
 console.log('='.repeat(76) + '\n');

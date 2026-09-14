@@ -539,6 +539,43 @@ table.tbl tbody tr.row--caution { background: #fffdf5; }
 html.fs-lg body { zoom: 1.15; }
 html.fs-xl body { zoom: 1.3; }
 
+/* ---------- page chrome (breadcrumb, h1, action bar) ---------- */
+
+.pagehead { margin-bottom: 16px; }
+
+.crumb {
+  display: flex; flex-wrap: wrap; align-items: center;
+  font-size: 12.5px; color: var(--ink-3); margin-bottom: 8px;
+}
+.crumb a { color: var(--blue-2); }
+.crumb__sep { color: var(--ink-4); margin: 0 5px; }
+.crumb__here { color: var(--ink-2); font-weight: 700; }
+
+.pagehead__row {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  border-bottom: 2px solid var(--blue); padding-bottom: 10px;
+}
+.pagehead__title { margin: 0; font-size: 25px; font-weight: 700; color: var(--blue); letter-spacing: .3px; line-height: 1.25; }
+.pagehead__intro { margin: 5px 0 0; font-size: 13.5px; color: var(--ink-3); }
+.pagehead__actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.pagehead__actions .btn { display: inline-flex; align-items: center; gap: 5px; }
+.pagehead__actions .ic { opacity: .8; }
+
+/* ---------- print ---------- */
+
+@media print {
+  .masthead, .hkonav, .side, .foot, .strip, .toast,
+  .pagehead__actions, .banner__nav, .fcarousel__nav { display: none !important; }
+  .layout { display: block; padding: 0; max-width: none; }
+  .card { break-inside: avoid; box-shadow: none; border-color: #999; }
+  .card__title { background: #eee !important; color: #000 !important; }
+  .pagehead__title { color: #000; }
+  a { color: #000; text-decoration: none; }
+  table.tbl thead th { background: #ddd !important; color: #000 !important; }
+  img { max-width: 100%; }
+}
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 900px) {
