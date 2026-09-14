@@ -205,44 +205,136 @@ Runbook, failure modes, monitoring signals and capacity notes:
 
 ---
 
-## Layout
+## Archive (database)
+
+The serving path caches the latest reading and discards the previous one. That is
+right for showing the weather and useless for everything asked *afterwards* —
+"why was a no-go issued at 14:00 yesterday?", "has the estimator selection been
+drifting?". So history is kept in SQLite (`node:sqlite`, still zero
+dependencies), entirely off the serving path.
+
+```
+observation      surface readings over time
+wind_observation wind by station, including the stations dropped from analysis
+aviation_report  METAR/TAF — raw text AND decoded, so a decoder bug stays auditable
+analysis_run     which estimator won and how well it scored
+lae_assessment   every verdict with its full factor list — the go/no-go audit trail
+```
+
+```bash
+curl '/api/history?kind=lae&limit=20'                    # audit trail
+curl '/api/history?kind=analysis&limit=50'               # estimator drift
+curl '/api/history?kind=observation&station=HKO'         # station time series
+curl '/api/db/status'                                    # row counts, size, errors
+curl '/api/db/maintain?days=90'                          # prune, checkpoint, integrity
+```
+
+Writes are `INSERT OR IGNORE` against natural keys, so re-polling a report that
+has not changed inserts nothing — the normal case, since the poller runs twice as
+often as the feed updates. Batches run in one transaction: that single change cut
+the write-ahead log from **1.76 MB to 276 KB** for comparable activity.
+
+Retention defaults to 90 days and runs on a timer, never in a request path.
+`prune()` **refuses a retention below 1 day** rather than obeying it, because a
+zero or negative value computes a cutoff in the future and would delete the whole
+archive.
+
+Schema, backup/restore, migration, checkpointing and a query cookbook:
+`docs/DATABASE_MANAGEMENT.md`.
+
+```
+node scripts/check-db.js       # 25 checks
+```
+
+---
+
+## Directory structure
+
+### Version controlled
 
 ```
 hko-local/
-├─ server.js          zero-dependency HTTP server: static host, API gateway, caches
-├─ start.bat          Windows launcher (prompts for port, opens browser)
-├─ start.sh           POSIX launcher
-├─ Dockerfile         container build (zero dependencies, healthcheck, volume)
-├─ .dockerignore
-├─ lib/
-│  ├─ png.js          PNG codec (terrarium DEM in, RGBA raster out)
-│  ├─ dem.js          terrain tiles -> mosaic -> void fill -> analysis grid
-│  ├─ interp.js       IDW, kriging, variogram, leave-one-out cross-validation
-│  ├─ analysis.js     post-processing pipeline, vector wind field, LAE assembly
-│  ├─ wind.js         compass parsing, u/v vector algebra, CSV edge cases
-│  ├─ aviation.js     METAR / TAF decoding, worst-case merging
-│  ├─ lae.js          go/no-go model, thresholds, wind-profile extrapolation
-│  ├─ stations.js     observation + wind station coordinates
-│  └─ colormap.js     temperature and wind ramps -> RGBA
-├─ scripts/
-│  ├─ check-dem.js    16 checks: codec, georeferencing, DEM accuracy, alignment
-│  ├─ check-interp.js 11 checks: synthetic control + live LOO
-│  ├─ check-lae.js    41 checks: vector wind, CSV edge cases, METAR/TAF
-│  ├─ check-bind.js    5 checks: loopback default, HOST override
-│  ├─ bench.js        endpoint latency + payload baseline
-│  └─ debug-*.js      ad-hoc diagnostics used while building
-├─ docs/
-│  ├─ ANALYSIS_METHOD.md      analysis method, validation, limitations
-│  ├─ LAE_PRODUCT.md          LAE product method, thresholds, limitations
-│  └─ DEPLOYMENT_AND_OPS.md   measured resource profile, deployment, runbook
-├─ public/
-│  ├─ index.html      SPA shell: masthead, nav, modules, footer
-│  ├─ styles.css      stylesheet (design tokens matched to HKO)
-│  └─ app.js          SPA: router, views, i18n, SVG map, 3-D chart, analysis view
-└─ .cache/
-   ├─ icons/          weather icons cached on first request
-   └─ dem/            terrain tiles cached on first run (~48 tiles)
+│
+├─ server.js                    zero-dependency HTTP server: static host, per-source
+│                               TTL cache, stale-on-error fallback, API gateway,
+│                               archive lifecycle, HOST/PORT config
+├─ start.bat                    Windows launcher (prompts for port, opens browser)
+├─ start.sh                     POSIX launcher
+├─ Dockerfile                   container build: no dependencies, healthcheck, .cache volume
+├─ .dockerignore                keeps .git, .cache and node_modules out of the image
+├─ .gitignore                   keeps .cache (terrain, icons, archive) out of the repo
+├─ .gitattributes               line endings: *.sh LF, *.bat CRLF
+├─ LICENSE                      Apache-2.0
+├─ README.md                    this file
+│
+├─ lib/                         the pipeline — pure logic, no HTTP
+│  ├─ png.js                    PNG codec, decode + encode. Needed because the terrain
+│  │                            DEM ships as PNG; verified byte-identical to Pillow
+│  ├─ dem.js                    Mapbox terrarium tiles -> mosaic -> void fill -> grid
+│  ├─ interp.js                 IDW, ordinary kriging, variogram fitting, LOO CV
+│  ├─ wind.js                   compass parsing (abbreviated + spelled out), u/v algebra,
+│  │                            wind CSV edge cases (N/A, Calm, Variable, empty)
+│  ├─ aviation.js               METAR / TAF decoding, worst-case merging over change groups
+│  ├─ lae.js                    go/no-go model, thresholds, power-law wind profile
+│  ├─ analysis.js               orchestration: temperature field, vector wind field,
+│  │                            LAE assembly, archive hooks
+│  ├─ store.js                  SQLite archive: schema, writes, queries, retention, backup
+│  ├─ stations.js               26 observation + 30 wind station coordinates
+│  └─ colormap.js               temperature and wind ramps -> RGBA raster
+│
+├─ public/                      the SPA — no framework, no build step
+│  ├─ index.html                shell: masthead, nav, module container, footer
+│  ├─ styles.css                stylesheet, HKO design tokens re-implemented
+│  └─ app.js                    router, 9 views, i18n (tc/sc/en), SVG map, wind arrows,
+│                               3-D isometric chart, analysis + LAE views
+│
+├─ scripts/                     verification and tooling
+│  ├─ check-dem.js              16 checks: PNG codec, georeferencing, DEM accuracy,
+│  │                            void fill, raster alignment
+│  ├─ check-interp.js           11 checks: estimator selection, synthetic control,
+│  │                            station-table sync
+│  ├─ check-lae.js              41 checks: vector wind wraparound, CSV edge cases,
+│  │                            METAR/TAF decoding, ceiling semantics
+│  ├─ check-db.js               25 checks: schema, idempotency, retention guard,
+│  │                            backup, integrity, durability across reopen
+│  ├─ check-bind.js              5 checks: loopback default, HOST override, warning
+│  ├─ bench.js                  endpoint latency + payload baseline
+│  ├─ debug-dem.js              ad-hoc: landmark sampling vs published heights
+│  └─ debug-mosaic.js           ad-hoc: locate implausible cells in the terrain mosaic
+│
+└─ docs/
+   ├─ DESIGN_PLAN.md            architecture, decisions, rejected alternatives
+   ├─ ANALYSIS_METHOD.md        post-processing method, validation results, limitations
+   ├─ LAE_PRODUCT.md            LAE method, thresholds, aviation decoding, limitations
+   ├─ DATABASE_MANAGEMENT.md    schema, retention, checkpointing, backup, queries
+   └─ DEPLOYMENT_AND_OPS.md     measured resource profile, deployment, runbook
 ```
+
+### Generated at runtime — never committed
+
+```
+.cache/
+├─ dem/                         48 terrain tiles (1.7 MB), fixed set for a fixed bbox.
+│                               Fetched once on first analysis, then never again
+├─ icons/                       weather icons (332 KB), one per icon code seen
+├─ samples/                     captured feed samples used as test fixtures
+└─ archive.db                   SQLite history (WAL mode) + -wal / -shm siblings
+```
+
+Everything under `.cache/` is reproducible and safe to delete. Total growth is
+bounded: the terrain set cannot grow for a fixed bounding box, and the icon set
+is finite. See `docs/DATABASE_MANAGEMENT.md` §4 for archive retention.
+
+### Where to start reading
+
+| If you want to understand… | Read |
+|---|---|
+| the whole design and why | `docs/DESIGN_PLAN.md` |
+| how the grid is computed | `docs/ANALYSIS_METHOD.md`, then `lib/interp.js` |
+| the LAE verdict | `docs/LAE_PRODUCT.md`, then `lib/lae.js` |
+| the data model | `docs/DATABASE_MANAGEMENT.md`, then `lib/store.js` |
+| running it | `docs/DEPLOYMENT_AND_OPS.md` |
+| what is verified | `scripts/check-*.js` |
 
 ---
 

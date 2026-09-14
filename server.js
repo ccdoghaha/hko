@@ -21,6 +21,8 @@ const fs = require('fs');
 const fsp = require('fs/promises');
 const path = require('path');
 const analysis = require('./lib/analysis');
+const store = require('./lib/store');
+const { STATIONS } = require('./lib/stations');
 
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -117,6 +119,13 @@ async function getData(type, lang, { force = false } = {}) {
     const value = await fetchUpstream(type, lang);
     const ts = Date.now();
     memCache.set(key, { body: value, ts });
+    // Archive every fresh rhrread report. Doing it here rather than in the route
+    // means every caller is covered, and it only fires on a genuine upstream
+    // fetch — the cache absorbs repeat polls, so the archive does not fill with
+    // duplicate rows at the poll rate.
+    if (type === 'rhrread') {
+      try { store.recordObservations(value, STATIONS); } catch { /* archive must never break serving */ }
+    }
     return { value, ts, stale: false, cached: false };
   } catch (err) {
     stats.errors++;
@@ -582,6 +591,56 @@ async function handleApi(req, res, u) {
     }
   }
 
+  if (u.pathname === '/api/db/status') {
+    return sendJson(res, 200, { ok: true, ...store.dbStats() });
+  }
+
+  if (u.pathname === '/api/history') {
+    const kind = String(q.get('kind') || 'lae');
+    const limitRaw = Number(q.get('limit'));
+    const limit = Number.isFinite(limitRaw) ? Math.max(1, Math.min(1000, limitRaw)) : 20;
+    const station = q.get('station') || null;
+    const from = q.get('from') || null;
+    const to = q.get('to') || null;
+
+    if (!store.isOpen()) {
+      return sendJson(res, 503, { ok: false, error: 'archive unavailable (node:sqlite not present)' });
+    }
+
+    try {
+      switch (kind) {
+        case 'lae':
+          return sendJson(res, 200, { ok: true, kind, limit, items: store.recentAssessments(limit) });
+        case 'analysis':
+          return sendJson(res, 200, { ok: true, kind, limit, items: store.recentAnalyses(limit) });
+        case 'observation':
+          if (!station) return sendJson(res, 400, { ok: false, error: 'station is required for kind=observation' });
+          return sendJson(res, 200, { ok: true, kind, station, limit, items: store.stationSeries(station, { from, to, limit }) });
+        case 'wind':
+          if (!station) return sendJson(res, 400, { ok: false, error: 'station is required for kind=wind' });
+          return sendJson(res, 200, { ok: true, kind, station, limit, items: store.windSeries(station, { limit }) });
+        case 'aviation':
+          return sendJson(res, 200, { ok: true, kind, limit, items: store.verification(limit) });
+        default:
+          return sendJson(res, 400, {
+            ok: false, error: `unknown kind "${kind}"`,
+            allowed: ['lae', 'analysis', 'observation', 'wind', 'aviation'],
+          });
+      }
+    } catch (err) {
+      return sendJson(res, 500, { ok: false, error: err.message });
+    }
+  }
+
+  if (u.pathname === '/api/db/maintain') {
+    if (!store.isOpen()) return sendJson(res, 503, { ok: false, error: 'archive unavailable' });
+    const daysRaw = Number(q.get('days'));
+    const days = Number.isFinite(daysRaw) ? daysRaw : 90;
+    const pruned = store.prune({ days });
+    const maint = store.maintain();
+    return sendJson(res, 200, { ok: true, pruned, maintenance: maint, stats: store.dbStats() });
+  }
+
   return sendJson(res, 404, { ok: false, error: 'unknown api route' });
 }
 
@@ -682,6 +741,39 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+/* ------------------------------------------------------------------ *
+ * archive lifecycle
+ * ------------------------------------------------------------------ */
+
+const ARCHIVE_PATH = path.join(CACHE_DIR, 'archive.db');
+const RETENTION_DAYS = Number(process.env.RETENTION_DAYS) || 90;
+const PRUNE_INTERVAL_MS = 24 * 60 * 60 * 1000;
+
+function startArchive() {
+  const ok = store.open(ARCHIVE_PATH, { verbose: true });
+  if (!ok) return false;
+
+  // Retention runs on a timer, never in a request path — a DELETE that scans
+  // every table has no business inside a response.
+  const timer = setInterval(() => {
+    const r = store.prune({ days: RETENTION_DAYS });
+    if (r.deleted) console.log(`[archive] pruned ${r.deleted} rows older than ${RETENTION_DAYS} days`);
+    if (r.error) console.warn(`[archive] prune refused: ${r.error}`);
+  }, PRUNE_INTERVAL_MS);
+  timer.unref();   // never hold the process open just to prune
+
+  const shutdown = () => {
+    clearInterval(timer);
+    const m = store.maintain();
+    if (m.ok) console.log('[archive] checkpointed and closed');
+    store.close();
+  };
+  process.once('SIGINT', () => { shutdown(); process.exit(0); });
+  process.once('SIGTERM', () => { shutdown(); process.exit(0); });
+
+  return true;
+}
+
 function listen(port, host = '127.0.0.1') {
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
@@ -704,6 +796,12 @@ function listen(port, host = '127.0.0.1') {
     }
     console.log(`  Health   http://${host}:${port}/api/status`);
     console.log(`  Data     HKO Open Data API (data.weather.gov.hk)`);
+    if (store.isOpen()) {
+      const s = store.dbStats();
+      console.log(`  Archive  ${ARCHIVE_PATH}  (${Object.values(s.tables).reduce((a, b) => a + (b || 0), 0)} rows, retention ${RETENTION_DAYS}d)`);
+    } else {
+      console.log(`  Archive  disabled (node:sqlite unavailable) — display layer unaffected`);
+    }
     console.log(line);
     console.log('  Ctrl+C to stop.');
   });
@@ -718,7 +816,8 @@ if (require.main === module) {
     console.error(`Invalid port: ${process.argv[2]}`);
     process.exit(1);
   }
+  startArchive();
   listen(port, host);
 }
 
-module.exports = { server, getData };
+module.exports = { server, getData, startArchive };
