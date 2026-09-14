@@ -205,6 +205,47 @@ Runbook, failure modes, monitoring signals and capacity notes:
 
 ---
 
+## Layout and interaction
+
+The homepage is built to the Observatory's information architecture: a **1249 px
+container**, a masthead carrying the Gregorian + lunar date and a toolbar
+(text size · share · search · menu · language), a blue section bar, then a
+**two-column body — a 218 px left navigation tree beside the content**, and a
+footer link set.
+
+The sidebar mirrors HKO's grouping and labels and is expandable per section
+(collapse state persists):
+
+```
+天氣           本港天氣 · 天氣預測 · 天氣警告 · 航運天氣 · 天氣監測圖像 · 地理信息系統天氣服務
+本站分析       天氣總覽 · 高解析度分析 · 最新消息
+```
+
+40 entries: **17 open a view in this SPA**, **23 link out to the Observatory's own
+page** (marked ↗) where this project has no equivalent product. That split is
+deliberate rather than pretending to cover everything.
+
+Homepage modules in HKO's order, with two working widgets:
+
+- **Parameter / station picker** — the feed's real *networks* are temperature
+  (26 stations), rainfall (18 districts) and wind (23 stations, fetched lazily).
+  Humidity and UV are carried from a *single* station each, so they are shown as
+  point readings rather than a one-row table; parameters the feed does not carry
+  at all are listed as such instead of being silently dropped.
+- **9-day forecast carousel** — date · min | max · humidity range · confidence,
+  matching the shape of HKO's own forecast strip.
+
+Every toolbar control does something real: text size cycles 100/115/130 %, share
+copies the link, search toggles and focuses, menu collapses the sidebar. Dead
+chrome would be worse than no chrome.
+
+Design tokens (palette, type scale, container width, module order) were read from
+the live page's computed styles and re-implemented in an original stylesheet.
+HKO's HTML, CSS, JS, images and article text are their copyright and are not
+copied; imagery and news are linked, not embedded.
+
+---
+
 ## Archive (database)
 
 The serving path caches the latest reading and discards the previous one. That is
@@ -283,10 +324,12 @@ hko-local/
 │  └─ colormap.js               temperature and wind ramps -> RGBA raster
 │
 ├─ public/                      the SPA — no framework, no build step
-│  ├─ index.html                shell: masthead, nav, module container, footer
+│  ├─ index.html                shell: masthead + toolbar, section nav, sidebar host,
+│  │                            two-column body, footer
 │  ├─ styles.css                stylesheet, HKO design tokens re-implemented
-│  └─ app.js                    router, 9 views, i18n (tc/sc/en), SVG map, wind arrows,
-│                               3-D isometric chart, analysis + LAE views
+│  └─ app.js                    router, 9 views, sidebar tree, i18n (tc/sc/en),
+│                               parameter/station picker, forecast carousel, SVG map,
+│                               wind arrows, 3-D isometric chart, analysis + LAE views
 │
 ├─ scripts/                     verification and tooling
 │  ├─ check-dem.js              16 checks: PNG codec, georeferencing, DEM accuracy,
@@ -297,6 +340,9 @@ hko-local/
 │  │                            METAR/TAF decoding, ceiling semantics
 │  ├─ check-db.js               25 checks: schema, idempotency, retention guard,
 │  │                            backup, integrity, durability across reopen
+│  ├─ check-ui.js               16 checks: DOM id resolution (shell vs script),
+│  │                            i18n key coverage in all 3 languages, sidebar tree
+│  │                            integrity, picker wiring, layout structure
 │  ├─ check-bind.js              5 checks: loopback default, HOST override, warning
 │  ├─ bench.js                  endpoint latency + payload baseline
 │  ├─ debug-dem.js              ad-hoc: landmark sampling vs published heights

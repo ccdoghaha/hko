@@ -14,37 +14,42 @@
 
 <!-- ================= masthead ================= -->
 <header class="masthead">
-  <div class="brand">
-    <span class="brand__mark" aria-hidden="true"></span>
-    <span class="brand__text">
-      <strong data-i18n="siteTitle">本地天氣站</strong>
-      <small data-i18n="siteSub">資料來源：香港天文台開放數據</small>
-    </span>
-  </div>
-
-  <div class="masthead__right">
-    <div class="datebox">
-      <div class="datebox__g" id="dateGregorian">—</div>
-      <div class="datebox__l" id="dateLunar">—</div>
+  <div class="masthead__row">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">
+        <strong data-i18n="siteTitle">本地天氣站</strong>
+        <small data-i18n="siteSub">資料來源：香港天文台開放數據</small>
+      </span>
     </div>
 
-    <div class="toolbar">
-      <form class="search" id="stationSearch" role="search" autocomplete="off">
-        <input type="search" id="searchInput" placeholder="搜尋地點…" aria-label="搜尋地點"
-               data-i18n-ph="searchPh">
-        <button type="submit" aria-label="搜尋">🔍</button>
-      </form>
+    <div class="masthead__right">
+      <div class="datetime" id="dateStrip">
+        <span id="dateGregorian">—</span><span class="datetime__sep">|</span><span id="dateLunar">—</span>
+      </div>
 
-      <nav class="langs" aria-label="Language">
-        <button type="button" data-lang="tc" class="lang is-active">繁</button>
-        <button type="button" data-lang="sc" class="lang">简</button>
-        <button type="button" data-lang="en" class="lang">EN</button>
-      </nav>
+      <div class="toolbar">
+        <button type="button" class="navbar-menu" id="btnFont" data-i18n="tbFont" title="文字大小">文字大小</button>
+        <button type="button" class="navbar-menu" id="btnShare" data-i18n="tbShare" title="分享">分享</button>
+        <button type="button" class="navbar-menu" id="btnSearch" data-i18n="tbSearch" title="搜尋">搜尋</button>
+        <button type="button" class="navbar-menu" id="btnMenu" data-i18n="tbMenu" title="選單" aria-expanded="true">選單</button>
+
+        <nav class="langs" aria-label="Language">
+          <button type="button" data-lang="tc" class="lang is-active">繁</button>
+          <button type="button" data-lang="sc" class="lang">简</button>
+          <button type="button" data-lang="en" class="lang">EN</button>
+        </nav>
+      </div>
     </div>
   </div>
+
+  <form class="search" id="stationSearch" role="search" autocomplete="off" hidden>
+    <input type="search" id="searchInput" placeholder="搜尋地點…" aria-label="搜尋地點" data-i18n-ph="searchPh">
+    <button type="submit" aria-label="搜尋">🔍</button>
+  </form>
 </header>
 
-<!-- ================= top-level nav (HKO section structure) ================= -->
+<!-- ================= top-level section nav ================= -->
 <nav class="hkonav" aria-label="Sections">
   <div class="hkonav__inner">
     <a href="https://www.hko.gov.hk/tc/wxinfo/currwx/current.htm" target="_blank" rel="noopener" data-i18n="navWeather">天氣</a>
@@ -59,34 +64,24 @@
   </div>
 </nav>
 
-<!-- ================= app nav (SPA views) ================= -->
-<nav class="hkonav hkonav--app" aria-label="Views" style="background:#3f777d">
-  <div class="hkonav__inner">
-    <a href="#/home"     data-route="home"     data-i18n="tabHome">主頁</a>
-    <a href="#/overview" data-route="overview" data-i18n="tabOverview">總覽</a>
-    <a href="#/regional" data-route="regional" data-i18n="tabRegional">分區天氣</a>
-    <a href="#/analysis" data-route="analysis" data-i18n="tabAnalysis">高解析度分析</a>
-    <a href="#/lae"      data-route="lae"      data-i18n="tabLae">低空作業</a>
-    <a href="#/imagery"  data-route="imagery"  data-i18n="tabImagery">天氣圖像</a>
-    <a href="#/forecast" data-route="forecast" data-i18n="tabForecast">九天預報</a>
-    <a href="#/alerts"   data-route="alerts"   data-i18n="tabAlerts">警告及提示</a>
-    <a href="#/news"     data-route="news"     data-i18n="tabNews">最新消息</a>
-  </div>
-</nav>
-
 <div id="warningBar" class="warnbar" hidden></div>
 
-<main id="main" class="wrap">
+<!-- ================= body: sidebar + content ================= -->
+<div class="layout" id="layout">
 
-  <div id="statusStrip" class="strip">
-    <span id="statusDot" class="dot dot--idle"></span>
-    <span id="statusText">載入中…</span>
-    <button id="refreshBtn" class="btn" type="button" data-i18n="refresh">即時更新</button>
-  </div>
+  <aside class="side" id="sideNav" aria-label="天氣資訊導覽"></aside>
 
-  <section id="view" class="view" aria-live="polite"></section>
+  <main id="main" class="main">
+    <div id="statusStrip" class="strip">
+      <span id="statusDot" class="dot dot--idle"></span>
+      <span id="statusText">載入中…</span>
+      <button id="refreshBtn" class="btn" type="button" data-i18n="refresh">即時更新</button>
+    </div>
 
-</main>
+    <section id="view" class="view" aria-live="polite"></section>
+  </main>
+
+</div>
 
 <!-- ================= footer ================= -->
 <footer class="foot">

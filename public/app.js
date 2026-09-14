@@ -16,6 +16,13 @@ const I18N = {
     navRad: '輻射監測', navCommunity: '社群', navLearn: '學習', navMedia: '媒體及消息', navAbout: '關於我們',
     tabHome: '主頁', tabOverview: '總覽', tabRegional: '分區天氣', tabImagery: '天氣圖像',
     tabForecast: '九天預報', tabAlerts: '警告及提示', tabNews: '最新消息',
+    tabAnalysis: '高解析度分析', tabLae: '低空作業', tabHome2: '主頁',
+    tbFont: '文字大小', tbShare: '分享', tbSearch: '搜尋', tbMenu: '選單',
+    shareCopied: '連結已複製', sideNavLabel: '天氣資訊導覽',
+    pickerTitle: '天氣資料查詢', pickerParam: '參數', pickerStation: '地點', pickerAll: '全部地點',
+    pickerScope: '涵蓋', pickerStations: '個地點', pickerMax: '最高', pickerMin: '最低', pickerMean: '平均',
+    pickerNoData: '沒有資料', pickerNotPublished: '開放數據未提供', colStation: '地點', calm: '靜風',
+    pickerSingle: '單站讀數（非網絡）',
     fClimate: '香港氣候', fSummary: '每月天氣摘要', fNew: '新增項目', fOpen: '公開資料',
     fRelated: '相關網址', fGuide: '快速用戶指南', fContact: '聯絡我們', fNotice: '重要告示', fPrivacy: '私隱政策',
     loading: '載入中…', refresh: '即時更新', refreshing: '更新中…',
@@ -78,6 +85,13 @@ const I18N = {
     navRad: '辐射监测', navCommunity: '社群', navLearn: '学习', navMedia: '媒体及消息', navAbout: '关于我们',
     tabHome: '主页', tabOverview: '总览', tabRegional: '分区天气', tabImagery: '天气图像',
     tabForecast: '九天预报', tabAlerts: '警告及提示', tabNews: '最新消息',
+    tabAnalysis: '高分辨率分析', tabLae: '低空作业', tabHome2: '主页',
+    tbFont: '文字大小', tbShare: '分享', tbSearch: '搜寻', tbMenu: '选单',
+    shareCopied: '链接已复制', sideNavLabel: '天气信息导览',
+    pickerTitle: '天气数据查询', pickerParam: '参数', pickerStation: '地点', pickerAll: '全部地点',
+    pickerScope: '涵盖', pickerStations: '个地点', pickerMax: '最高', pickerMin: '最低', pickerMean: '平均',
+    pickerNoData: '没有数据', pickerNotPublished: '开放数据未提供', colStation: '地点', calm: '静风',
+    pickerSingle: '单站读数（非网络）',
     fClimate: '香港气候', fSummary: '每月天气摘要', fNew: '新增项目', fOpen: '公开资料',
     fRelated: '相关网址', fGuide: '快速用户指南', fContact: '联络我们', fNotice: '重要告示', fPrivacy: '私隐政策',
     loading: '加载中…', refresh: '即时更新', refreshing: '更新中…',
@@ -140,6 +154,13 @@ const I18N = {
     navRad: 'Radiation', navCommunity: 'Community', navLearn: 'Learning', navMedia: 'Media & News', navAbout: 'About Us',
     tabHome: 'Home', tabOverview: 'Overview', tabRegional: 'Regional', tabImagery: 'Imagery',
     tabForecast: '9-Day', tabAlerts: 'Warnings', tabNews: 'News',
+    tabAnalysis: 'High-res analysis', tabLae: 'Low-altitude ops', tabHome2: 'Home',
+    tbFont: 'Text size', tbShare: 'Share', tbSearch: 'Search', tbMenu: 'Menu',
+    shareCopied: 'Link copied', sideNavLabel: 'Weather information navigation',
+    pickerTitle: 'Weather data query', pickerParam: 'Parameter', pickerStation: 'Station', pickerAll: 'All stations',
+    pickerScope: 'Coverage', pickerStations: 'stations', pickerMax: 'Max', pickerMin: 'Min', pickerMean: 'Mean',
+    pickerNoData: 'No data', pickerNotPublished: 'Not in the open-data feed', colStation: 'Station', calm: 'Calm',
+    pickerSingle: 'Single-station readings (not a network)',
     fClimate: 'HK Climate', fSummary: 'Monthly Summary', fNew: "What's New", fOpen: 'Open Data',
     fRelated: 'Related Sites', fGuide: 'User Guide', fContact: 'Contact Us', fNotice: 'Important Notices', fPrivacy: 'Privacy Policy',
     loading: 'Loading…', refresh: 'Refresh', refreshing: 'Refreshing…',
@@ -307,6 +328,10 @@ const state = {
   laeError: null,
   laeInFlight: null,
   laeAlt: 120,
+  fontSize: 0,
+  picker: { param: 'temp', station: null },
+  wind: null,
+  windInFlight: null,
 };
 
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
@@ -666,7 +691,158 @@ function moduleCard(titleKey, bodyHtml, note) {
   </section>`;
 }
 
+/* ------------------------------------------------------------------ *
+ * parameter / station picker
+ *
+ * HKO's homepage carries two selects: one for the parameter, one for the
+ * station. This is the same interaction over the open-data feed. Parameters the
+ * open data feed does not publish (grass temperature, heat index, visibility,
+ * MSL pressure, yesterday's extremes) are listed as unavailable rather than
+ * silently omitted, so the gap is visible.
+ * ------------------------------------------------------------------ */
+
+/* Parameters that are genuinely *networks* in the open-data feed. The feed also
+ * carries humidity and UV index, but each from a single station (the Observatory
+ * and King's Park respectively) — offering those as networks renders a one-row
+ * table that looks broken, so they are shown separately as point readings. */
+const PICKER_PARAMS = [
+  { k: 'temp', n: ['氣溫', '气温', 'Temperature'], unit: '°C', dp: 1 },
+  { k: 'rain', n: ['過去一小時雨量', '过去一小时雨量', 'Rainfall, past hour'], unit: 'mm', dp: 1 },
+  { k: 'wind', n: ['風向及風速', '风向及风速', 'Wind direction and speed'], unit: 'km/h', dp: 0 },
+];
+
+// Single-station readings — real, but not a spatial network.
+const SINGLE_STATION = [
+  { k: 'hum', n: ['相對濕度', '相对湿度', 'Relative humidity'], unit: '%', from: 'humidity' },
+  { k: 'uv', n: ['紫外線指數', '紫外线指数', 'UV index'], unit: '', from: 'uvindex' },
+];
+
+// In HKO's own selector but not carried by the open-data feed at all.
+const PICKER_UNAVAILABLE = [
+  ['最高氣溫', '最高气温', 'Maximum temperature'],
+  ['最低氣溫', '最低气温', 'Minimum temperature'],
+  ['香港暑熱指數', '香港暑热指数', 'HK Heat Index'],
+  ['草溫', '草温', 'Grass temperature'],
+  ['能見度', '能见度', 'Visibility'],
+  ['平均海平面氣壓', '平均海平面气压', 'Mean sea-level pressure'],
+  ['過去二十四小時氣溫差別', '过去二十四小时气温差别', '24-hour temperature change'],
+];
+
+function pickerSeries(k) {
+  const r = rhr();
+  const bag = (o) => (o && o.data) || [];
+  const num = (d, field) => {
+    const v = Number(d[field]);
+    return Number.isFinite(v) ? v : null;
+  };
+  switch (k) {
+    case 'temp': return bag(r.temperature).map((d) => ({ place: d.place, value: num(d, 'value') }));
+    case 'rain': return bag(r.rainfall).map((d) => ({ place: d.place, value: num(d, 'max') || 0 }));
+    case 'wind': {
+      const rows = (state.wind && state.wind.stations) || [];
+      return rows.map((s) => ({
+        place: s.station,
+        value: s.speedKmh == null ? null : s.speedKmh,
+        dir: s.calm ? t('calm') : (s.dirName || null),
+      }));
+    }
+    default: return [];
+  }
+}
+
+function singleStationRows(li) {
+  const r = rhr();
+  return SINGLE_STATION.map((s) => {
+    const bag = (r[s.from] && r[s.from].data) || [];
+    const d = bag[0];
+    if (!d) return null;
+    return `<div class="metric"><div class="metric__k">${esc(s.n[li])} · ${esc(d.place)}</div>
+      <div class="metric__v">${esc(d.value)}<small>${esc(s.unit)}</small></div>
+      ${d.desc ? `<div class="metric__sub">${esc(d.desc)}</div>` : ''}</div>`;
+  }).filter(Boolean).join('');
+}
+
+function pickerCard() {
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  let p = PICKER_PARAMS.find((x) => x.k === state.picker.param);
+  if (!p) { p = PICKER_PARAMS[0]; state.picker.param = p.k; }   // drop a stale key from an older session
+  const series = pickerSeries(p.k).filter((s) => s.place);
+  const valid = series.filter((s) => s.value != null);
+
+  const places = [...new Set(series.map((s) => s.place))];
+  if (state.picker.station && !places.includes(state.picker.station)) state.picker.station = null;
+  const chosen = state.picker.station;
+
+  const max = valid.length ? valid.reduce((a, b) => (b.value > a.value ? b : a)) : null;
+  const min = valid.length ? valid.reduce((a, b) => (b.value < a.value ? b : a)) : null;
+  const mean = valid.length ? valid.reduce((s, x) => s + x.value, 0) / valid.length : null;
+
+  const rowFor = (s) => {
+    const on = chosen && s.place === chosen;
+    return `<tr class="${on ? 'row--selected' : ''}">
+      <td><a href="#/regional" data-pick-jump="${esc(s.place)}">${esc(s.place)}</a></td>
+      <td class="num">${s.value == null ? '—' : esc(s.value.toFixed(p.dp))}${p.unit ? ' ' + esc(p.unit) : ''}${s.dir ? ` <span class="side__ext">${esc(s.dir)}</span>` : ''}</td>
+    </tr>`;
+  };
+
+  const ranked = [...valid].sort((a, b) => b.value - a.value).slice(0, 40);
+
+  return `
+    <section class="card">
+      <h2 class="card__title">${esc(t('pickerTitle'))}</h2>
+      <div class="card__body">
+        <div class="paramrow">
+          <span class="paramrow__lab">${esc(t('pickerParam'))}</span>
+          <select data-pick-param aria-label="${esc(t('pickerParam'))}">
+            ${PICKER_PARAMS.map((x) => `<option value="${esc(x.k)}" ${x.k === p.k ? 'selected' : ''}>${esc(x.n[li])}</option>`).join('')}
+          </select>
+
+          <span class="paramrow__lab">${esc(t('pickerStation'))}</span>
+          <select data-pick-station aria-label="${esc(t('pickerStation'))}">
+            <option value="">${esc(t('pickerAll'))}</option>
+            ${places.map((pl) => `<option value="${esc(pl)}" ${pl === chosen ? 'selected' : ''}>${esc(pl)}</option>`).join('')}
+          </select>
+
+          <span class="paramrow__hint">
+            ${esc(t('pickerScope'))}: ${valid.length} ${esc(t('pickerStations'))}
+            · ${esc(t('pickerMax'))} ${max ? esc(max.value.toFixed(p.dp)) : '—'}
+            · ${esc(t('pickerMin'))} ${min ? esc(min.value.toFixed(p.dp)) : '—'}
+            · ${esc(t('pickerMean'))} ${mean == null ? '—' : esc(mean.toFixed(p.dp))}
+          </span>
+        </div>
+
+        <div class="tablewrap" style="margin-top:12px;max-height:280px;overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>${esc(t('colStation'))}</th><th style="text-align:right">${esc(p.n[li])}${p.unit ? ` (${esc(p.unit)})` : ''}</th></tr></thead>
+            <tbody>${ranked.length ? ranked.map(rowFor).join('') : `<tr><td colspan="2" class="empty">${esc(t('pickerNoData'))}</td></tr>`}</tbody>
+          </table>
+        </div>
+
+        <p class="paramrow__hint" style="margin-top:10px">
+          ${esc(t('pickerSingle'))}: ${SINGLE_STATION.map((s) => esc(s.n[li])).join(' · ')}
+        </p>
+        <div class="metrics" style="margin-top:8px">${singleStationRows(li)}</div>
+
+        <p class="paramrow__hint" style="margin-top:10px">
+          ${esc(t('pickerNotPublished'))}: ${PICKER_UNAVAILABLE.map((n) => esc(n[li])).join(' · ')}
+        </p>
+      </div>
+      <p class="card__note">${esc(t('recordTime'))}: ${esc(fmtTime((rhr().temperature || {}).recordTime))}</p>
+    </section>`;
+}
+
+/** The wind feed is only needed when the picker asks for it, so fetch it lazily
+ *  rather than on every page load. */
+function ensureWind() {
+  if (state.wind || state.windInFlight) return;
+  state.windInFlight = fetch('/api/wind')
+    .then((r) => r.json())
+    .then((d) => { state.wind = d; state.windInFlight = null; renderAll(); })
+    .catch(() => { state.windInFlight = null; });
+}
+
 function viewHome() {
+  if (state.picker.param === 'wind') ensureWind();
   const st = heroStation();
   const range = todayRange();
   const uv = uvValue();
@@ -715,28 +891,34 @@ function viewHome() {
       <p class="card__note">${esc(t('schematic'))} · ${esc(t('recordTime'))}: ${esc(fmtTime((rhr().temperature || {}).recordTime))}</p>
     </section>`;
 
-  /* --- ps5: 9-day forecast --- */
+  /* --- ps5: 9-day forecast carousel --- */
   const days = nineDays().map((d) => {
     const dt = parseCompactDate(d.forecastDate);
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const isToday = dt && dt.getTime() === today.getTime();
     const pic = d.ForecastIcon;
-    return `<div class="day ${isToday ? 'day--today' : ''}">
-      <div class="day__dow">${esc(isToday ? t('today') : d.week || '')}</div>
-      <div class="day__date">${esc(fmtDM(d.forecastDate))}</div>
-      ${pic ? `<img class="day__icon" src="${esc(iconUrl(pic))}" alt="" width="52" height="52" loading="lazy">` : ''}
-      <div class="day__temp">${d.forecastMintemp ? esc(d.forecastMintemp.value) : '—'} <span>– ${d.forecastMaxtemp ? esc(d.forecastMaxtemp.value) : '—'}${esc(t('unitC'))}</span></div>
-      <div class="day__wx">${esc(d.forecastWeather || '')}</div>
-      <div class="day__extra">
-        ${d.PSR ? `<div>${esc(t('rainProb'))}: ${esc(d.PSR)}</div>` : ''}
-      </div>
+    const rh = (d.forecastMinRH && d.forecastMaxRH)
+      ? `${esc(d.forecastMinRH.value)}-${esc(d.forecastMaxRH.value)}%` : '';
+    return `<div class="fcarousel__item ${isToday ? 'fcarousel__item--today' : ''}">
+      <div class="fcarousel__dow">${esc(isToday ? t('today') : d.week || '')}</div>
+      <div class="fcarousel__date">${esc(fmtDM(d.forecastDate))}</div>
+      ${pic ? `<img class="fcarousel__icon" src="${esc(iconUrl(pic))}" alt="" width="50" height="50">` : ''}
+      <div class="fcarousel__temp">${d.forecastMintemp ? esc(d.forecastMintemp.value) : '—'} <span>| ${d.forecastMaxtemp ? esc(d.forecastMaxtemp.value) : '—'}${esc(t('unitC'))}</span></div>
+      ${rh ? `<div class="fcarousel__hum">${rh}</div>` : ''}
+      ${d.Confidence ? `<div class="fcarousel__conf">${esc(d.Confidence)}</div>` : ''}
     </div>`;
   }).join('');
 
   const ps5 = `
     <section class="card">
       <h2 class="card__title">${esc(t('nineDay'))}</h2>
-      <div class="card__body"><div class="days">${days || '<p class="empty">—</p>'}</div></div>
+      <div class="card__body">
+        <div class="fcarousel">
+          <button type="button" class="fcarousel__nav fcarousel__nav--prev" data-carousel="-1" aria-label="previous">‹</button>
+          <div class="fcarousel__track" id="fcTrack">${days || `<p class="empty">${esc(t('pickerNoData'))}</p>`}</div>
+          <button type="button" class="fcarousel__nav fcarousel__nav--next" data-carousel="1" aria-label="next">›</button>
+        </div>
+      </div>
       <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(fnd().updateTime))}</p>
     </section>`;
 
@@ -776,7 +958,7 @@ function viewHome() {
       </div>
     </section>`;
 
-  return ps0 + ps2 + ps5 + ps6 + ps7 + ps9;
+  return ps0 + pickerCard() + ps2 + ps5 + ps6 + ps7 + ps9;
 }
 
 /* ------------------------------------------------------------------ *
@@ -1626,12 +1808,149 @@ function renderStatus() {
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * sidebar navigation
+ *
+ * HKO's homepage is a left navigation tree, not a horizontal tab bar. The
+ * grouping and labels below mirror that information architecture; every entry
+ * either opens a view in this SPA or links out to the Observatory's own page.
+ * ------------------------------------------------------------------ */
+
+const HKO = 'https://www.hko.gov.hk/tc';
+const MAPS = 'https://maps.weather.gov.hk';
+
+// [ 繁, 简, EN, destination ]  destination '#/x' = local view, else external
+const SIDEBAR_TREE = [
+  ['天氣', '天气', 'Weather', [
+    ['本港天氣', '本港天气', 'Local weather', [
+      ['分區天氣', '分区天气', 'Regional weather', '#/regional'],
+      ['天氣照片', '天气照片', 'Weather photos', `${HKO}/wxinfo/ts/index_webcam.htm`],
+      ['雨量分佈圖', '雨量分布图', 'Rainfall map', '#/regional'],
+      ['紫外線資訊', '紫外线信息', 'UV information', `${HKO}/wxinfo/uvinfo/uvinfo.html`],
+      ['香港水域能見度', '香港水域能见度', 'Visibility in HK waters', `${HKO}/vis/vis_index.shtml`],
+      ['天氣報告', '天气报告', 'Weather report', '#/home'],
+      ['昨日天氣及輻射水平資料', '昨日天气及辐射水平资料', "Yesterday's weather and radiation", `${HKO}/wxinfo/pastwx/ryes.htm`],
+      ['過去天氣', '过去天气', 'Past weather', `${HKO}/wxinfo/pastwx/past.htm`],
+      ['香港高空氣象觀測', '香港高空气象观测', 'Upper-air observations', `${HKO}/out_photo/upper-air-weather.htm`],
+      ['京士柏氣象站', '京士柏气象站', "King's Park meteorological station", `${HKO}/wxinfo/aws/kpinfo.htm`],
+    ]],
+    ['天氣預測', '天气预测', 'Weather forecast', [
+      ['本港地區天氣預報', '本港地区天气预报', 'Local weather forecast', '#/forecast'],
+      ['九天天氣預報', '九天天气预报', '9-day forecast', '#/forecast'],
+      ['特別天氣提示', '特别天气提示', 'Special weather tips', '#/alerts'],
+      ['延伸預報', '延伸预报', 'Extended forecast', `${HKO}/probfcst/tempfcst.htm`],
+      ['自動分區天氣預報', '自动分区天气预报', 'Automatic regional forecast', `${MAPS}/ocf/index_uc.html`],
+      ['兩小時降雨預報', '两小时降雨预报', '2-hour rainfall nowcast', `${MAPS}/ocf/index_uc.html?data=ncrf`],
+      ['一小時閃電預報', '一小时闪电预报', '1-hour lightning nowcast', '#/imagery'],
+      ['紫外線指數預測', '紫外线指数预测', 'UV index forecast', `${HKO}/wxinfo/uvinfo/uvinfo.html`],
+      ['華南海域天氣報告', '南海海域天气报告', 'South China Sea forecast', `${HKO}/wxinfo/currwx/ffish.htm`],
+      ['船舶天氣預報', '船舶天气预报', 'Marine forecast', `${HKO}/wxinfo/currwx/fmar.htm`],
+    ]],
+    ['天氣警告', '天气警告', 'Warnings', [
+      ['今日天氣警告', '今日天气警告', "Today's warnings", '#/alerts'],
+      ['詳細警告資料', '详细警告资料', 'Warning details', '#/alerts'],
+      ['大雨及雷暴區域資訊', '大雨及雷暴区域信息', 'Rainstorm and thunderstorm areas', `${HKO}/rhr/main.html`],
+      ['熱帶氣旋警告（本港地區）', '热带气旋警告（本港地区）', 'Tropical cyclone warning', `${HKO}/wxinfo/currwx/tc.htm`],
+      ['各類警告詳細資料', '各类警告详细资料', 'All warning bulletins', `${HKO}/wservice/warning/details.htm`],
+      ['漁民天氣', '渔民天气', 'Fishermen weather', `${HKO}/fishermen/main.htm`],
+    ]],
+    ['航運天氣', '航运天气', 'Marine weather', [
+      ['航運界天氣資料', '航运界天气资料', 'Mariners weather', `${HKO}/wservice/tsheet/pms/mariners.htm`],
+      ['香港海港氣象服務', '香港海港气象服务', 'HK port meteorological service', `${HKO}/wservice/tsheet/pms/index.htm`],
+      ['我的海洋天氣圖像廊', '我的海洋天气图像廊', 'Marine weather gallery', `${MAPS}/sea/index_uc.htm`],
+      ['航空天氣', '航空天气', 'Aviation weather', '#/lae'],
+    ]],
+    ['天氣監測圖像', '天气监测图像', 'Monitoring imagery', [
+      ['雷達圖像', '雷达图像', 'Radar imagery', '#/imagery'],
+      ['閃電位置資訊服務', '闪电位置信息服务', 'Lightning location service', '#/imagery'],
+      ['氣象衛星圖片', '气象卫星图片', 'Satellite imagery', '#/imagery'],
+      ['天氣圖', '天气图', 'Weather chart', '#/imagery'],
+      ['沙塵天氣資訊', '沙尘天气信息', 'Sandstorm information', `${HKO}/wxinfo/sanddust/sdawx.html`],
+      ['反軌跡路線圖', '反轨迹路线图', 'Backward trajectory', `${HKO}/wxinfo/trajectory/trajectory.shtml`],
+    ]],
+    ['地理信息系統天氣服務', '地理信息系统天气服务', 'GIS weather services', [
+      ['地球天氣', '地球天气', 'Earth weather', `${MAPS}/wxviewer/index.html?lang=tc`],
+    ]],
+  ]],
+  ['本站分析', '本站分析', 'Local analysis', [
+    ['天氣總覽', '天气总览', 'Overview', '#/overview'],
+    ['高解析度分析', '高分辨率分析', 'High-resolution analysis', '#/analysis'],
+    ['最新消息', '最新消息', 'News', '#/news'],
+  ]],
+];
+
+/** Collapsed group paths, persisted so a reload keeps the tree as the user left it. */
+const collapsedGroups = new Set(
+  (() => { try { return JSON.parse(localStorage.getItem('hko.collapsed') || '[]'); } catch { return []; } })()
+);
+
+function saveCollapsed() {
+  try { localStorage.setItem('hko.collapsed', JSON.stringify([...collapsedGroups])); } catch { /* private mode */ }
+}
+
+function renderSidebar() {
+  const host = $('#sideNav');
+  if (!host) return;
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+
+  const item = (n, path) => {
+    const dest = n[3];
+    const ext = !String(dest).startsWith('#/');
+    const attrs = ext
+      ? `href="${esc(dest)}" target="_blank" rel="noopener"`
+      : `href="${esc(dest)}"`;
+    const hint = ext ? ` <span class="side__ext" aria-hidden="true">↗</span>` : '';
+    return `<li><a class="side__link" ${attrs} data-path="${esc(path)}">${esc(n[li])}${hint}</a></li>`;
+  };
+
+  const group = (n, depth, parentPath) => {
+    const path = parentPath ? `${parentPath}/${n[li]}` : n[li];
+    const kids = n[3] || [];
+    const open = !collapsedGroups.has(path);
+    const level = depth === 0 ? 'side__head--top' : 'side__head--sub';
+    return `<li class="side__group">
+      <button type="button" class="side__head ${level}" data-group="${esc(path)}" aria-expanded="${open}">
+        <span class="side__caret" aria-hidden="true"></span>${esc(n[li])}
+      </button>
+      <ul class="side__list" ${open ? '' : 'hidden'}>
+        ${kids.map((c) => (c[3] && Array.isArray(c[3]) ? group(c, depth + 1, path) : item(c, path))).join('')}
+      </ul>
+    </li>`;
+  };
+
+  host.innerHTML = `<nav class="side__inner" aria-label="${esc(t('sideNavLabel'))}">
+    <ul class="side__list side__list--root">
+      ${SIDEBAR_TREE.map((g) => group(g, 0, '')).join('')}
+    </ul>
+  </nav>`;
+
+  $$('.side__head', host).forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.group;
+      const list = btn.nextElementSibling;
+      const nowOpen = list.hasAttribute('hidden');
+      if (nowOpen) list.removeAttribute('hidden'); else list.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', String(nowOpen));
+      if (nowOpen) collapsedGroups.delete(key); else collapsedGroups.add(key);
+      saveCollapsed();
+    });
+  });
+
+  markSidebarActive();
+}
+
+/** Highlight the sidebar entry that matches the current route. */
+function markSidebarActive() {
+  const want = `#/${state.route}`;
+  $$('.side__link').forEach((a) => a.classList.toggle('is-active', a.getAttribute('href') === want));
+}
+
 function renderI18nChrome() {
   document.documentElement.lang = state.lang === 'en' ? 'en' : (state.lang === 'sc' ? 'zh-Hans-HK' : 'zh-Hant-HK');
   $$('[data-i18n]').forEach((el) => { el.textContent = t(el.getAttribute('data-i18n')); });
   $$('[data-i18n-ph]').forEach((el) => { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
   $$('.lang').forEach((b) => b.classList.toggle('is-active', b.dataset.lang === state.lang));
-  $$('.hkonav--app a').forEach((a) => a.classList.toggle('is-active', a.dataset.route === state.route));
+  markSidebarActive();
 }
 
 /* ------------------------------------------------------------------ *
@@ -1716,6 +2035,68 @@ function locateMe() {
   );
 }
 
+function toast(msg) {
+  let el = $('#toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.className = 'toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add('is-on');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('is-on'), 2200);
+}
+
+/* Masthead toolbar. These are real controls, not decoration: HKO's toolbar has
+ * the same affordances (text size, share, search, menu) and dead chrome would be
+ * worse than not drawing it. */
+
+const FS_STEPS = ['normal', 'lg', 'xl'];
+
+function applyFontSize() {
+  const size = FS_STEPS[state.fontSize] || 'normal';
+  document.documentElement.classList.remove('fs-lg', 'fs-xl');
+  if (size !== 'normal') document.documentElement.classList.add(`fs-${size}`);
+}
+
+function cycleFontSize() {
+  state.fontSize = (state.fontSize + 1) % FS_STEPS.length;
+  try { localStorage.setItem('hko.fontSize', String(state.fontSize)); } catch {}
+  applyFontSize();
+  toast(`${t('tbFont')}: ${FS_STEPS[state.fontSize] === 'normal' ? '100%' : (FS_STEPS[state.fontSize] === 'lg' ? '115%' : '130%')}`);
+}
+
+async function sharePage() {
+  const url = location.href;
+  try {
+    if (navigator.share) { await navigator.share({ title: document.title, url }); return; }
+    await navigator.clipboard.writeText(url);
+    toast(t('shareCopied'));
+  } catch {
+    toast(url);   // clipboard blocked (not https) — show it so it can be copied by hand
+  }
+}
+
+function toggleSidebar() {
+  const layout = $('#layout');
+  const btn = $('#btnMenu');
+  if (!layout) return;
+  const hidden = layout.classList.toggle('side-collapsed');
+  if (btn) btn.setAttribute('aria-expanded', String(!hidden));
+}
+
+function toggleSearch() {
+  const form = $('#stationSearch');
+  if (!form) return;
+  form.hidden = !form.hidden;
+  if (!form.hidden) {
+    const inp = $('#searchInput');
+    if (inp) inp.focus();
+  }
+}
+
 function bindGlobalOnce() {
   window.addEventListener('hashchange', () => {
     state.route = parseHash();
@@ -1734,11 +2115,17 @@ function bindGlobalOnce() {
         state.lang = l;
         try { localStorage.setItem('hko-local-lang', l); } catch {}
         state.regional.filter = '';
+        renderSidebar();          // labels are per-language, so the tree is rebuilt
         loadBundle(true);
       }
       return;
     }
     if (ev.target.closest('#refreshBtn')) { loadBundle(true); return; }
+
+    if (ev.target.closest('#btnFont')) { cycleFontSize(); return; }
+    if (ev.target.closest('#btnShare')) { sharePage(); return; }
+    if (ev.target.closest('#btnMenu')) { toggleSidebar(); return; }
+    if (ev.target.closest('#btnSearch')) { toggleSearch(); return; }
 
     const ds = ev.target.closest('[data-dataset]');
     if (ds) { state.regional.dataset = ds.dataset.dataset; state.chart.hover = null; renderAll(); return; }
@@ -1762,12 +2149,44 @@ function bindGlobalOnce() {
       return;
     }
 
+    const car = ev.target.closest('[data-carousel]');
+    if (car) {
+      const track = $('#fcTrack');
+      if (track) track.scrollBy({ left: Number(car.dataset.carousel) * 396, behavior: 'smooth' });
+      return;
+    }
+
+    const jump = ev.target.closest('[data-pick-jump]');
+    if (jump) {
+      state.regional.filter = jump.dataset.pickJump;
+      state.chart.hover = null;
+      // the anchor already points at #/regional; if we are there, re-render
+      if (state.route === 'regional') { ev.preventDefault(); renderAll(); }
+      return;
+    }
+
     const th = ev.target.closest('th.sortable');
     if (th && th.dataset.sort === 'value') {
       const isRain = state.regional.dataset === 'rain';
       if (isRain) state.regional.sortDirRain = state.regional.sortDirRain === 'desc' ? 'asc' : 'desc';
       else state.regional.sortDir = state.regional.sortDir === 'desc' ? 'asc' : 'desc';
       state.chart.hover = null;
+      renderAll();
+      return;
+    }
+  });
+
+  document.body.addEventListener('change', (ev) => {
+    const p = ev.target.closest('[data-pick-param]');
+    if (p) {
+      state.picker.param = p.value;
+      state.picker.station = null;   // stations differ per parameter
+      renderAll();
+      return;
+    }
+    const s = ev.target.closest('[data-pick-station]');
+    if (s) {
+      state.picker.station = s.value || null;
       renderAll();
       return;
     }
@@ -1798,10 +2217,14 @@ function bindGlobalOnce() {
   try {
     const saved = localStorage.getItem('hko-local-lang');
     if (saved && I18N[saved]) state.lang = saved;
+    const fs = localStorage.getItem('hko.fontSize');
+    if (fs != null && FS_STEPS[Number(fs)]) state.fontSize = Number(fs);
   } catch {}
   if (!location.hash) location.hash = '#/home';
   state.route = parseHash();
   bindGlobalOnce();
+  renderSidebar();
+  applyFontSize();
   renderI18nChrome();
   renderStatus();
   loadBundle(false);
