@@ -20,6 +20,7 @@ const http = require('http');
 const fs = require('fs');
 const fsp = require('fs/promises');
 const path = require('path');
+const analysis = require('./lib/analysis');
 
 const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, 'public');
@@ -525,6 +526,23 @@ async function handleApi(req, res, u) {
     return sendJson(res, 200, payload);
   }
 
+  if (u.pathname === '/api/analysis') {
+    const force = q.get('force') === '1';
+    try {
+      const r = await analysis.run({
+        cacheDir: CACHE_DIR,
+        getRhrread: () => getData('rhrread', 'tc', { force }).then((x) => x.value),
+        force,
+      });
+      const { pngBuffer, ...json } = r;
+      return sendJson(res, 200, json);
+    } catch (err) {
+      stats.errors++;
+      stats.lastError = `${new Date().toISOString()} analysis: ${err.message}`;
+      return sendJson(res, 502, { ok: false, error: err.message });
+    }
+  }
+
   return sendJson(res, 404, { ok: false, error: 'unknown api route' });
 }
 
@@ -592,6 +610,23 @@ const server = http.createServer(async (req, res) => {
           'Content-Type': type,
           'Content-Length': buf.length,
           'Cache-Control': 'public, max-age=60',
+        });
+        return res.end(buf);
+      } catch (err) {
+        return sendJson(res, 502, { ok: false, error: err.message });
+      }
+    }
+
+    if (u.pathname === '/analysis/field.png') {
+      try {
+        const buf = await analysis.raster({
+          cacheDir: CACHE_DIR,
+          getRhrread: () => getData('rhrread', 'tc', {}).then((x) => x.value),
+        });
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': buf.length,
+          'Cache-Control': 'public, max-age=300',
         });
         return res.end(buf);
       } catch (err) {

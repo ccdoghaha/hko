@@ -45,6 +45,18 @@ const I18N = {
     mapTitle: '分區天氣圖', schematic: '示意圖，位置為約略值',
     less: '較低', more: '較高', locate: '定位', locating: '定位中…',
     solarTerm: '節氣', lunarDate: '農曆',
+    tabAnalysis: '高解析度分析', analysisTitle: '高解析度地面氣溫分析',
+    analysisSub: '由自動氣象站觀測內插至高解析度網格',
+    methodTitle: '方法', estimator: '內插方法', selectedTag: '選用',
+    rmse: '均方根誤差', mae: '平均絕對誤差', bias: '偏差', maxErr: '最大誤差',
+    networkTitle: '測站網絡', stationCount: '測站數目', elevRange: '測站海拔',
+    elevSpan: '海拔跨度', gridRes: '網格解析度', fieldTitle: '分析場統計',
+    variogramTitle: '變差函數', nugget: '塊金', sill: '基台', range: '變程',
+    showOverlay: '顯示分析場', hideOverlay: '隱藏分析場', refreshAnalysis: '重新分析',
+    looNote: '方法優劣由留一交叉驗證（leave-one-out）實測決定，並非預設。',
+    lowlandNote: '此測站網絡集中於低地，海拔跨度有限，因此氣溫遞減率修正屬外推而非擬合關係；交叉驗證顯示修正未能改善誤差，故本分析採用未經地形修正的內插法。',
+    spansNote: '測站網絡涵蓋足夠地形起伏，氣溫遞減率修正經交叉驗證證實有效。',
+    analysisPending: '正在計算分析場…', stationElev: '海拔',
   },
   sc: {
     siteTitle: '本地气象站', siteSub: '数据来源：香港天文台开放数据',
@@ -82,6 +94,18 @@ const I18N = {
     mapTitle: '分区天气图', schematic: '示意图，位置为约略值',
     less: '较低', more: '较高', locate: '定位', locating: '定位中…',
     solarTerm: '节气', lunarDate: '农历',
+    tabAnalysis: '高解析度分析', analysisTitle: '高解析度地面气温分析',
+    analysisSub: '由自动气象站观测内插至高解析度网格',
+    methodTitle: '方法', estimator: '内插方法', selectedTag: '选用',
+    rmse: '均方根误差', mae: '平均绝对误差', bias: '偏差', maxErr: '最大误差',
+    networkTitle: '测站网络', stationCount: '测站数目', elevRange: '测站海拔',
+    elevSpan: '海拔跨度', gridRes: '网格解析度', fieldTitle: '分析场统计',
+    variogramTitle: '变差函数', nugget: '块金', sill: '基台', range: '变程',
+    showOverlay: '显示分析场', hideOverlay: '隐藏分析场', refreshAnalysis: '重新分析',
+    looNote: '方法优劣由留一交叉验证（leave-one-out）实测决定，并非预设。',
+    lowlandNote: '此测站网络集中于低地，海拔跨度有限，因此气温递减率修正属外推而非拟合关系；交叉验证显示修正未能改善误差，故本分析采用未经地形修正的内插法。',
+    spansNote: '测站网络涵盖足够地形起伏，气温递减率修正经交叉验证证实有效。',
+    analysisPending: '正在计算分析场…', stationElev: '海拔',
   },
   en: {
     siteTitle: 'Local Weather Station', siteSub: 'Source: Hong Kong Observatory Open Data',
@@ -119,6 +143,18 @@ const I18N = {
     mapTitle: 'Regional Weather Map', schematic: 'Schematic — station positions are approximate',
     less: 'Lower', more: 'Higher', locate: 'Locate', locating: 'Locating…',
     solarTerm: 'Solar term', lunarDate: 'Lunar',
+    tabAnalysis: 'High-res Analysis', analysisTitle: 'High-resolution Surface Temperature Analysis',
+    analysisSub: 'Station observations interpolated onto a high-resolution grid',
+    methodTitle: 'Method', estimator: 'Estimator', selectedTag: 'selected',
+    rmse: 'RMSE', mae: 'MAE', bias: 'Bias', maxErr: 'Max error',
+    networkTitle: 'Observation Network', stationCount: 'Stations', elevRange: 'Station elevation',
+    elevSpan: 'Elevation span', gridRes: 'Grid resolution', fieldTitle: 'Field Statistics',
+    variogramTitle: 'Variogram', nugget: 'Nugget', sill: 'Sill', range: 'Range',
+    showOverlay: 'Show analysis field', hideOverlay: 'Hide analysis field', refreshAnalysis: 'Recompute',
+    looNote: 'The estimators are ranked by leave-one-out cross-validation on live observations, not by assumption.',
+    lowlandNote: 'This network sits almost entirely in the lowlands, so the lapse-rate correction is extrapolation rather than a fitted relationship. Cross-validation shows it does not reduce error here, so the uncorrected estimator is used.',
+    spansNote: 'The network spans enough relief for the lapse-rate correction to be identifiable; cross-validation confirms it helps.',
+    analysisPending: 'Computing analysis field…', stationElev: 'Elev',
   },
 };
 
@@ -220,10 +256,15 @@ const state = {
   regional: { sortDir: 'desc', sortDirRain: 'desc', dataset: 'temp', filter: '' },
   chart: { items: [], hover: null, box: null, canvas: null },
   autoTimer: null,
+  analysis: null,
+  analysisLoading: false,
+  analysisError: null,
+  analysisInFlight: null,
+  showOverlay: true,
 };
 
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
-const ROUTES = ['home', 'overview', 'regional', 'imagery', 'forecast', 'alerts', 'news'];
+const ROUTES = ['home', 'overview', 'regional', 'analysis', 'imagery', 'forecast', 'alerts', 'news'];
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -306,6 +347,49 @@ async function loadBundle(force = false) {
 function scheduleAutoRefresh() {
   if (state.autoTimer) clearInterval(state.autoTimer);
   state.autoTimer = setInterval(() => { if (!document.hidden) loadBundle(true); }, AUTO_REFRESH_MS);
+}
+
+/* The analysis is expensive to compute (terrain mosaic + interpolation) and
+   changes only when the observations do, so it is fetched on demand rather
+   than on every page refresh. */
+async function loadAnalysis(force = false) {
+  if (state.analysis && !force) return state.analysis;
+  if (state.analysisInFlight && !force) return state.analysisInFlight;
+
+  state.analysisLoading = true;
+  state.analysisError = null;
+  if (state.route === 'analysis') renderAll();
+
+  const job = (async () => {
+    const res = await fetch(`/api/analysis${force ? '?force=1' : ''}`);
+    const json = await res.json();
+    if (!res.ok || !json.ok) throw new Error(json.error || `HTTP ${res.status}`);
+    return json;
+  })();
+  state.analysisInFlight = job;
+
+  try {
+    state.analysis = await job;
+    state.analysisError = null;
+  } catch (err) {
+    state.analysisError = err.message || String(err);
+    state.analysis = null;
+  } finally {
+    state.analysisInFlight = null;
+    state.analysisLoading = false;
+    if (state.route === 'analysis') renderAll();
+  }
+  return state.analysis;
+}
+
+/** Overlay descriptor for the SVG map, from the analysis grid bounds. */
+function overlayFor() {
+  const a = state.analysis;
+  if (!a || !state.showOverlay) return null;
+  return {
+    href: `/analysis/field.png?t=${encodeURIComponent(a.generatedAt)}`,
+    north: a.grid.north, south: a.grid.south, west: a.grid.west, east: a.grid.east,
+  };
 }
 
 /* ------------------------------------------------------------------ *
@@ -399,10 +483,26 @@ const LAND = [
   [[114.020,22.045],[114.065,22.055],[114.070,22.020],[114.025,22.010]],
 ];
 
-function renderMap(rows, kind) {
-  const polys = LAND.map((ring) =>
-    `<polygon points="${ring.map(([lon, lat]) => project(lat, lon).map((n) => n.toFixed(1)).join(',')).join(' ')}"
-      fill="#e7efe4" stroke="#c3d4bb" stroke-width="1"/>`).join('');
+function renderMap(rows, kind, overlay) {
+  const polys = LAND.map((ring) => {
+    const pts = ring.map(([lon, lat]) => project(lat, lon).map((n) => n.toFixed(1)).join(',')).join(' ');
+    return overlay
+      /* with the raster beneath, keep only the coastline as a hint */
+      ? `<polygon points="${pts}" fill="none" stroke="#8fa89a" stroke-width="0.8" opacity="0.75"/>`
+      : `<polygon points="${pts}" fill="#e7efe4" stroke="#c3d4bb" stroke-width="1"/>`;
+  }).join('');
+
+  /* The analysis raster is placed by projecting its geographic bounds through
+     the same equirectangular transform used for everything else, so it aligns
+     with the markers by construction rather than by tuning. */
+  let overlaySvg = '';
+  if (overlay) {
+    const [ox, oy] = project(overlay.north, overlay.west);
+    const [ex, ey] = project(overlay.south, overlay.east);
+    overlaySvg = `<image href="${esc(overlay.href)}" x="${ox.toFixed(2)}" y="${oy.toFixed(2)}"
+      width="${(ex - ox).toFixed(2)}" height="${(ey - oy).toFixed(2)}"
+      preserveAspectRatio="none" opacity="0.9"/>`;
+  }
 
   const maxV = Math.max(...rows.map((r) => r.value), 1);
   const markers = rows.map((r) => {
@@ -422,6 +522,7 @@ function renderMap(rows, kind) {
     <svg viewBox="0 0 ${MAP.w} ${MAP.h}" role="img" aria-label="${esc(t('mapTitle'))}">
       <rect width="${MAP.w}" height="${MAP.h}" fill="#dceef7"/>
       ${polys}
+      ${overlaySvg}
       ${markers}
     </svg>
   </div>`;
@@ -483,7 +584,7 @@ function viewHome() {
         </span>
       </h2>
       <div class="card__body">
-        ${renderMap(state.regional.dataset === 'rain' ? rainRows : tempRows, state.regional.dataset === 'rain' ? 'rain' : 'temp')}
+        ${renderMap(state.regional.dataset === 'rain' ? rainRows : tempRows, state.regional.dataset === 'rain' ? 'rain' : 'temp', overlayFor())}
       </div>
       <p class="card__note">${esc(t('schematic'))} · ${esc(t('recordTime'))}: ${esc(fmtTime((rhr().temperature || {}).recordTime))}</p>
     </section>`;
@@ -646,7 +747,7 @@ function viewRegional() {
   return `
     <section class="card">
       <h2 class="card__title">${esc(t('mapTitle'))}</h2>
-      <div class="card__body">${renderMap(rows, kind)}</div>
+      <div class="card__body">${renderMap(rows, kind, overlayFor())}</div>
       <p class="card__note">${esc(t('schematic'))}</p>
     </section>
 
@@ -848,8 +949,116 @@ function viewNews() {
 }
 
 /* ------------------------------------------------------------------ *
- * 3-D isometric bar chart
+ * view: ANALYSIS (high-resolution post-processed field)
  * ------------------------------------------------------------------ */
+
+function viewAnalysis() {
+  const a = state.analysis;
+
+  if (!a) {
+    // no result yet: only claim failure if one actually happened
+    return `<section class="card">
+      <h2 class="card__title">${esc(state.analysisError ? t('errorTitle') : t('analysisTitle'))}</h2>
+      <div class="card__body">
+        ${state.analysisError
+          ? `<p class="empty">${esc(state.analysisError)}</p>`
+          : `<p class="prose">${esc(t('analysisPending'))}</p>
+             <div class="skeleton" style="width:70%"></div>
+             <div class="skeleton" style="width:45%"></div>
+             <div class="skeleton" style="width:58%"></div>`}
+        <button class="btn" data-analysis-refresh type="button">${esc(t('refreshAnalysis'))}</button>
+      </div></section>`;
+  }
+
+  const tempRows = tempStations().map((d) => ({ place: d.place, value: Number(d.value) }));
+
+  /* --- the product --- */
+  const mapCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('analysisTitle'))}
+        <span class="spacer">
+          <button class="btn" data-overlay-toggle type="button">${esc(state.showOverlay ? t('hideOverlay') : t('showOverlay'))}</button>
+          <button class="btn" data-analysis-refresh type="button" ${state.analysisLoading ? 'disabled' : ''}>${esc(t('refreshAnalysis'))}</button>
+        </span>
+      </h2>
+      <div class="card__body">
+        ${renderMap(tempRows, 'temp', overlayFor())}
+        <div class="chartlegend">
+          <span>${esc(t('analysisSub'))}</span>
+          <span>${a.grid.cols}×${a.grid.rows} &#64; ${a.grid.metresPerCell} m</span>
+          <span>${esc(a.grid.west.toFixed(3))}–${esc(a.grid.east.toFixed(3))}°E, ${esc(a.grid.south.toFixed(3))}–${esc(a.grid.north.toFixed(3))}°N</span>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(a.generatedAt))} · ${esc(t('recordTime'))}: ${esc(fmtTime(a.observationTime))} · PNG ${a.raster.bytes} bytes</p>
+    </section>`;
+
+  /* --- estimator comparison: the actual finding --- */
+  const estRows = a.estimators.map((e) => `
+    <tr class="${e.selected ? 'row--selected' : ''}">
+      <td>${esc(e.label)}${e.selected ? ` <strong>← ${esc(t('selectedTag'))}</strong>` : ''}</td>
+      <td class="num">${e.rmse.toFixed(2)}</td>
+      <td class="num">${e.mae.toFixed(2)}</td>
+      <td class="num">${e.bias >= 0 ? '+' : ''}${e.bias.toFixed(2)}</td>
+      <td class="num">${e.maxError.toFixed(2)}</td>
+    </tr>`).join('');
+
+  const estCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('methodTitle'))} — ${esc(t('estimator'))}</h2>
+      <div class="card__body">
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr>
+              <th>${esc(t('estimator'))}</th>
+              <th style="text-align:right">${esc(t('rmse'))} (K)</th>
+              <th style="text-align:right">${esc(t('mae'))} (K)</th>
+              <th style="text-align:right">${esc(t('bias'))} (K)</th>
+              <th style="text-align:right">${esc(t('maxErr'))} (K)</th>
+            </tr></thead>
+            <tbody>${estRows}</tbody>
+          </table>
+        </div>
+        <p class="card__note">${esc(t('looNote'))}</p>
+      </div>
+    </section>`;
+
+  /* --- why the correction did or did not help --- */
+  const n = a.network;
+  const whyNote = !n.spansRelief ? t('lowlandNote')
+                : a.correctionHelped ? t('spansNote')
+                : t('looNote');
+
+  const whyCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('networkTitle'))}</h2>
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('stationCount'))}</div><div class="metric__v">${n.stations}<small>/${n.configured}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('elevSpan'))}</div><div class="metric__v">${n.elevationSpan}<small>m</small></div><div class="metric__sub">${n.elevationMin}–${n.elevationMax} m</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('gridRes'))}</div><div class="metric__v">${a.grid.metresPerCell}<small>m</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('variogramTitle'))} ${esc(t('range'))}</div><div class="metric__v">${(a.variogram.range / 1000).toFixed(1)}<small>km</small></div><div class="metric__sub">${esc(t('nugget'))} ${a.variogram.nugget.toFixed(3)} · ${esc(t('sill'))} ${a.variogram.sill.toFixed(3)}</div></div>
+        </div>
+        <p class="prose prose--muted" style="margin-top:12px">${esc(whyNote)}</p>
+      </div>
+    </section>`;
+
+  /* --- field statistics --- */
+  const f = a.field;
+  const fieldCard = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('fieldTitle'))}</h2>
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('minTemp'))}</div><div class="metric__v">${f.min.toFixed(1)}<small>${esc(t('unitC'))}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('maxTemp'))}</div><div class="metric__v">${f.max.toFixed(1)}<small>${esc(t('unitC'))}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('temp'))} (mean)</div><div class="metric__v">${f.mean.toFixed(1)}<small>${esc(t('unitC'))}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('district'))} cells</div><div class="metric__v">${f.cells.toLocaleString()}</div></div>
+        </div>
+      </div>
+    </section>`;
+
+  return mapCard + `<div class="grid grid--2">${estCard}${whyCard}</div>` + fieldCard;
+}
 
 const ISO = { cos: 0.98, kx: 0.16, kz: 0.5 };
 const isoProject = (x, y, z) => [(x - z) * ISO.cos, x * ISO.kx + z * ISO.kz - y];
@@ -1116,8 +1325,8 @@ function renderAll() {
   }
 
   const map = {
-    home: viewHome, overview: viewOverview, regional: viewRegional, imagery: viewImagery,
-    forecast: viewForecast, alerts: viewAlerts, news: viewNews,
+    home: viewHome, overview: viewOverview, regional: viewRegional, analysis: viewAnalysis,
+    imagery: viewImagery, forecast: viewForecast, alerts: viewAlerts, news: viewNews,
   };
   view.innerHTML = (map[state.route] || viewHome)();
 
@@ -1173,6 +1382,7 @@ function bindGlobalOnce() {
     state.chart.hover = null;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     renderAll();
+    if (state.route === 'analysis' && !state.analysis) loadAnalysis(false);
   });
 
   document.body.addEventListener('click', (ev) => {
@@ -1194,6 +1404,17 @@ function bindGlobalOnce() {
 
     if (ev.target.closest('#locateBtn')) { locateMe(); return; }
     if (ev.target.closest('#clearFilter')) { state.regional.filter = ''; renderAll(); return; }
+
+    if (ev.target.closest('[data-overlay-toggle]')) {
+      state.showOverlay = !state.showOverlay;
+      renderAll();
+      return;
+    }
+    if (ev.target.closest('[data-analysis-refresh]')) {
+      state.analysis = null;
+      loadAnalysis(true);
+      return;
+    }
 
     const th = ev.target.closest('th.sortable');
     if (th && th.dataset.sort === 'value') {
@@ -1239,4 +1460,9 @@ function bindGlobalOnce() {
   renderStatus();
   loadBundle(false);
   scheduleAutoRefresh();
+  // The analysis is heavier to compute and feeds the map overlay on every view,
+  // so warm it once shortly after first paint rather than blocking the initial
+  // render. If the user lands directly on the analysis route, fetch it at once.
+  if (state.route === 'analysis') loadAnalysis(false);
+  else setTimeout(() => loadAnalysis(false), 1200);
 })();

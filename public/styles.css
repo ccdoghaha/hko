@@ -218,6 +218,8 @@ table.tbl th.sortable:hover { background: var(--blue-dark); }
 table.tbl th .arrow { opacity: .8; font-size: 10px; margin-left: 4px; }
 table.tbl tbody tr:nth-child(even) { background: var(--panel-2); }
 table.tbl tbody tr:hover { background: #e8f2fb; }
+table.tbl tbody tr.row--selected { background: #e6f4ea; }
+table.tbl tbody tr.row--selected td { font-weight: 600; }
 table.tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
 
 .tempchip {

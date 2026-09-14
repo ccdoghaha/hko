@@ -103,6 +103,50 @@ are linked out rather than reproduced. Everything data-driven is implemented.
 
 ---
 
+## High-resolution analysis (post-processing)
+
+Beyond displaying observations, this project contains a genuine post-processing
+pipeline: the ~26-station network is interpolated onto a **250 m grid** using
+real terrain, with the method chosen by measurement rather than assumption.
+
+```
+lib/png.js        PNG decoder/encoder, no dependencies (needed for the DEM)
+lib/dem.js        terrarium terrain tiles -> mosaic -> void fill -> 250 m grid
+lib/interp.js     IDW, ordinary kriging, variogram fitting, leave-one-out CV
+lib/analysis.js   pipeline orchestration + estimator selection
+lib/colormap.js   temperature ramp -> RGBA raster
+docs/ANALYSIS_METHOD.md   full method, validation results, limitations
+```
+
+Measured on live observations:
+
+| Estimator | LOO RMSE |
+|---|---|
+| **IDW, no terrain correction** | **1.03 K** ← selected |
+| IDW with terrain correction | 1.07 K |
+| Ordinary kriging with terrain correction | 1.20 K |
+
+The terrain correction **did not help**, and the reason is a property of the
+network: the `rhrread` stations span only **1–204 m** of elevation. HKO's hilltop
+sites are not in that feed, so a lapse-rate correction is extrapolation rather
+than a fitted relationship. A control experiment confirms the mechanism is sound
+— the same code on a synthetic network spanning 587 m of relief improves RMSE by
+**48%** instead of 22%. The estimator is therefore re-selected by measured RMSE
+on every run; if the feed gains hilltop stations, the correction will start
+winning on its own.
+
+Full write-up, including the DEM's 0.004% void rate, the pillow cross-check of
+the PNG decoder, and seven documented limitations: `docs/ANALYSIS_METHOD.md`.
+
+Validate any change with:
+
+```
+node scripts/check-dem.js      # 16 checks
+node scripts/check-interp.js   # 11 checks
+```
+
+---
+
 ## Layout
 
 ```
@@ -110,12 +154,26 @@ hko-local/
 ├─ server.js          zero-dependency HTTP server: static host, API gateway, caches
 ├─ start.bat          Windows launcher (prompts for port, opens browser)
 ├─ start.sh           POSIX launcher
+├─ lib/
+│  ├─ png.js          PNG codec (terrarium DEM in, RGBA raster out)
+│  ├─ dem.js          terrain tiles -> mosaic -> void fill -> analysis grid
+│  ├─ interp.js       IDW, kriging, variogram, leave-one-out cross-validation
+│  ├─ analysis.js     post-processing pipeline + estimator selection
+│  ├─ stations.js     station coordinates (server side)
+│  └─ colormap.js     temperature ramp -> RGBA
+├─ scripts/
+│  ├─ check-dem.js    16 checks: codec, georeferencing, DEM accuracy, alignment
+│  ├─ check-interp.js 11 checks: synthetic control + live LOO
+│  └─ debug-*.js      ad-hoc diagnostics used while building
+├─ docs/
+│  └─ ANALYSIS_METHOD.md   method, validation results, limitations
 ├─ public/
 │  ├─ index.html      SPA shell: masthead, nav, modules, footer
 │  ├─ styles.css      stylesheet (design tokens matched to HKO)
-│  └─ app.js          SPA: router, views, i18n, SVG map, 3-D canvas chart
+│  └─ app.js          SPA: router, views, i18n, SVG map, 3-D chart, analysis view
 └─ .cache/
-   └─ icons/          weather icons cached on first request
+   ├─ icons/          weather icons cached on first request
+   └─ dem/            terrain tiles cached on first run (~48 tiles)
 ```
 
 ---
@@ -154,6 +212,8 @@ browser ──▶ localhost:8787 ──┬──▶ data.weather.gov.hk   (weath
 | `GET /api/lunar?date=2026-09-14&lang=tc` | lunar date + solar term |
 | `GET /api/news?kind=whatsnew` | news headlines (RSS) |
 | `GET /api/status` | uptime, cache stats, last upstream error |
+| `GET /api/analysis` | high-resolution analysis: grid, scores, selection, field stats |
+| `GET /analysis/field.png` | the analysis raster (RGBA, sea transparent) |
 | `GET /icons/pic{nn}.png` | proxied + disk-cached weather icon |
 | `GET /imagery/{radar,satellite,lightning}` | proxied live imagery, 60 s cache |
 
