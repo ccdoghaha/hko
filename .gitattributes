@@ -1,0 +1,13 @@
+# Normalise line endings so the project behaves the same on every platform.
+* text=auto
+
+# Shell scripts must keep LF or they fail to execute on Linux/macOS.
+*.sh   text eol=lf
+
+# Windows batch files must keep CRLF.
+*.bat  text eol=crlf
+
+# Binary assets are never touched.
+*.png  binary
+*.jpg  binary
+*.ico  binary

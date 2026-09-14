@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>本地天氣站 · Local Weather Station</title>
+<meta name="description" content="Local single-page weather dashboard backed by the Hong Kong Observatory Open Data API.">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="/icons/pic54.png">
+</head>
+<body>
+
+<a class="skip" href="#main">跳至主要內容</a>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">
+        <strong data-i18n="siteTitle">本地天氣站</strong>
+        <small data-i18n="siteSub">資料來源：香港天文台開放數據</small>
+      </span>
+    </div>
+
+    <nav class="langs" aria-label="Language">
+      <button type="button" data-lang="tc" class="lang is-active">繁</button>
+      <button type="button" data-lang="sc" class="lang">简</button>
+      <button type="button" data-lang="en" class="lang">EN</button>
+    </nav>
+  </div>
+</header>
+
+<div id="warningBar" class="warnbar" hidden></div>
+
+<nav class="tabs" aria-label="Sections">
+  <a class="tab" href="#/overview" data-route="overview" data-i18n="tabOverview">總覽</a>
+  <a class="tab" href="#/regional" data-route="regional" data-i18n="tabRegional">分區天氣</a>
+  <a class="tab" href="#/forecast" data-route="forecast" data-i18n="tabForecast">九天預報</a>
+  <a class="tab" href="#/alerts"  data-route="alerts"   data-i18n="tabAlerts">警告及提示</a>
+</nav>
+
+<main id="main" class="wrap">
+
+  <div id="statusStrip" class="strip">
+    <span id="statusDot" class="dot dot--idle"></span>
+    <span id="statusText">載入中…</span>
+    <button id="refreshBtn" class="btn" type="button" data-i18n="refresh">即時更新</button>
+  </div>
+
+  <section id="view" class="view" aria-live="polite"></section>
+
+</main>
+
+<footer class="foot">
+  <p data-i18n="footNote">本機示範應用。天氣資料由香港天文台開放數據 API 提供，版權屬香港天文台所有。此介面為獨立實作，並非天文台官方網站。</p>
+  <p class="foot__meta"><span id="footMeta">—</span></p>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

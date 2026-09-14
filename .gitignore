@@ -1,0 +1,12 @@
+# Runtime cache — weather icons fetched from HKO on first request.
+# Regenerated automatically; never commit it.
+.cache/
+
+# OS / editor noise
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
