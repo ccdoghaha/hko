@@ -5,19 +5,25 @@
 'use strict';
 
 /* ------------------------------------------------------------------ *
- * i18n — UI chrome only; all weather text comes from the API itself.
+ * i18n
  * ------------------------------------------------------------------ */
 
 const I18N = {
   tc: {
     siteTitle: '本地天氣站', siteSub: '資料來源：香港天文台開放數據',
-    tabOverview: '總覽', tabRegional: '分區天氣', tabForecast: '九天預報', tabAlerts: '警告及提示',
+    searchPh: '搜尋地點…',
+    navWeather: '天氣', navClimate: '氣候', navGeo: '地球物理', navAstro: '天文及授時',
+    navRad: '輻射監測', navCommunity: '社群', navLearn: '學習', navMedia: '媒體及消息', navAbout: '關於我們',
+    tabHome: '主頁', tabOverview: '總覽', tabRegional: '分區天氣', tabImagery: '天氣圖像',
+    tabForecast: '九天預報', tabAlerts: '警告及提示', tabNews: '最新消息',
+    fClimate: '香港氣候', fSummary: '每月天氣摘要', fNew: '新增項目', fOpen: '公開資料',
+    fRelated: '相關網址', fGuide: '快速用戶指南', fContact: '聯絡我們', fNotice: '重要告示', fPrivacy: '私隱政策',
     loading: '載入中…', refresh: '即時更新', refreshing: '更新中…',
     footNote: '本機示範應用。天氣資料由香港天文台開放數據 API 提供，版權屬香港天文台所有。此介面為獨立實作，並非天文台官方網站。',
     live: '已連線 · 資料時間', stale: '離線快取 · 資料時間', err: '無法連線',
     justNow: '剛剛更新', minsAgo: '分鐘前',
-    currentWx: '本港天氣', flwTitle: '本港地區天氣預報', nineDay: '九天預報',
-    regionalTemp: '分區氣溫', regionalRain: '分區雨量', alertsTitle: '天氣警告及提示',
+    currentWx: '天氣實況', flwTitle: '本港地區天氣預報', nineDay: '九天天氣預報',
+    regionalTemp: '分區天氣', regionalRain: '分區雨量', alertsTitle: '天氣警告',
     specialTips: '特別天氣提示', fireDanger: '火災危險警告',
     humidity: '相對濕度', uvindex: '紫外線指數', rainfall: '雨量', lightning: '閃電',
     updated: '更新時間', recordTime: '錄得時間', station: '地點', temp: '氣溫',
@@ -28,18 +34,33 @@ const I18N = {
     generalSituation: '天氣概況', outlook: '展望', forecastPeriod: '預報時段',
     seaTemp: '海水溫度', soilTemp: '土壤溫度', maxTemp: '最高氣溫', minTemp: '最低氣溫',
     maxRH: '最高濕度', minRH: '最低濕度', wind: '風', rainProb: '顯著降雨概率',
-    today: '今日', errorTitle: '連線失敗', retry: '重試',
+    today: '今日', errorTitle: '連線失敗',
     records: '個站點', unitC: '°C', unitMm: '毫米', unitPct: '%',
+    radar: '雷達', satellite: '衛星', lightningImg: '閃電',
+    weatherImagery: '天氣圖像', earthWeather: '地球天氣', worldWeather: '世界天氣',
+    myLocation: '我的位置天氣', socialMedia: '社交媒體', hkoChannel: '天文台頻道',
+    latestNews: '最新消息', weatherBlog: '天氣隨筆', hkoUpdates: '天文台最新動態',
+    hkoBlog: '天文台網誌', hkClimate: '香港氣候', climateSummary: '氣候摘要',
+    viewOnHko: '在天文台網站查看', hasFeed: 'RSS', noFeed: '此欄目不提供 RSS，請到天文台網站瀏覽。',
+    mapTitle: '分區天氣圖', schematic: '示意圖，位置為約略值',
+    less: '較低', more: '較高', locate: '定位', locating: '定位中…',
+    solarTerm: '節氣', lunarDate: '農曆',
   },
   sc: {
     siteTitle: '本地气象站', siteSub: '数据来源：香港天文台开放数据',
-    tabOverview: '总览', tabRegional: '分区天气', tabForecast: '九天预报', tabAlerts: '警告及提示',
+    searchPh: '搜寻地点…',
+    navWeather: '天气', navClimate: '气候', navGeo: '地球物理', navAstro: '天文及授时',
+    navRad: '辐射监测', navCommunity: '社群', navLearn: '学习', navMedia: '媒体及消息', navAbout: '关于我们',
+    tabHome: '主页', tabOverview: '总览', tabRegional: '分区天气', tabImagery: '天气图像',
+    tabForecast: '九天预报', tabAlerts: '警告及提示', tabNews: '最新消息',
+    fClimate: '香港气候', fSummary: '每月天气摘要', fNew: '新增项目', fOpen: '公开资料',
+    fRelated: '相关网址', fGuide: '快速用户指南', fContact: '联络我们', fNotice: '重要告示', fPrivacy: '私隐政策',
     loading: '加载中…', refresh: '即时更新', refreshing: '更新中…',
     footNote: '本机示范应用。天气数据由香港天文台开放数据 API 提供，版权属香港天文台所有。此界面为独立实现，并非天文台官方网站。',
     live: '已连线 · 数据时间', stale: '离线缓存 · 数据时间', err: '无法连线',
     justNow: '刚刚更新', minsAgo: '分钟前',
-    currentWx: '本港天气', flwTitle: '本港地区天气预报', nineDay: '九天预报',
-    regionalTemp: '分区气温', regionalRain: '分区雨量', alertsTitle: '天气警告及提示',
+    currentWx: '天气实况', flwTitle: '本港地区天气预报', nineDay: '九天天气预报',
+    regionalTemp: '分区天气', regionalRain: '分区雨量', alertsTitle: '天气警告',
     specialTips: '特别天气提示', fireDanger: '火灾危险警告',
     humidity: '相对湿度', uvindex: '紫外线指数', rainfall: '雨量', lightning: '闪电',
     updated: '更新时间', recordTime: '录得时间', station: '地点', temp: '气温',
@@ -50,18 +71,33 @@ const I18N = {
     generalSituation: '天气概况', outlook: '展望', forecastPeriod: '预报时段',
     seaTemp: '海水温度', soilTemp: '土壤温度', maxTemp: '最高气温', minTemp: '最低气温',
     maxRH: '最高湿度', minRH: '最低湿度', wind: '风', rainProb: '显著降雨概率',
-    today: '今日', errorTitle: '连线失败', retry: '重试',
+    today: '今日', errorTitle: '连线失败',
     records: '个站点', unitC: '°C', unitMm: '毫米', unitPct: '%',
+    radar: '雷达', satellite: '卫星', lightningImg: '闪电',
+    weatherImagery: '天气图像', earthWeather: '地球天气', worldWeather: '世界天气',
+    myLocation: '我的位置天气', socialMedia: '社交媒体', hkoChannel: '天文台频道',
+    latestNews: '最新消息', weatherBlog: '天气随笔', hkoUpdates: '天文台最新动态',
+    hkoBlog: '天文台网志', hkClimate: '香港气候', climateSummary: '气候摘要',
+    viewOnHko: '在天文台网站查看', hasFeed: 'RSS', noFeed: '此栏目不提供 RSS，请到天文台网站浏览。',
+    mapTitle: '分区天气图', schematic: '示意图，位置为约略值',
+    less: '较低', more: '较高', locate: '定位', locating: '定位中…',
+    solarTerm: '节气', lunarDate: '农历',
   },
   en: {
     siteTitle: 'Local Weather Station', siteSub: 'Source: Hong Kong Observatory Open Data',
-    tabOverview: 'Overview', tabRegional: 'Regional', tabForecast: '9-Day', tabAlerts: 'Warnings',
+    searchPh: 'Search station…',
+    navWeather: 'Weather', navClimate: 'Climate', navGeo: 'Geophysics', navAstro: 'Astronomy & Time',
+    navRad: 'Radiation', navCommunity: 'Community', navLearn: 'Learning', navMedia: 'Media & News', navAbout: 'About Us',
+    tabHome: 'Home', tabOverview: 'Overview', tabRegional: 'Regional', tabImagery: 'Imagery',
+    tabForecast: '9-Day', tabAlerts: 'Warnings', tabNews: 'News',
+    fClimate: 'HK Climate', fSummary: 'Monthly Summary', fNew: "What's New", fOpen: 'Open Data',
+    fRelated: 'Related Sites', fGuide: 'User Guide', fContact: 'Contact Us', fNotice: 'Important Notices', fPrivacy: 'Privacy Policy',
     loading: 'Loading…', refresh: 'Refresh', refreshing: 'Refreshing…',
     footNote: 'Local demonstration app. Weather data is provided by the Hong Kong Observatory Open Data API and remains the copyright of the Hong Kong Observatory. This interface is an independent implementation, not the official HKO website.',
     live: 'Connected · data time', stale: 'Offline cache · data time', err: 'Connection failed',
     justNow: 'updated just now', minsAgo: 'min ago',
     currentWx: 'Current Weather', flwTitle: 'Local Weather Forecast', nineDay: '9-Day Forecast',
-    regionalTemp: 'Regional Temperature', regionalRain: 'Regional Rainfall', alertsTitle: 'Warnings & Tips',
+    regionalTemp: 'Regional Weather', regionalRain: 'Regional Rainfall', alertsTitle: 'Weather Warnings',
     specialTips: 'Special Weather Tips', fireDanger: 'Fire Danger Warning',
     humidity: 'Relative Humidity', uvindex: 'UV Index', rainfall: 'Rainfall', lightning: 'Lightning',
     updated: 'Updated', recordTime: 'Recorded', station: 'Station', temp: 'Temp',
@@ -72,10 +108,102 @@ const I18N = {
     generalSituation: 'General Situation', outlook: 'Outlook', forecastPeriod: 'Forecast Period',
     seaTemp: 'Sea Temperature', soilTemp: 'Soil Temperature', maxTemp: 'Max', minTemp: 'Min',
     maxRH: 'Max RH', minRH: 'Min RH', wind: 'Wind', rainProb: 'Prob. of significant rain',
-    today: 'Today', errorTitle: 'Connection failed', retry: 'Retry',
+    today: 'Today', errorTitle: 'Connection failed',
     records: 'stations', unitC: '°C', unitMm: 'mm', unitPct: '%',
+    radar: 'Radar', satellite: 'Satellite', lightningImg: 'Lightning',
+    weatherImagery: 'Weather Imagery', earthWeather: 'Earth Weather', worldWeather: 'World Weather',
+    myLocation: 'Weather at My Location', socialMedia: 'Social Media', hkoChannel: 'HKO Channel',
+    latestNews: 'What\'s New', weatherBlog: 'Weather Blog', hkoUpdates: 'HKO Updates',
+    hkoBlog: 'HKO Blog', hkClimate: 'Hong Kong Climate', climateSummary: 'Climate Summary',
+    viewOnHko: 'View on HKO website', hasFeed: 'RSS', noFeed: 'No RSS feed for this column — browse it on the HKO website.',
+    mapTitle: 'Regional Weather Map', schematic: 'Schematic — station positions are approximate',
+    less: 'Lower', more: 'Higher', locate: 'Locate', locating: 'Locating…',
+    solarTerm: 'Solar term', lunarDate: 'Lunar',
   },
 };
+
+/* ------------------------------------------------------------------ *
+ * HK observation stations: approximate coordinates for the schematic map
+ * ------------------------------------------------------------------ */
+
+const HK_STATIONS = [
+  { tc: '赤鱲角',     sc: '赤鱲角',     en: 'Chek Lap Kok',          lat: 22.309, lon: 113.915 },
+  { tc: '長洲',       sc: '长洲',       en: 'Cheung Chau',           lat: 22.201, lon: 114.027 },
+  { tc: '清水灣',     sc: '清水湾',     en: 'Clear Water Bay',       lat: 22.263, lon: 114.293 },
+  { tc: '跑馬地',     sc: '跑马地',     en: 'Happy Valley',          lat: 22.270, lon: 114.183 },
+  { tc: '香港天文台', sc: '香港天文台', en: 'Hong Kong Observatory', lat: 22.302, lon: 114.174 },
+  { tc: '香港公園',   sc: '香港公园',   en: 'Hong Kong Park',        lat: 22.278, lon: 114.160 },
+  { tc: '滘西洲',     sc: '滘西洲',     en: 'Kau Sai Chau',          lat: 22.359, lon: 114.330 },
+  { tc: '九龍城',     sc: '九龙城',     en: 'Kowloon City',          lat: 22.332, lon: 114.190 },
+  { tc: '觀塘',       sc: '观塘',       en: 'Kwun Tong',             lat: 22.318, lon: 114.223 },
+  { tc: '流浮山',     sc: '流浮山',     en: 'Lau Fau Shan',          lat: 22.469, lon: 113.984 },
+  { tc: '昂坪',       sc: '昂坪',       en: 'Ngong Ping',            lat: 22.256, lon: 113.913 },
+  { tc: '北潭涌',     sc: '北潭涌',     en: 'Pak Tam Chung',         lat: 22.395, lon: 114.318 },
+  { tc: '坪洲',       sc: '坪洲',       en: 'Peng Chau',             lat: 22.291, lon: 114.043 },
+  { tc: '西貢',       sc: '西贡',       en: 'Sai Kung',              lat: 22.382, lon: 114.274 },
+  { tc: '沙田',       sc: '沙田',       en: 'Sha Tin',               lat: 22.402, lon: 114.210 },
+  { tc: '深水埗',     sc: '深水埗',     en: 'Sham Shui Po',          lat: 22.335, lon: 114.137 },
+  { tc: '筲箕灣',     sc: '筲箕湾',     en: 'Shau Kei Wan',          lat: 22.282, lon: 114.236 },
+  { tc: '石崗',       sc: '石岗',       en: 'Shek Kong',             lat: 22.427, lon: 114.080 },
+  { tc: '上水',       sc: '上水',       en: 'Sheung Shui',           lat: 22.500, lon: 114.117 },
+  { tc: '打鼓嶺',     sc: '打鼓岭',     en: 'Ta Kwu Ling',           lat: 22.528, lon: 114.157 },
+  { tc: '大美督',     sc: '大美督',     en: 'Tai Mei Tuk',           lat: 22.467, lon: 114.237 },
+  { tc: '大帽山',     sc: '大帽山',     en: 'Tai Mo Shan',           lat: 22.411, lon: 114.124 },
+  { tc: '大埔',       sc: '大埔',       en: 'Tai Po',                lat: 22.449, lon: 114.169 },
+  { tc: '大老山',     sc: '大老山',     en: "Tate's Cairn",          lat: 22.358, lon: 114.218 },
+  { tc: '山頂',       sc: '山顶',       en: 'The Peak',              lat: 22.268, lon: 114.148 },
+  { tc: '將軍澳',     sc: '将军澳',     en: 'Tseung Kwan O',         lat: 22.315, lon: 114.256 },
+  { tc: '青衣',       sc: '青衣',       en: 'Tsing Yi',              lat: 22.344, lon: 114.099 },
+  { tc: '荃灣可觀',   sc: '荃湾可观',   en: 'Tsuen Wan Ho Koon',     lat: 22.371, lon: 114.108 },
+  { tc: '荃灣城門谷', sc: '荃湾城门谷', en: 'Tsuen Wan Shing Mun Valley', lat: 22.377, lon: 114.140 },
+  { tc: '屯門',       sc: '屯门',       en: 'Tuen Mun',              lat: 22.393, lon: 113.976 },
+  { tc: '元朗',       sc: '元朗',       en: 'Yuen Long',             lat: 22.444, lon: 114.022 },
+  { tc: '黃竹坑',     sc: '黄竹坑',     en: 'Wong Chuk Hang',        lat: 22.248, lon: 114.170 },
+  { tc: '啟德',       sc: '启德',       en: 'Kai Tak',               lat: 22.317, lon: 114.213 },
+  { tc: '橫瀾島',     sc: '横澜岛',     en: 'Waglan Island',         lat: 22.182, lon: 114.303 },
+  { tc: '赤柱',       sc: '赤柱',       en: 'Stanley',               lat: 22.213, lon: 114.217 },
+
+  /* Additional temperature stations returned by rhrread */
+  { tc: '京士柏',     sc: '京士柏',     en: "King's Park",           lat: 22.310, lon: 114.173 },
+  { tc: '黃大仙',     sc: '黄大仙',     en: 'Wong Tai Sin',          lat: 22.342, lon: 114.196 },
+  { tc: '啟德跑道公園', sc: '启德跑道公园', en: 'Kai Tak Runway Park', lat: 22.305, lon: 114.213 },
+  { tc: '元朗公園',   sc: '元朗公园',   en: 'Yuen Long Park',        lat: 22.442, lon: 114.018 },
+
+  /* The 18 districts used by the rainfall feed (districts, not stations) */
+  { tc: '中西區',     sc: '中西区',     en: 'Central & Western',     lat: 22.283, lon: 114.150 },
+  { tc: '東區',       sc: '东区',       en: 'Eastern',               lat: 22.283, lon: 114.223 },
+  { tc: '葵青',       sc: '葵青',       en: 'Kwai Tsing',            lat: 22.355, lon: 114.130 },
+  { tc: '離島區',     sc: '离岛区',     en: 'Islands',               lat: 22.260, lon: 113.950 },
+  { tc: '北區',       sc: '北区',       en: 'North',                 lat: 22.495, lon: 114.150 },
+  { tc: '南區',       sc: '南区',       en: 'Southern',              lat: 22.240, lon: 114.160 },
+  { tc: '荃灣',       sc: '荃湾',       en: 'Tsuen Wan',             lat: 22.371, lon: 114.115 },
+  { tc: '灣仔',       sc: '湾仔',       en: 'Wan Chai',              lat: 22.278, lon: 114.175 },
+  { tc: '油尖旺',     sc: '油尖旺',     en: 'Yau Tsim Mong',         lat: 22.312, lon: 114.170 },
+];
+
+/** lang -> { stationName: {lat, lon} } */
+const STATION_LOOKUP = (() => {
+  const out = {};
+  for (const lang of ['tc', 'sc', 'en']) {
+    out[lang] = {};
+    for (const s of HK_STATIONS) out[lang][s[lang]] = { lat: s.lat, lon: s.lon };
+  }
+  return out;
+})();
+
+function stationCoords(name) {
+  // The rainfall feed returns administrative districts that carry a "District"
+  // suffix in English ('Central & Western District'), while the station list
+  // does not ('Central & Western'). Try both forms.
+  const tryName = (n) => {
+    for (const lang of ['tc', 'sc', 'en']) {
+      if (STATION_LOOKUP[lang][n]) return STATION_LOOKUP[lang][n];
+    }
+    return null;
+  };
+  const bare = String(name).replace(/\s+District$/, '');
+  return tryName(name) || tryName(`${name} District`) || tryName(bare) || null;
+}
 
 /* ------------------------------------------------------------------ *
  * state
@@ -83,24 +211,26 @@ const I18N = {
 
 const state = {
   lang: 'tc',
-  route: 'overview',
+  route: 'home',
   bundle: null,
   fetchedAt: null,
   stale: false,
   loading: false,
   error: null,
-  regional: { sortKey: 'value', sortDir: 'desc', dataset: 'temp', sortDirRain: 'desc' },
+  regional: { sortDir: 'desc', sortDirRain: 'desc', dataset: 'temp', filter: '' },
   chart: { items: [], hover: null, box: null, canvas: null },
   autoTimer: null,
 };
 
 const AUTO_REFRESH_MS = 5 * 60 * 1000;
+const ROUTES = ['home', 'overview', 'regional', 'imagery', 'forecast', 'alerts', 'news'];
 
-const $  = (sel, root = document) => root.querySelector(sel);
-const t  = (key) => (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[key] || key;
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+const t = (k) => (I18N[state.lang] && I18N[state.lang][k]) || I18N.en[k] || k;
 
 /* ------------------------------------------------------------------ *
- * small utilities
+ * utilities
  * ------------------------------------------------------------------ */
 
 function esc(s) {
@@ -108,6 +238,7 @@ function esc(s) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
+function num(v, dp = 1) { return (v == null || isNaN(v)) ? '—' : Number(v).toFixed(dp); }
 
 function fmtTime(iso) {
   if (!iso) return '—';
@@ -116,78 +247,46 @@ function fmtTime(iso) {
   const p = (n) => String(n).padStart(2, '0');
   return `${p(d.getMonth() + 1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
-
-/** "20260915" -> Date (HKO 9-day forecast date format) */
 function parseCompactDate(s) {
   const m = String(s || '').match(/^(\d{4})(\d{2})(\d{2})$/);
-  if (!m) return null;
-  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
 }
-
-function fmtDM(s) {
-  const d = parseCompactDate(s);
-  if (!d) return '—';
-  return `${d.getMonth() + 1}/${d.getDate()}`;
-}
-
+function fmtDM(s) { const d = parseCompactDate(s); return d ? `${d.getMonth() + 1}/${d.getDate()}` : '—'; }
 function relTime(ts) {
   if (!ts) return '—';
   const mins = Math.round((Date.now() - ts) / 60000);
-  if (mins <= 0) return t('justNow');
-  return `${mins} ${t('minsAgo')}`;
+  return mins <= 0 ? t('justNow') : `${mins} ${t('minsAgo')}`;
 }
 
-/** Blue -> red ramp for a temperature in Celsius. */
+/* colour ramps */
+function hexToRgb(h) { const s = h.replace('#', ''); return [parseInt(s.slice(0,2),16), parseInt(s.slice(2,4),16), parseInt(s.slice(4,6),16)]; }
+function rgbToHex(r,g,b){ const c = n => Math.max(0,Math.min(255,Math.round(n))).toString(16).padStart(2,'0'); return `#${c(r)}${c(g)}${c(b)}`; }
+function mixHex(a,b,f){ const [r1,g1,b1]=hexToRgb(a), [r2,g2,b2]=hexToRgb(b); return rgbToHex(r1+(r2-r1)*f, g1+(g2-g1)*f, b1+(b2-b1)*f); }
+function shade(hex,f){ const [r,g,b]=hexToRgb(hex); if (f>=0) return rgbToHex(r+(255-r)*f, g+(255-g)*f, b+(255-b)*f); const k=1+f; return rgbToHex(r*k,g*k,b*k); }
+
 function tempColor(v) {
   if (v == null || isNaN(v)) return '#8aa0b4';
-  const stops = [
-    [8,   '#2f6fb5'], [14, '#3f9ad1'], [20, '#4fb3a5'],
-    [25, '#8ec24a'],  [29, '#e8b230'], [32, '#e07b2c'], [35, '#c0392b'],
-  ];
+  const stops = [[8,'#2f6fb5'],[14,'#3f9ad1'],[20,'#4fb3a5'],[25,'#8ec24a'],[29,'#e8b230'],[32,'#e07b2c'],[35,'#c0392b']];
   if (v <= stops[0][0]) return stops[0][1];
   for (let i = 1; i < stops.length; i++) {
     if (v <= stops[i][0]) {
-      const [v0, c0] = stops[i - 1];
-      const [v1, c1] = stops[i];
+      const [v0,c0] = stops[i-1], [v1,c1] = stops[i];
       return mixHex(c0, c1, (v - v0) / (v1 - v0 || 1));
     }
   }
-  return stops[stops.length - 1][1];
+  return stops[stops.length-1][1];
 }
-
-function hexToRgb(h) {
-  const s = h.replace('#', '');
-  return [parseInt(s.slice(0, 2), 16), parseInt(s.slice(2, 4), 16), parseInt(s.slice(4, 6), 16)];
-}
-
-function rgbToHex(r, g, b) {
-  const c = (n) => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0');
-  return `#${c(r)}${c(g)}${c(b)}`;
-}
-
-function mixHex(a, b, f) {
-  const [r1, g1, b1] = hexToRgb(a);
-  const [r2, g2, b2] = hexToRgb(b);
-  return rgbToHex(r1 + (r2 - r1) * f, g1 + (g2 - g1) * f, b1 + (b2 - b1) * f);
-}
-
-/** Lighten (f>0) or darken (f<0) a hex colour by fraction f. */
-function shade(hex, f) {
-  const [r, g, b] = hexToRgb(hex);
-  if (f >= 0) return rgbToHex(r + (255 - r) * f, g + (255 - g) * f, b + (255 - b) * f);
-  const k = 1 + f;
-  return rgbToHex(r * k, g * k, b * k);
-}
+function rainColor(v, max = 40) { return mixHex('#cfe3f5', '#1c5f9e', Math.min(1, (Number(v)||0) / max)); }
 
 /* ------------------------------------------------------------------ *
- * data loading
+ * data
  * ------------------------------------------------------------------ */
 
 async function loadBundle(force = false) {
   state.loading = true;
   renderStatus();
   try {
-    const res = await fetch(`/api/bundle?lang=${encodeURIComponent(state.lang)}${force ? '&force=1' : ''}`);
+    const res = await fetch(`/api/home?lang=${encodeURIComponent(state.lang)}${force ? '&force=1' : ''}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
     state.bundle = json;
@@ -197,7 +296,6 @@ async function loadBundle(force = false) {
     renderAll();
   } catch (err) {
     state.error = err.message || String(err);
-    renderStatus();
     if (!state.bundle) renderAll();
   } finally {
     state.loading = false;
@@ -207,189 +305,361 @@ async function loadBundle(force = false) {
 
 function scheduleAutoRefresh() {
   if (state.autoTimer) clearInterval(state.autoTimer);
-  state.autoTimer = setInterval(() => {
-    if (!document.hidden) loadBundle(true);
-  }, AUTO_REFRESH_MS);
+  state.autoTimer = setInterval(() => { if (!document.hidden) loadBundle(true); }, AUTO_REFRESH_MS);
 }
 
 /* ------------------------------------------------------------------ *
  * derived data
  * ------------------------------------------------------------------ */
 
-function rhr()      { return state.bundle && state.bundle.rhrread || {}; }
-function warnings() { return (state.bundle && state.bundle.warnsum) || {}; }
+const rhr = () => (state.bundle && state.bundle.rhrread) || {};
+const flw = () => (state.bundle && state.bundle.flw) || {};
+const fnd = () => (state.bundle && state.bundle.fnd) || {};
+const lunar = () => (state.bundle && state.bundle.lunar) || {};
+const newsBag = () => (state.bundle && state.bundle.news) || {};
+
 function warningList() {
-  const w = warnings();
-  if (!w || Array.isArray(w)) return [];
-  return Object.values(w).filter((x) => x && typeof x === 'object');
+  const w = (state.bundle && state.bundle.warnsum) || {};
+  return (!w || Array.isArray(w)) ? [] : Object.values(w).filter((x) => x && typeof x === 'object');
 }
 function specialTips() {
   const s = state.bundle && state.bundle.swt;
   return (s && Array.isArray(s.swt)) ? s.swt : [];
 }
 function nineDays() {
-  const f = state.bundle && state.bundle.fnd;
+  const f = fnd();
   return (f && Array.isArray(f.weatherForecast)) ? f.weatherForecast : [];
 }
+function tempStations() { return (rhr().temperature && rhr().temperature.data) || []; }
+function rainStations() { return (rhr().rainfall && rhr().rainfall.data) || []; }
 
 function heroStation() {
-  const data = (rhr().temperature && rhr().temperature.data) || [];
-  return data.find((s) => /天文台|Observatory/i.test(s.place)) || data[0] || null;
+  const d = tempStations();
+  return d.find((s) => /天文台|Observatory/i.test(s.place)) || d[0] || null;
 }
-
 function humidityValue() {
   const h = rhr().humidity;
-  return (h && h.data && h.data[0] && h.data[0].value) ?? null;
+  return (h && h.data && h.data[0]) ? h.data[0].value : null;
 }
-
 function uvValue() {
   const u = rhr().uvindex;
   const d = u && u.data && u.data[0];
-  if (!d) return null;
-  return { value: d.value ?? null, desc: d.desc || '' };
+  return d ? { value: d.value, desc: d.desc || '', place: d.place || '' } : null;
 }
-
-function totalRainfall() {
-  const r = rhr().rainfall;
-  const d = (r && r.data) || [];
-  if (!d.length) return null;
-  const maxes = d.map((x) => Number(x.max) || 0);
-  return { max: Math.max(...maxes), mean: maxes.reduce((a, b) => a + b, 0) / maxes.length };
-}
-
 function lightningActive() {
-  const l = rhr().lightning;
-  const d = (l && l.data) || [];
+  const d = (rhr().lightning && rhr().lightning.data) || [];
   return d.some((x) => String(x.occur).toLowerCase() === 'true');
 }
-
 function currentIcon() {
   const ic = rhr().icon;
-  const n = Array.isArray(ic) ? ic[0] : ic;
-  return Number(n) || null;
+  return Number(Array.isArray(ic) ? ic[0] : ic) || null;
 }
-
 function currentDesc() {
   const m = rhr().tcmessage;
   if (Array.isArray(m) && m.length) return m.filter(Boolean).join(' ');
   if (typeof m === 'string' && m.trim()) return m.trim();
-  const flw = (state.bundle && state.bundle.flw) || {};
-  return flw.forecastDesc || '';
+  return flw().forecastDesc || '';
 }
-
 function iconUrl(n) { return n ? `/icons/pic${n}.png` : ''; }
 
+/** min/max of today's 9-day entry */
+function todayRange() {
+  const days = nineDays();
+  if (!days.length) return null;
+  const d0 = days[0];
+  return {
+    min: d0.forecastMintemp ? d0.forecastMintemp.value : null,
+    max: d0.forecastMaxtemp ? d0.forecastMaxtemp.value : null,
+  };
+}
+
 /* ------------------------------------------------------------------ *
- * view: overview
+ * SVG schematic map of HK stations
+ * ------------------------------------------------------------------ */
+
+const MAP = { lonMin: 113.83, lonMax: 114.44, latMin: 22.14, latMax: 22.58, w: 760, h: 470 };
+
+function project(lat, lon) {
+  const x = (lon - MAP.lonMin) / (MAP.lonMax - MAP.lonMin) * MAP.w;
+  const y = (MAP.latMax - lat) / (MAP.latMax - MAP.latMin) * MAP.h;
+  return [x, y];
+}
+
+/* Stylised land outlines — approximate, for orientation only. */
+const LAND = [
+  [[113.845,22.255],[113.880,22.290],[113.930,22.300],[113.975,22.280],[114.010,22.250],
+   [114.020,22.215],[113.995,22.190],[113.930,22.185],[113.870,22.200],[113.845,22.225]],
+  [[114.125,22.285],[114.175,22.290],[114.235,22.275],[114.265,22.245],[114.255,22.205],
+   [114.200,22.190],[114.150,22.200],[114.120,22.240]],
+  [[114.145,22.340],[114.225,22.335],[114.235,22.300],[114.200,22.290],[114.155,22.295],[114.135,22.315]],
+  [[113.930,22.290],[113.990,22.400],[114.040,22.470],[114.100,22.550],[114.200,22.560],
+   [114.300,22.530],[114.400,22.480],[114.420,22.400],[114.360,22.340],[114.250,22.310],
+   [114.150,22.295],[114.050,22.280],[113.970,22.260],[113.940,22.250]],
+  [[114.100,22.220],[114.140,22.230],[114.145,22.200],[114.110,22.190]],
+  [[114.020,22.045],[114.065,22.055],[114.070,22.020],[114.025,22.010]],
+];
+
+function renderMap(rows, kind) {
+  const polys = LAND.map((ring) =>
+    `<polygon points="${ring.map(([lon, lat]) => project(lat, lon).map((n) => n.toFixed(1)).join(',')).join(' ')}"
+      fill="#e7efe4" stroke="#c3d4bb" stroke-width="1"/>`).join('');
+
+  const maxV = Math.max(...rows.map((r) => r.value), 1);
+  const markers = rows.map((r) => {
+    const c = stationCoords(r.place);
+    if (!c) return '';
+    const [x, y] = project(c.lat, c.lon);
+    const fill = kind === 'rain' ? rainColor(r.value) : tempColor(r.value);
+    const label = String(r.place);
+    return `<g class="station" data-place="${esc(label)}">
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="${fill}"/>
+      <text x="${x.toFixed(1)}" y="${(y + 3.5).toFixed(1)}" text-anchor="middle">${esc(r.value)}</text>
+      <text class="lbl" x="${x.toFixed(1)}" y="${(y + 23).toFixed(1)}" text-anchor="middle">${esc(label)}</text>
+    </g>`;
+  }).join('');
+
+  return `<div class="mapwrap">
+    <svg viewBox="0 0 ${MAP.w} ${MAP.h}" role="img" aria-label="${esc(t('mapTitle'))}">
+      <rect width="${MAP.w}" height="${MAP.h}" fill="#dceef7"/>
+      ${polys}
+      ${markers}
+    </svg>
+  </div>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * view: HOME — every homepage module, in the Observatory's order
+ * ------------------------------------------------------------------ */
+
+function moduleCard(titleKey, bodyHtml, note) {
+  return `<section class="card">
+    <h2 class="card__title">${esc(typeof titleKey === 'string' && t(titleKey) !== titleKey ? t(titleKey) : titleKey)}</h2>
+    <div class="card__body">${bodyHtml}</div>
+    ${note ? `<p class="card__note">${note}</p>` : ''}
+  </section>`;
+}
+
+function viewHome() {
+  const st = heroStation();
+  const range = todayRange();
+  const uv = uvValue();
+  const icon = currentIcon();
+  const recTime = (rhr().temperature && rhr().temperature.recordTime) || rhr().updateTime;
+  const f = flw();
+  const tempRows = tempStations().map((d) => ({ place: d.place, value: Number(d.value) }));
+  const rainRows = rainStations().map((d) => ({ place: d.place, value: Number(d.max) || 0 }));
+  const whatsnew = (newsBag().whatsnew && newsBag().whatsnew.items) || [];
+
+  /* --- ps0: current conditions + range + UV --- */
+  const ps0 = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('currentWx'))}</h2>
+      <div class="card__body">
+        <div class="hero">
+          ${icon ? `<img class="hero__icon" src="${esc(iconUrl(icon))}" alt="" width="108" height="108">` : ''}
+          <div>
+            <div class="hero__temp">${st && st.value != null ? esc(st.value) : '—'}<sup>${esc(t('unitC'))}</sup></div>
+            ${range ? `<div class="hero__range">${esc(t('maxTemp'))} <b>${esc(range.max)}${esc(t('unitC'))}</b> · ${esc(t('minTemp'))} <b>${esc(range.min)}${esc(t('unitC'))}</b></div>` : ''}
+            <div class="hero__desc">${esc(st ? st.place : '—')}</div>
+            <div class="hero__meta">${esc(t('recordTime'))}: ${esc(fmtTime(recTime))}</div>
+          </div>
+        </div>
+        <p class="prose prose--muted" style="margin-top:14px">${esc(currentDesc())}</p>
+        <div class="metrics" style="margin-top:14px">
+          <div class="metric"><div class="metric__k">${esc(t('humidity'))}</div><div class="metric__v">${humidityValue() == null ? '—' : esc(humidityValue())}<small>${esc(t('unitPct'))}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('uvindex'))}</div><div class="metric__v">${uv ? esc(uv.value) : '—'}</div><div class="metric__sub">${esc(uv ? uv.desc : '')}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('lightning'))}</div><div class="metric__v">${lightningActive() ? '⚡' : '—'}</div></div>
+        </div>
+      </div>
+    </section>`;
+
+  /* --- ps2: regional map + station list --- */
+  const ps2 = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('regionalTemp'))}
+        <span class="spacer">
+          <button class="btn" data-dataset="temp" ${state.regional.dataset === 'temp' ? 'disabled' : ''}>${esc(t('chartTemp'))}</button>
+          <button class="btn" data-dataset="rain" ${state.regional.dataset === 'rain' ? 'disabled' : ''}>${esc(t('chartRain'))}</button>
+        </span>
+      </h2>
+      <div class="card__body">
+        ${renderMap(state.regional.dataset === 'rain' ? rainRows : tempRows, state.regional.dataset === 'rain' ? 'rain' : 'temp')}
+      </div>
+      <p class="card__note">${esc(t('schematic'))} · ${esc(t('recordTime'))}: ${esc(fmtTime((rhr().temperature || {}).recordTime))}</p>
+    </section>`;
+
+  /* --- ps5: 9-day forecast --- */
+  const days = nineDays().map((d) => {
+    const dt = parseCompactDate(d.forecastDate);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const isToday = dt && dt.getTime() === today.getTime();
+    const pic = d.ForecastIcon;
+    return `<div class="day ${isToday ? 'day--today' : ''}">
+      <div class="day__dow">${esc(isToday ? t('today') : d.week || '')}</div>
+      <div class="day__date">${esc(fmtDM(d.forecastDate))}</div>
+      ${pic ? `<img class="day__icon" src="${esc(iconUrl(pic))}" alt="" width="52" height="52" loading="lazy">` : ''}
+      <div class="day__temp">${d.forecastMintemp ? esc(d.forecastMintemp.value) : '—'} <span>– ${d.forecastMaxtemp ? esc(d.forecastMaxtemp.value) : '—'}${esc(t('unitC'))}</span></div>
+      <div class="day__wx">${esc(d.forecastWeather || '')}</div>
+      <div class="day__extra">
+        ${d.PSR ? `<div>${esc(t('rainProb'))}: ${esc(d.PSR)}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  const ps5 = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('nineDay'))}</h2>
+      <div class="card__body"><div class="days">${days || '<p class="empty">—</p>'}</div></div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(fnd().updateTime))}</p>
+    </section>`;
+
+  /* --- ps6: imagery --- */
+  const ps6 = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('weatherImagery'))}</h2>
+      <div class="card__body">
+        <div class="imagery">
+          <div class="imgcard"><div class="imgcard__h">${esc(t('satellite'))}</div><img src="/imagery/satellite" alt="${esc(t('satellite'))}" loading="lazy"></div>
+          <div class="imgcard"><div class="imgcard__h">${esc(t('radar'))}</div><img src="/imagery/radar" alt="${esc(t('radar'))}" loading="lazy"></div>
+          <div class="imgcard"><div class="imgcard__h">${esc(t('lightningImg'))}</div><img src="/imagery/lightning" alt="${esc(t('lightningImg'))}" loading="lazy"></div>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(new Date().toISOString()))} · 1 min cache</p>
+    </section>`;
+
+  /* --- ps7: news --- */
+  const newsHtml = whatsnew.length
+    ? `<ul class="newslist">${whatsnew.map((n) => `<li><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.text)}</a><span class="ext">↗</span></li>`).join('')}</ul>`
+    : `<p class="empty">${esc(t('noFeed'))} <a href="https://www.hko.gov.hk/tc/whatsnew/index.htm" target="_blank" rel="noopener">${esc(t('viewOnHko'))}</a></p>`;
+
+  const ps7 = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('latestNews'))}</h2>
+      <div class="card__body">${newsHtml}</div>
+      <p class="card__note">RSS: rss.weather.gov.hk · 30 min cache</p>
+    </section>`;
+
+  /* --- ps9: climate --- */
+  const ps9 = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('hkClimate'))}</h2>
+      <div class="card__body">
+        <p class="prose">${esc(t('climateSummary'))}: <a href="https://www.hko.gov.hk/tc/wxinfo/pastwx/mws.htm" target="_blank" rel="noopener">${esc(t('viewOnHko'))} ↗</a></p>
+        ${f.generalSituation ? `<p class="prose prose--muted">${esc(f.generalSituation)}</p>` : ''}
+      </div>
+    </section>`;
+
+  return ps0 + ps2 + ps5 + ps6 + ps7 + ps9;
+}
+
+/* ------------------------------------------------------------------ *
+ * view: OVERVIEW
  * ------------------------------------------------------------------ */
 
 function viewOverview() {
   const st = heroStation();
+  const range = todayRange();
   const uv = uvValue();
-  const rain = totalRainfall();
   const icon = currentIcon();
-  const flw = (state.bundle && state.bundle.flw) || {};
-  const hum = humidityValue();
+  const f = flw();
   const recTime = (rhr().temperature && rhr().temperature.recordTime) || rhr().updateTime;
 
   const heroCard = `
     <section class="card">
       <h2 class="card__title">${esc(t('currentWx'))}</h2>
-      <div class="hero">
-        ${icon ? `<img class="hero__icon" src="${esc(iconUrl(icon))}" alt="" width="104" height="104">` : ''}
-        <div>
-          <div class="hero__temp">${st && st.value != null ? esc(st.value) : '—'}<sup>${esc(t('unitC'))}</sup></div>
-          <div class="hero__desc">${esc(st ? st.place : '—')}</div>
-          <div class="hero__meta">${esc(t('recordTime'))}: ${esc(fmtTime(recTime))}</div>
+      <div class="card__body">
+        <div class="hero">
+          ${icon ? `<img class="hero__icon" src="${esc(iconUrl(icon))}" alt="" width="108" height="108">` : ''}
+          <div>
+            <div class="hero__temp">${st && st.value != null ? esc(st.value) : '—'}<sup>${esc(t('unitC'))}</sup></div>
+            ${range ? `<div class="hero__range">${esc(t('maxTemp'))} <b>${esc(range.max)}${esc(t('unitC'))}</b> · ${esc(t('minTemp'))} <b>${esc(range.min)}${esc(t('unitC'))}</b></div>` : ''}
+            <div class="hero__desc">${esc(st ? st.place : '—')}</div>
+            <div class="hero__meta">${esc(t('recordTime'))}: ${esc(fmtTime(recTime))}</div>
+          </div>
         </div>
+        <p class="prose prose--muted" style="margin-top:14px">${esc(currentDesc())}</p>
       </div>
-      <p class="prose prose--muted" style="margin-top:14px">${esc(currentDesc()) || '&nbsp;'}</p>
     </section>`;
 
-  const metric = (k, v, unit, sub) => `
-    <div class="metric">
-      <div class="metric__k">${esc(k)}</div>
-      <div class="metric__v">${v == null ? '—' : esc(v)}${unit ? `<small>${esc(unit)}</small>` : ''}</div>
-      ${sub ? `<div class="metric__sub">${esc(sub)}</div>` : ''}
-    </div>`;
-
-  const metricsCard = `
+  const flwCard = `
     <section class="card">
       <h2 class="card__title">${esc(t('flwTitle'))}</h2>
-      <p class="prose"><strong>${esc(t('generalSituation'))}:</strong> ${esc(flw.generalSituation || '—')}</p>
-      <p class="prose"><strong>${esc(flw.forecastPeriod || t('forecastPeriod'))}:</strong> ${esc(flw.forecastDesc || '—')}</p>
-      <p class="prose"><strong>${esc(t('outlook'))}:</strong> ${esc(flw.outlook || '—')}</p>
-      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(flw.updateTime))}</p>
+      <div class="card__body">
+        <p class="prose"><b>${esc(t('generalSituation'))}:</b> ${esc(f.generalSituation || '—')}</p>
+        <p class="prose"><b>${esc(f.forecastPeriod || t('forecastPeriod'))}:</b> ${esc(f.forecastDesc || '—')}</p>
+        <p class="prose"><b>${esc(t('outlook'))}:</b> ${esc(f.outlook || '—')}</p>
+      </div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(f.updateTime))}</p>
     </section>`;
 
   const metrics = `
     <section class="card">
       <h2 class="card__title">${esc(t('currentWx'))}</h2>
-      <div class="metrics">
-        ${metric(t('humidity'), hum, t('unitPct'))}
-        ${metric(t('uvindex'), uv ? uv.value : null, '', uv ? uv.desc : '')}
-        ${metric(t('rainfall'), rain ? rain.max : null, t('unitMm'), rain ? `max · ${t('unitMm')}` : '')}
-        ${metric(t('lightning'), lightningActive() ? '⚡' : '—', '', '')}
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric"><div class="metric__k">${esc(t('humidity'))}</div><div class="metric__v">${humidityValue() == null ? '—' : esc(humidityValue())}<small>${esc(t('unitPct'))}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('uvindex'))}</div><div class="metric__v">${uv ? esc(uv.value) : '—'}</div><div class="metric__sub">${esc(uv ? uv.desc : '')}</div></div>
+          <div class="metric"><div class="metric__k">${esc(t('maxTemp'))}</div><div class="metric__v">${range ? esc(range.max) : '—'}<small>${esc(t('unitC'))}</small></div></div>
+          <div class="metric"><div class="metric__k">${esc(t('minTemp'))}</div><div class="metric__v">${range ? esc(range.min) : '—'}<small>${esc(t('unitC'))}</small></div></div>
+        </div>
       </div>
     </section>`;
 
-  return heroCard + `<div class="grid grid--2">${metricsCard}${metrics}</div>`;
+  return heroCard + `<div class="grid grid--2">${flwCard}${metrics}</div>`;
 }
 
 /* ------------------------------------------------------------------ *
- * view: regional (table + 3-D chart)
+ * view: REGIONAL (table + 3-D chart)
  * ------------------------------------------------------------------ */
 
 function regionalRows() {
   const s = state.regional;
-  const r = rhr();
-
+  const filter = (s.filter || '').trim();
   if (s.dataset === 'rain') {
-    const rows = ((r.rainfall && r.rainfall.data) || []).map((d) => ({
-      place: d.place,
-      value: Number(d.max) || 0,
-      min: d.min == null ? null : Number(d.min),
-      unit: 'mm',
-    }));
+    let rows = rainStations().map((d) => ({ place: d.place, value: Number(d.max) || 0, min: d.min == null ? null : Number(d.min) }));
+    if (filter) rows = rows.filter((r) => r.place.includes(filter));
     const dir = s.sortDirRain === 'asc' ? 1 : -1;
     rows.sort((a, b) => (a.value - b.value) * dir || a.place.localeCompare(b.place));
-    return { rows, label: t('maxRain'), unit: t('unitMm'), kind: 'rain' };
+    return { rows, unit: t('unitMm'), kind: 'rain' };
   }
-
-  const rows = ((r.temperature && r.temperature.data) || []).map((d) => ({
-    place: d.place, value: Number(d.value), unit: 'C',
-  }));
+  let rows = tempStations().map((d) => ({ place: d.place, value: Number(d.value) }));
+  if (filter) rows = rows.filter((r) => r.place.includes(filter));
   const dir = s.sortDir === 'asc' ? 1 : -1;
   rows.sort((a, b) => (a.value - b.value) * dir || a.place.localeCompare(b.place));
-  return { rows, label: t('temp'), unit: t('unitC'), kind: 'temp' };
+  return { rows, unit: t('unitC'), kind: 'temp' };
 }
 
 function viewRegional() {
   const { rows, unit, kind } = regionalRows();
   const isRain = kind === 'rain';
-  const arrow = (key, dir) => `<span class="arrow">${dir === 'asc' ? '▲' : '▼'}</span>`;
+  const arrow = (dir) => `<span class="arrow">${dir === 'asc' ? '▲' : '▼'}</span>`;
 
   const body = rows.map((r) => {
-    const chip = isRain
-      ? `<span class="tempchip" style="background:${mixHex('#cfe3f5', '#1c5f9e', Math.min(1, r.value / 40))}">${esc(r.value)}</span>`
-      : `<span class="tempchip" style="background:${tempColor(r.value)}">${esc(r.value)}</span>`;
+    const chip = isRain ? rainColor(r.value) : tempColor(r.value);
     return `<tr>
       <td>${esc(r.place)}</td>
-      <td class="num">${chip} <small style="color:#7b8a9c">${esc(unit)}</small></td>
+      <td class="num"><span class="tempchip" style="background:${chip}">${esc(r.value)}</span> <small style="color:#888">${esc(unit)}</small></td>
       ${isRain ? `<td class="num">${r.min == null ? '—' : esc(r.min)}</td>` : ''}
     </tr>`;
   }).join('');
 
   return `
     <section class="card">
+      <h2 class="card__title">${esc(t('mapTitle'))}</h2>
+      <div class="card__body">${renderMap(rows, kind)}</div>
+      <p class="card__note">${esc(t('schematic'))}</p>
+    </section>
+
+    <section class="card">
       <h2 class="card__title">${esc(isRain ? t('regionalRain') : t('regionalTemp'))}
-        <span style="margin-left:auto;font-weight:400;text-transform:none;letter-spacing:0">
+        <span class="spacer">
           <button class="btn" data-dataset="temp" ${!isRain ? 'disabled' : ''}>${esc(t('chartTemp'))}</button>
           <button class="btn" data-dataset="rain" ${isRain ? 'disabled' : ''}>${esc(t('chartRain'))}</button>
         </span>
       </h2>
-
-      <div class="chartbox"><canvas id="chart3d"></canvas></div>
+      <div class="card__body">
+        <div class="chartbox"><canvas id="chart3d"></canvas></div>
+      </div>
       <div class="chartlegend">
         <span>${esc(isRain ? t('chartTitleRain') : t('chartTitle'))}</span>
         <span>${esc(t('chartHint'))}</span>
@@ -398,22 +668,187 @@ function viewRegional() {
 
     <section class="card">
       <h2 class="card__title">${esc(t('station'))} · ${rows.length} ${esc(t('records'))}</h2>
-      <div class="tablewrap">
-        <table class="tbl">
-          <thead><tr>
-            <th class="sortable" data-sort="place">${esc(t('station'))}</th>
-            <th class="sortable" data-sort="value" style="text-align:right">${esc(t('temp'))} ${arrow('value', isRain ? state.regional.sortDirRain : state.regional.sortDir)}</th>
-            ${isRain ? `<th class="num" style="text-align:right">${esc(t('minRain'))}</th>` : ''}
-          </tr></thead>
-          <tbody>${body}</tbody>
-        </table>
+      <div class="card__body">
+        <div class="mapselect" style="margin-bottom:10px">
+          <button class="btn" id="locateBtn" type="button">${esc(t('locate'))}</button>
+          ${state.regional.filter ? `<span class="empty">「${esc(state.regional.filter)}」 <button class="btn" id="clearFilter" type="button">✕</button></span>` : ''}
+        </div>
+        <div class="tablewrap">
+          <table class="tbl">
+            <thead><tr>
+              <th class="sortable" data-sort="place">${esc(t('station'))}</th>
+              <th class="sortable" data-sort="value" style="text-align:right">${esc(t('temp'))} ${arrow(isRain ? state.regional.sortDirRain : state.regional.sortDir)}</th>
+              ${isRain ? `<th class="num" style="text-align:right">${esc(t('minRain'))}</th>` : ''}
+            </tr></thead>
+            <tbody>${body}</tbody>
+          </table>
+        </div>
       </div>
       <p class="card__note">${esc(t('recordTime'))}: ${esc(fmtTime((rhr().temperature || {}).recordTime))}</p>
     </section>`;
 }
 
 /* ------------------------------------------------------------------ *
- * 3-D isometric bar chart (original renderer)
+ * view: IMAGERY
+ * ------------------------------------------------------------------ */
+
+function viewImagery() {
+  const card = (src, title) => `
+    <div class="imgcard">
+      <div class="imgcard__h">${esc(title)}</div>
+      <img src="${src}" alt="${esc(title)}">
+      <div class="imgcard__f">${esc(t('updated'))}: ${esc(fmtTime(new Date().toISOString()))}</div>
+    </div>`;
+  return `
+    <section class="card">
+      <h2 class="card__title">${esc(t('weatherImagery'))}</h2>
+      <div class="card__body">
+        <div class="imagery">
+          ${card('/imagery/satellite', t('satellite'))}
+          ${card('/imagery/radar', t('radar'))}
+          ${card('/imagery/lightning', t('lightningImg'))}
+        </div>
+      </div>
+      <p class="card__note">Proxied live from the Observatory's public product endpoints · 60 s cache</p>
+    </section>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * view: 9-DAY
+ * ------------------------------------------------------------------ */
+
+function viewForecast() {
+  const days = nineDays();
+  const f = fnd();
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+
+  const cards = days.map((d) => {
+    const dt = parseCompactDate(d.forecastDate);
+    const isToday = dt && dt.getTime() === today.getTime();
+    const pic = d.ForecastIcon;
+    return `<div class="day ${isToday ? 'day--today' : ''}">
+      <div class="day__dow">${esc(isToday ? t('today') : d.week || '')}</div>
+      <div class="day__date">${esc(fmtDM(d.forecastDate))}</div>
+      ${pic ? `<img class="day__icon" src="${esc(iconUrl(pic))}" alt="" width="52" height="52" loading="lazy">` : ''}
+      <div class="day__temp">${d.forecastMintemp ? esc(d.forecastMintemp.value) : '—'} <span>– ${d.forecastMaxtemp ? esc(d.forecastMaxtemp.value) : '—'}${esc(t('unitC'))}</span></div>
+      <div class="day__wx">${esc(d.forecastWeather || '')}</div>
+      <div class="day__extra">
+        <div>${esc(t('maxRH'))} ${d.forecastMaxrh ? esc(d.forecastMaxrh.value) : '—'}${esc(t('unitPct'))} · ${esc(t('minRH'))} ${d.forecastMinrh ? esc(d.forecastMinrh.value) : '—'}${esc(t('unitPct'))}</div>
+        ${d.PSR ? `<div>${esc(t('rainProb'))}: ${esc(d.PSR)}</div>` : ''}
+        ${d.forecastWind ? `<div>${esc(t('wind'))}: ${esc(d.forecastWind)}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  const sea = f.seaTemp;
+  const soil = Array.isArray(f.soilTemp) ? f.soilTemp : [];
+
+  return `
+    <section class="card">
+      <h2 class="card__title">${esc(t('generalSituation'))}</h2>
+      <div class="card__body"><p class="prose">${esc(f.generalSituation || '—')}</p></div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(f.updateTime))}</p>
+    </section>
+    <section class="card">
+      <h2 class="card__title">${esc(t('nineDay'))}</h2>
+      <div class="card__body"><div class="days">${cards || '<p class="empty">—</p>'}</div></div>
+    </section>
+    <div class="grid grid--2">
+      <section class="card">
+        <h2 class="card__title">${esc(t('seaTemp'))}</h2>
+        <div class="card__body">${sea ? `<p class="prose">${esc(sea.place)}: <b>${esc(sea.value)}${esc(t('unitC'))}</b></p><p class="card__note">${esc(t('recordTime'))}: ${esc(fmtTime(sea.recordTime))}</p>` : '<p class="empty">—</p>'}</div>
+      </section>
+      <section class="card">
+        <h2 class="card__title">${esc(t('soilTemp'))}</h2>
+        <div class="card__body">${soil.length ? soil.map((s) => `<p class="prose">${esc(s.place)}: <b>${esc(s.value)}${esc(t('unitC'))}</b> <span class="card__note">${esc(fmtTime(s.recordTime))}</span></p>`).join('') : '<p class="empty">—</p>'}</div>
+      </section>
+    </div>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * view: ALERTS
+ * ------------------------------------------------------------------ */
+
+function severityOf(code) {
+  const c = String(code || '').toUpperCase();
+  if (/^(WRB|WRC|TC9|TC10|WT)$/.test(c)) return 'severe';
+  if (/^(WRA|TC1|TC3|TC8[A-Z]{0,2}|WMS|WSS|WL|WLS)$/.test(c)) return 'warn';
+  return 'info';
+}
+
+function viewAlerts() {
+  const list = warningList();
+  const tips = specialTips();
+  const info = Array.isArray(state.bundle && state.bundle.warningInfo) ? state.bundle.warningInfo : [];
+  const f = flw();
+
+  const warnHtml = list.length
+    ? list.map((w) => `<div class="alert ${severityOf(w.code) === 'severe' ? 'alert--severe' : ''}">
+        <p class="alert__h">${esc(w.name || w.code || '—')}</p>
+        <p class="alert__b">${esc(w.code || '')}${w.actionCode ? ' · ' + esc(w.actionCode) : ''}</p>
+        <p class="alert__t">${esc(t('updated'))}: ${esc(fmtTime(w.updateTime || w.issueTime))}</p>
+      </div>`).join('')
+    : `<p class="empty">${esc(t('noWarning'))}</p>`;
+
+  const infoHtml = info.length
+    ? info.map((w) => `<div class="alert alert--info">
+        <p class="alert__h">${esc(w.warningStatementCode || '—')}</p>
+        <p class="alert__b">${(w.contents || []).map((c) => esc(c)).join('<br>')}</p>
+        <p class="alert__t">${esc(t('updated'))}: ${esc(fmtTime(w.updateTime))}</p>
+      </div>`).join('')
+    : '';
+
+  const tipsHtml = tips.length
+    ? tips.map((s) => `<div class="alert">
+        <p class="alert__b">${esc(s.desc || '')}</p>
+        <p class="alert__t">${esc(t('updated'))}: ${esc(fmtTime(s.updateTime))}</p>
+      </div>`).join('')
+    : `<p class="empty">${esc(t('noTip'))}</p>`;
+
+  return `
+    <section class="card">
+      <h2 class="card__title">${esc(t('alertsTitle'))}</h2>
+      <div class="card__body">${warnHtml}${infoHtml}</div>
+    </section>
+    <section class="card">
+      <h2 class="card__title">${esc(t('specialTips'))}</h2>
+      <div class="card__body">${tipsHtml}</div>
+    </section>
+    <section class="card">
+      <h2 class="card__title">${esc(t('fireDanger'))}</h2>
+      <div class="card__body">
+        <p class="prose">${esc(f.fireDangerWarning || t('noWarning'))}</p>
+        ${f.tcInfo ? `<p class="prose">${esc(f.tcInfo)}</p>` : ''}
+      </div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(f.updateTime))}</p>
+    </section>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * view: NEWS
+ * ------------------------------------------------------------------ */
+
+function viewNews() {
+  const bag = newsBag();
+  const block = (key, titleKey) => {
+    const entry = bag[key] || {};
+    const items = entry.items || [];
+    const src = `https://www.hko.gov.hk/tc/${key === 'hkonews' ? 'hkonews' : key}/index.htm`;
+    const inner = items.length
+      ? `<ul class="newslist">${items.map((n) => `<li><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.text)}</a><span class="ext">↗</span></li>`).join('')}</ul>`
+      : `<p class="empty">${esc(t('noFeed'))}</p>`;
+    return `<section class="card">
+      <h2 class="card__title">${esc(t(titleKey))}</h2>
+      <div class="card__body">${inner}</div>
+      <p class="card__note"><a href="${esc(src)}" target="_blank" rel="noopener">${esc(t('viewOnHko'))} ↗</a></p>
+    </section>`;
+  };
+  return block('whatsnew', 'latestNews') + block('blog', 'weatherBlog')
+       + block('hkonews', 'hkoUpdates') + block('forecaster_blog', 'hkoBlog');
+}
+
+/* ------------------------------------------------------------------ *
+ * 3-D isometric bar chart
  * ------------------------------------------------------------------ */
 
 const ISO = { cos: 0.98, kx: 0.16, kz: 0.5 };
@@ -423,7 +858,7 @@ function draw3DChart(canvas, items) {
   if (!canvas) return;
   const dpr = window.devicePixelRatio || 1;
   const W = canvas.clientWidth || 900;
-  const H = canvas.clientHeight || 380;
+  const H = canvas.clientHeight || 400;
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
   const g = canvas.getContext('2d');
@@ -431,77 +866,46 @@ function draw3DChart(canvas, items) {
   g.clearRect(0, 0, W, H);
 
   if (!items.length) {
-    g.fillStyle = '#7b8a9c';
-    g.font = '14px system-ui, sans-serif';
-    g.textAlign = 'center';
-    g.fillText('—', W / 2, H / 2);
-    state.chart.box = null;
-    return;
+    g.fillStyle = '#888'; g.font = '14px system-ui, sans-serif'; g.textAlign = 'center';
+    g.fillText('—', W / 2, H / 2); state.chart.box = null; return;
   }
 
   const maxV = Math.max(...items.map((d) => d.value), 1);
   const minV = Math.min(...items.map((d) => d.value), 0);
-
-  const BAR_W = 30, BAR_D = 30, GAP = 26, MAX_H = 210;
+  const BAR_W = 30, BAR_D = 30, GAP = 26, MAX_H = 220;
   const step = BAR_W + GAP;
 
-  // Build every face in raw isometric space first, so we can fit-to-canvas.
   const bars = items.map((d, i) => {
     const norm = maxV === minV ? 1 : (d.value - minV) / (maxV - minV);
     const h = Math.max(6, norm * MAX_H + 6);
-    const x0 = i * step, x1 = x0 + BAR_W;
-    const z0 = 0, z1 = z0 + BAR_D;
+    const x0 = i * step, x1 = x0 + BAR_W, z0 = 0, z1 = z0 + BAR_D;
     const base = d.color || '#3b7cba';
     const P = isoProject;
     return {
       item: d,
       faces: [
-        // top
-        { pts: [P(x0, h, z0), P(x1, h, z0), P(x1, h, z1), P(x0, h, z1)], fill: shade(base, 0.30), kind: 'top' },
-        // right  (x = x1)
-        { pts: [P(x1, 0, z0), P(x1, h, z0), P(x1, h, z1), P(x1, 0, z1)], fill: shade(base, -0.16), kind: 'side' },
-        // front  (z = z1)
-        { pts: [P(x0, 0, z1), P(x0, h, z1), P(x1, h, z1), P(x1, 0, z1)], fill: shade(base, -0.34), kind: 'front' },
+        { pts: [P(x0,h,z0), P(x1,h,z0), P(x1,h,z1), P(x0,h,z1)], fill: shade(base, 0.30) },
+        { pts: [P(x1,0,z0), P(x1,h,z0), P(x1,h,z1), P(x1,0,z1)], fill: shade(base, -0.16) },
+        { pts: [P(x0,0,z1), P(x0,h,z1), P(x1,h,z1), P(x1,0,z1)], fill: shade(base, -0.34) },
       ],
       top: P((x0 + x1) / 2, h, (z0 + z1) / 2),
       base: P((x0 + x1) / 2, 0, (z0 + z1) / 2),
-      centre: [(x0 + x1) / 2, (z0 + z1) / 2],
     };
   });
 
-  // bounding box over all raw points
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
   for (const b of bars) {
     for (const f of b.faces) for (const [px, py] of f.pts) {
       if (px < minX) minX = px; if (px > maxX) maxX = px;
       if (py < minY) minY = py; if (py > maxY) maxY = py;
     }
-    for (const [px, py] of [b.top, b.base]) {
-      if (px < minX) minX = px; if (px > maxX) maxX = px;
-      if (py < minY) minY = py; if (py > maxY) maxY = py;
-    }
   }
 
-  const PAD_L = 20, PAD_R = 20, PAD_T = 34, PAD_B = 62;
+  const PAD_L = 20, PAD_R = 20, PAD_T = 36, PAD_B = 66;
   const s = Math.min((W - PAD_L - PAD_R) / (maxX - minX || 1), (H - PAD_T - PAD_B) / (maxY - minY || 1));
-  const ox = PAD_L - minX * s;
-  const oy = PAD_T - minY * s;
+  const ox = PAD_L - minX * s, oy = PAD_T - minY * s;
   const toScreen = ([px, py]) => [ox + px * s, oy + py * s];
 
-  // baseline grid
-  g.save();
-  g.strokeStyle = 'rgba(120,140,165,.28)';
-  g.lineWidth = 1;
-  g.beginPath();
-  const first = toScreen(isoProject(0, 0, 0));
-  const lastBar = bars[bars.length - 1];
-  const last = toScreen(isoProject(lastBar.centre[0] * 2, 0, 0));
-  g.moveTo(first[0], first[1]);
-  g.lineTo(last[0], last[1]);
-  g.stroke();
-  g.restore();
-
-  // bars
   const hitboxes = [];
   for (const b of bars) {
     for (const f of b.faces) {
@@ -512,28 +916,25 @@ function draw3DChart(canvas, items) {
       g.closePath();
       g.fillStyle = f.fill;
       g.fill();
-      g.strokeStyle = 'rgba(255,255,255,.45)';
+      g.strokeStyle = 'rgba(255,255,255,.5)';
       g.lineWidth = 1;
       g.stroke();
     }
-
     const [tX, tY] = toScreen(b.top);
     const [bX, bY] = toScreen(b.base);
-    hitboxes.push({ topX: tX, topY: tY, baseX: bX, baseY: bY, item: b.item });
+    hitboxes.push({ topX: tX, topY: tY, item: b.item });
 
-    // value label on top
-    g.fillStyle = '#16202c';
-    g.font = '600 11.5px system-ui, "Segoe UI", sans-serif';
+    g.fillStyle = '#000';
+    g.font = '700 11.5px Arial, sans-serif';
     g.textAlign = 'center';
     g.textBaseline = 'bottom';
     g.fillText(String(b.item.value), tX, tY - 6);
 
-    // station label below baseline, rotated
     g.save();
     g.translate(bX, bY + 8);
     g.rotate(-Math.PI / 5);
-    g.fillStyle = '#5a6b7e';
-    g.font = '11px system-ui, "Microsoft JhengHei", sans-serif';
+    g.fillStyle = '#3e5259';
+    g.font = '11px Arial, "Microsoft JhengHei", sans-serif';
     g.textAlign = 'right';
     g.textBaseline = 'top';
     const lbl = String(b.item.label);
@@ -541,87 +942,67 @@ function draw3DChart(canvas, items) {
     g.restore();
   }
 
-  state.chart.box = { hitboxes, scale: s, toScreen };
+  state.chart.box = { hitboxes };
   state.chart.items = items;
   drawHover(g);
 }
 
-/** Redraw just the hover read-out on top of the existing chart. */
 function drawHover(g) {
   const h = state.chart.hover;
   if (!h) return;
   g.save();
-  g.beginPath();
-  g.arc(h.x, h.y, 7, 0, Math.PI * 2);
-  g.fillStyle = 'rgba(11,107,203,.95)';
-  g.fill();
-  g.strokeStyle = '#fff';
-  g.lineWidth = 2;
-  g.stroke();
+  g.beginPath(); g.arc(h.x, h.y, 7, 0, Math.PI * 2);
+  g.fillStyle = 'rgba(27,83,151,.95)'; g.fill();
+  g.strokeStyle = '#fff'; g.lineWidth = 2; g.stroke();
 
   const text = `${h.item.label}  ${h.item.value}${h.suffix || ''}`;
-  g.font = '600 12.5px system-ui, "Segoe UI", sans-serif';
+  g.font = '700 12.5px Arial, sans-serif';
   const w = g.measureText(text).width + 18;
-  let x = h.x + 12, y = h.y - 14;
-  if (x + w > (state.chart.canvas || {}).clientWidth - 6) x = h.x - w - 12;
-  g.fillStyle = 'rgba(22,32,44,.94)';
+  let x = h.x + 12, y = h.y - 16;
+  const cv = state.chart.canvas;
+  if (cv && x + w > cv.clientWidth - 6) x = h.x - w - 12;
+  g.fillStyle = 'rgba(0,0,0,.9)';
   g.beginPath();
-  const r = 6;
+  const r = 5;
   g.moveTo(x + r, y);
   g.arcTo(x + w, y, x + w, y + 26, r);
   g.arcTo(x + w, y + 26, x, y + 26, r);
   g.arcTo(x, y + 26, x, y, r);
   g.arcTo(x, y, x + w, y, r);
-  g.closePath();
-  g.fill();
-  g.fillStyle = '#fff';
-  g.textAlign = 'left';
-  g.textBaseline = 'middle';
+  g.closePath(); g.fill();
+  g.fillStyle = '#fff'; g.textAlign = 'left'; g.textBaseline = 'middle';
   g.fillText(text, x + 9, y + 13);
   g.restore();
 }
 
-/** Redraw the whole canvas (bars) then the hover layer. */
 function redrawChart() {
-  const canvas = state.chart.canvas;
-  if (!canvas || !document.body.contains(canvas)) return;
-  const items = state.chart.items;
-  draw3DChart(canvas, items);
+  const cv = state.chart.canvas;
+  if (!cv || !document.body.contains(cv)) return;
+  draw3DChart(cv, state.chart.items);
 }
 
 function bindChart(canvas, items) {
   state.chart.canvas = canvas;
-  const g = canvas.getContext('2d');
-
   const onMove = (ev) => {
     const box = state.chart.box;
     if (!box) return;
     const rect = canvas.getBoundingClientRect();
-    const mx = ev.clientX - rect.left;
-    const my = ev.clientY - rect.top;
-
+    const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
     let best = null, bestD = Infinity;
     for (const hb of box.hitboxes) {
       const d = Math.hypot(hb.topX - mx, hb.topY - my);
       if (d < bestD) { bestD = d; best = hb; }
     }
-    if (best && bestD < 42) {
-      const suffix = best.item.unitSuffix || '';
+    if (best && bestD < 44) {
       if (state.chart.hover && state.chart.hover.item === best.item) return;
-      state.chart.hover = { x: best.topX, y: best.topY, item: best.item, suffix };
+      state.chart.hover = { x: best.topX, y: best.topY, item: best.item, suffix: best.item.unitSuffix || '' };
     } else {
       if (!state.chart.hover) return;
       state.chart.hover = null;
     }
     redrawChart();
   };
-
-  const onLeave = () => {
-    if (!state.chart.hover) return;
-    state.chart.hover = null;
-    redrawChart();
-  };
-
+  const onLeave = () => { if (state.chart.hover) { state.chart.hover = null; redrawChart(); } };
   canvas.addEventListener('mousemove', onMove);
   canvas.addEventListener('mouseleave', onLeave);
   window.addEventListener('resize', onResizeDebounced);
@@ -630,233 +1011,115 @@ function bindChart(canvas, items) {
 let resizeTimer = null;
 function onResizeDebounced() {
   if (resizeTimer) clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => redrawChart(), 160);
+  resizeTimer = setTimeout(redrawChart, 160);
 }
 
 /* ------------------------------------------------------------------ *
- * view: 9-day forecast
+ * chrome
  * ------------------------------------------------------------------ */
 
-function viewForecast() {
-  const days = nineDays();
-  const fnd = (state.bundle && state.bundle.fnd) || {};
-  const today = new Date(); today.setHours(0, 0, 0, 0);
+function renderDatebox() {
+  const g = $('#dateGregorian'), l = $('#dateLunar');
+  if (!g || !l) return;
+  const lu = lunar();
+  const now = new Date();
+  const dow = now.getDay();
 
-  const cards = days.map((d) => {
-    const dt = parseCompactDate(d.forecastDate);
-    const isToday = dt && dt.getTime() === today.getTime();
-    const maxt = d.forecastMaxtemp ? d.forecastMaxtemp.value : null;
-    const mint = d.forecastMintemp ? d.forecastMintemp.value : null;
-    const maxrh = d.forecastMaxrh ? d.forecastMaxrh.value : null;
-    const minrh = d.forecastMinrh ? d.forecastMinrh.value : null;
-    const pic = d.ForecastIcon;
-    return `
-      <div class="day ${isToday ? 'day--today' : ''}">
-        <div class="day__dow">${esc(isToday ? t('today') : d.week || '')}</div>
-        <div class="day__date">${esc(fmtDM(d.forecastDate))}</div>
-        ${pic ? `<img class="day__icon" src="${esc(iconUrl(pic))}" alt="" width="56" height="56" loading="lazy">` : ''}
-        <div class="day__temp">${mint != null ? esc(mint) : '—'} <span>– ${maxt != null ? esc(maxt) : '—'}${esc(t('unitC'))}</span></div>
-        <div class="day__wx">${esc(d.forecastWeather || '')}</div>
-        <div class="day__extra">
-          <div>${esc(t('maxRH'))} ${maxrh != null ? esc(maxrh) : '—'}${esc(t('unitPct'))} · ${esc(t('minRH'))} ${minrh != null ? esc(minrh) : '—'}${esc(t('unitPct'))}</div>
-          ${d.PSR ? `<div>${esc(t('rainProb'))}: ${esc(d.PSR)}</div>` : ''}
-          ${d.forecastWind ? `<div>${esc(t('wind'))}: ${esc(d.forecastWind)}</div>` : ''}
-        </div>
-      </div>`;
-  }).join('');
+  if (state.lang === 'en') {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    g.textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} (${days[dow]})`;
+  } else {
+    const days = ['日','一','二','三','四','五','六'];
+    g.textContent = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 (${days[dow]})`;
+  }
 
-  const sea = fnd.seaTemp;
-  const soil = Array.isArray(fnd.soilTemp) ? fnd.soilTemp : [];
-
-  return `
-    <section class="card">
-      <h2 class="card__title">${esc(t('generalSituation'))}</h2>
-      <p class="prose">${esc(fnd.generalSituation || '—')}</p>
-      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(fnd.updateTime))}</p>
-    </section>
-
-    <section class="card">
-      <h2 class="card__title">${esc(t('nineDay'))}</h2>
-      <div class="days">${cards || `<p class="empty">—</p>`}</div>
-    </section>
-
-    <div class="grid grid--2">
-      <section class="card">
-        <h2 class="card__title">${esc(t('seaTemp'))}</h2>
-        ${sea ? `<p class="prose">${esc(sea.place)}: <strong>${esc(sea.value)}${esc(t('unitC'))}</strong><br>
-          <span class="card__note">${esc(t('recordTime'))}: ${esc(fmtTime(sea.recordTime))}</span></p>` : `<p class="empty">—</p>`}
-      </section>
-      <section class="card">
-        <h2 class="card__title">${esc(t('soilTemp'))}</h2>
-        ${soil.length ? soil.map((s) => `<p class="prose" style="margin-bottom:4px">${esc(s.place)}: <strong>${esc(s.value)}${esc(t('unitC'))}</strong>
-          <span class="card__note">· ${esc(t('recordTime'))}: ${esc(fmtTime(s.recordTime))}</span></p>`).join('') : `<p class="empty">—</p>`}
-      </section>
-    </div>`;
-}
-
-/* ------------------------------------------------------------------ *
- * view: warnings & tips
- * ------------------------------------------------------------------ */
-
-function severityOf(code) {
-  const c = String(code || '').toUpperCase();
-  // Exact match only — substring tests misclassify codes like WTS (thunderstorm) as WT (tsunami).
-  if (/^(WRB|WRC|TC9|TC10|WT)$/.test(c)) return 'severe';
-  if (/^(WRA|TC1|TC3|TC8[A-Z]{0,2}|WMS|WSS|WL|WLS)$/.test(c)) return 'warn';
-  return 'info';
-}
-
-function viewAlerts() {
-  const list = warningList();
-  const tips = specialTips();
-  const info = Array.isArray(state.bundle && state.bundle.warningInfo) ? state.bundle.warningInfo : [];
-  const flw = (state.bundle && state.bundle.flw) || {};
-
-  const warnHtml = list.length
-    ? list.map((w) => `
-      <div class="alert ${severityOf(w.code || w.warningStatementCode) === 'severe' ? 'alert--severe' : ''}">
-        <p class="alert__h">${esc(w.name || w.code || '—')}</p>
-        <p class="alert__b">${esc(w.actionCode ? `${w.code || ''} · ${w.actionCode}` : (w.code || ''))}</p>
-        <p class="alert__t">${esc(t('updated'))}: ${esc(fmtTime(w.updateTime || w.issueTime))}</p>
-      </div>`).join('')
-    : `<p class="empty">${esc(t('noWarning'))}</p>`;
-
-  const infoHtml = info.length
-    ? info.map((w) => `
-      <div class="alert alert--info">
-        <p class="alert__h">${esc(w.warningStatementCode || '—')}</p>
-        <p class="alert__b">${(w.contents || []).map((c) => esc(c)).join('<br>')}</p>
-        <p class="alert__t">${esc(t('updated'))}: ${esc(fmtTime(w.updateTime))}</p>
-      </div>`).join('')
+  const bits = [];
+  if (lu.lunar) bits.push(`${t('lunarDate')} ${lu.lunar}`);
+  if (lu.term) bits.push(`${t('solarTerm')} ${lu.term}`);
+  l.innerHTML = bits.length
+    ? esc(bits.join(' · ')).replace(esc(lu.term || '\u0000'), `<span class="datebox__term">${esc(lu.term)}</span>`)
     : '';
-
-  const tipsHtml = tips.length
-    ? tips.map((s) => `
-      <div class="alert">
-        <p class="alert__b">${esc(s.desc || '')}</p>
-        <p class="alert__t">${esc(t('updated'))}: ${esc(fmtTime(s.updateTime || s.updateTime2))}</p>
-      </div>`).join('')
-    : `<p class="empty">${esc(t('noTip'))}</p>`;
-
-  return `
-    <section class="card">
-      <h2 class="card__title">${esc(t('alertsTitle'))}</h2>
-      ${warnHtml}
-      ${infoHtml}
-    </section>
-    <section class="card">
-      <h2 class="card__title">${esc(t('specialTips'))}</h2>
-      ${tipsHtml}
-    </section>
-    <section class="card">
-      <h2 class="card__title">${esc(t('fireDanger'))}</h2>
-      <p class="prose">${esc(flw.fireDangerWarning || t('noWarning'))}</p>
-      ${flw.tcInfo ? `<p class="prose"><strong>熱帶氣旋資訊:</strong> ${esc(flw.tcInfo)}</p>` : ''}
-      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(flw.updateTime))}</p>
-    </section>`;
 }
-
-/* ------------------------------------------------------------------ *
- * chrome: warning bar, status strip
- * ------------------------------------------------------------------ */
 
 function renderWarningBar() {
   const bar = $('#warningBar');
+  if (!bar) return;
   const list = warningList();
   if (!list.length) { bar.hidden = true; bar.innerHTML = ''; return; }
-
   const severe = list.some((w) => severityOf(w.code) === 'severe');
   bar.hidden = false;
   bar.className = `warnbar ${severe ? 'warnbar--severe' : ''}`;
   bar.innerHTML = list.map((w) =>
-    `<span class="warnbar__pill"><span>${esc(w.code || '')}</span></span><strong>${esc(w.name || '')}</strong>`
-  ).join('');
+    `<span class="warnbar__pill"><span>${esc(w.code || '')}</span></span><strong>${esc(w.name || '')}</strong>`).join('');
 }
 
 function renderStatus() {
-  const dot = $('#statusDot');
-  const txt = $('#statusText');
-  const btn = $('#refreshBtn');
+  const dot = $('#statusDot'), txt = $('#statusText'), btn = $('#refreshBtn');
+  if (!dot || !txt) return;
+  dot.className = 'dot ' + (state.error ? 'dot--err' : state.loading ? 'dot--idle' : state.stale ? 'dot--stale' : 'dot--live');
 
-  dot.className = 'dot ' + (
-    state.error ? 'dot--err' :
-    state.loading ? 'dot--idle' :
-    state.stale ? 'dot--stale' : 'dot--live'
-  );
-
-  if (state.loading && !state.fetchedAt) {
-    txt.textContent = t('loading');
-  } else if (state.error && !state.bundle) {
-    txt.textContent = `${t('err')} — ${state.error}`;
-  } else {
-    const key = state.stale ? 'stale' : 'live';
+  if (state.loading && !state.fetchedAt) txt.textContent = t('loading');
+  else if (state.error && !state.bundle) txt.textContent = `${t('err')} — ${state.error}`;
+  else {
     const when = state.fetchedAt ? new Date(state.fetchedAt) : new Date();
     const p = (n) => String(n).padStart(2, '0');
-    txt.textContent = `${t(key)} ${p(when.getHours())}:${p(when.getMinutes())} (${relTime(state.fetchedAt)})`;
+    txt.textContent = `${t(state.stale ? 'stale' : 'live')} ${p(when.getHours())}:${p(when.getMinutes())} (${relTime(state.fetchedAt)})`;
   }
-
-  btn.disabled = state.loading;
-  btn.textContent = state.loading ? t('refreshing') : t('refresh');
+  if (btn) { btn.disabled = state.loading; btn.textContent = state.loading ? t('refreshing') : t('refresh'); }
 
   const meta = $('#footMeta');
   if (meta && state.bundle) {
     const m = state.bundle.meta && state.bundle.meta.rhrread;
     const errs = (state.bundle.errors || []).map((e) => e.type).join(',');
-    meta.textContent =
-      `lang=${state.lang} · rhrread=${m && m.ok ? 'ok' : 'fail'} · fetchedAt=${m ? m.fetchedAt : '—'}` +
-      (errs ? ` · failed=[${errs}]` : '') + (state.stale ? ' · STALE' : '');
+    meta.textContent = `lang=${state.lang} · rhrread=${m && m.ok ? 'ok' : 'fail'} · fetchedAt=${m ? m.fetchedAt : '—'}`
+      + (errs ? ` · failed=[${errs}]` : '') + (state.stale ? ' · STALE' : '');
   }
 }
 
 function renderI18nChrome() {
   document.documentElement.lang = state.lang === 'en' ? 'en' : (state.lang === 'sc' ? 'zh-Hans-HK' : 'zh-Hant-HK');
-  document.querySelectorAll('[data-i18n]').forEach((el) => {
-    const k = el.getAttribute('data-i18n');
-    el.textContent = t(k);
-  });
-  document.querySelectorAll('.lang').forEach((b) => {
-    b.classList.toggle('is-active', b.dataset.lang === state.lang);
-  });
-  document.querySelectorAll('.tab').forEach((a) => {
-    a.classList.toggle('is-active', a.dataset.route === state.route);
-  });
+  $$('[data-i18n]').forEach((el) => { el.textContent = t(el.getAttribute('data-i18n')); });
+  $$('[data-i18n-ph]').forEach((el) => { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+  $$('.lang').forEach((b) => b.classList.toggle('is-active', b.dataset.lang === state.lang));
+  $$('.hkonav--app a').forEach((a) => a.classList.toggle('is-active', a.dataset.route === state.route));
 }
 
 /* ------------------------------------------------------------------ *
- * router + render loop
+ * router / render
  * ------------------------------------------------------------------ */
 
 function parseHash() {
   const m = String(location.hash || '').match(/^#\/([a-z]+)/i);
-  const r = m ? m[1].toLowerCase() : 'overview';
-  return ['overview', 'regional', 'forecast', 'alerts'].includes(r) ? r : 'overview';
+  const r = m ? m[1].toLowerCase() : 'home';
+  return ROUTES.includes(r) ? r : 'home';
 }
 
 function renderAll() {
   state.route = parseHash();
   renderI18nChrome();
   renderWarningBar();
+  renderDatebox();
 
   const view = $('#view');
-
   if (!state.bundle) {
-    view.innerHTML = `
-      <section class="card">
-        <h2 class="card__title">${esc(state.error ? t('errorTitle') : t('loading'))}</h2>
+    view.innerHTML = `<section class="card">
+      <h2 class="card__title">${esc(state.error ? t('errorTitle') : t('loading'))}</h2>
+      <div class="card__body">
         ${state.error ? `<p class="empty">${esc(state.error)}</p>` : ''}
         <div class="skeleton" style="width:70%"></div>
         <div class="skeleton" style="width:45%"></div>
         <div class="skeleton" style="width:55%"></div>
-      </section>`;
+      </div>
+    </section>`;
     return;
   }
 
-  let html = '';
-  if (state.route === 'overview')      html = viewOverview();
-  else if (state.route === 'regional') html = viewRegional();
-  else if (state.route === 'forecast') html = viewForecast();
-  else                                 html = viewAlerts();
-  view.innerHTML = html;
+  const map = {
+    home: viewHome, overview: viewOverview, regional: viewRegional, imagery: viewImagery,
+    forecast: viewForecast, alerts: viewAlerts, news: viewNews,
+  };
+  view.innerHTML = (map[state.route] || viewHome)();
 
   if (state.route === 'regional') {
     const canvas = $('#chart3d');
@@ -864,9 +1127,8 @@ function renderAll() {
       const { rows, kind } = regionalRows();
       const isRain = kind === 'rain';
       const items = rows.map((r) => ({
-        label: r.place,
-        value: r.value,
-        color: isRain ? mixHex('#cfe3f5', '#1c5f9e', Math.min(1, r.value / 40)) : tempColor(r.value),
+        label: r.place, value: r.value,
+        color: isRain ? rainColor(r.value) : tempColor(r.value),
         unitSuffix: isRain ? ` ${t('unitMm')}` : t('unitC'),
       }));
       state.chart.hover = null;
@@ -877,10 +1139,39 @@ function renderAll() {
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * events
+ * ------------------------------------------------------------------ */
+
+function locateMe() {
+  const btn = $('#locateBtn');
+  if (!navigator.geolocation) return;
+  if (btn) { btn.disabled = true; btn.textContent = t('locating'); }
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      let best = null, bestD = Infinity;
+      for (const s of HK_STATIONS) {
+        const d = Math.hypot(s.lat - latitude, s.lon - longitude);
+        if (d < bestD) { bestD = d; best = s; }
+      }
+      if (best && btn) {
+        const name = best[state.lang] || best.tc;
+        state.regional.filter = name;
+        state.chart.hover = null;
+        renderAll();
+      }
+    },
+    () => { if (btn) { btn.disabled = false; btn.textContent = t('locate'); } },
+    { timeout: 8000 }
+  );
+}
+
 function bindGlobalOnce() {
   window.addEventListener('hashchange', () => {
     state.route = parseHash();
     state.chart.hover = null;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     renderAll();
   });
 
@@ -890,44 +1181,45 @@ function bindGlobalOnce() {
       const l = langBtn.dataset.lang;
       if (l && l !== state.lang) {
         state.lang = l;
-        try { localStorage.setItem('hko-local-lang', l); } catch { /* ignore */ }
+        try { localStorage.setItem('hko-local-lang', l); } catch {}
+        state.regional.filter = '';
         loadBundle(true);
       }
       return;
     }
-
     if (ev.target.closest('#refreshBtn')) { loadBundle(true); return; }
 
     const ds = ev.target.closest('[data-dataset]');
-    if (ds) {
-      state.regional.dataset = ds.dataset.dataset;
-      state.chart.hover = null;
-      renderAll();
-      return;
-    }
+    if (ds) { state.regional.dataset = ds.dataset.dataset; state.chart.hover = null; renderAll(); return; }
+
+    if (ev.target.closest('#locateBtn')) { locateMe(); return; }
+    if (ev.target.closest('#clearFilter')) { state.regional.filter = ''; renderAll(); return; }
 
     const th = ev.target.closest('th.sortable');
-    if (th) {
-      const key = th.dataset.sort;
+    if (th && th.dataset.sort === 'value') {
       const isRain = state.regional.dataset === 'rain';
-      if (key === 'value') {
-        if (isRain) state.regional.sortDirRain = state.regional.sortDirRain === 'desc' ? 'asc' : 'desc';
-        else state.regional.sortDir = state.regional.sortDir === 'desc' ? 'asc' : 'desc';
-      } else {
-        state.regional.sortKey = key;
-      }
+      if (isRain) state.regional.sortDirRain = state.regional.sortDirRain === 'desc' ? 'asc' : 'desc';
+      else state.regional.sortDir = state.regional.sortDir === 'desc' ? 'asc' : 'desc';
       state.chart.hover = null;
       renderAll();
       return;
     }
-
-    if (ev.target.closest('[data-retry]')) { loadBundle(true); }
   });
 
+  const form = $('#stationSearch');
+  if (form) {
+    form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const q = ($('#searchInput') || {}).value || '';
+      state.regional.filter = q.trim();
+      state.chart.hover = null;
+      if (state.route !== 'regional') location.hash = '#/regional';
+      else renderAll();
+    });
+  }
+
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && state.fetchedAt && Date.now() - state.fetchedAt > AUTO_REFRESH_MS) {
-      loadBundle(true);
-    }
+    if (!document.hidden && state.fetchedAt && Date.now() - state.fetchedAt > AUTO_REFRESH_MS) loadBundle(true);
   });
 }
 
@@ -939,8 +1231,8 @@ function bindGlobalOnce() {
   try {
     const saved = localStorage.getItem('hko-local-lang');
     if (saved && I18N[saved]) state.lang = saved;
-  } catch { /* ignore */ }
-
+  } catch {}
+  if (!location.hash) location.hash = '#/home';
   state.route = parseHash();
   bindGlobalOnce();
   renderI18nChrome();

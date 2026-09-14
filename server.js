@@ -154,6 +154,187 @@ async function getIcon(picNo) {
 }
 
 /* ------------------------------------------------------------------ *
+ * lunar calendar (Gregorian -> lunar date + solar term)
+ * ------------------------------------------------------------------ */
+
+const LUNAR_URL = (y, lang) =>
+  lang === 'en'
+    ? `https://www.hko.gov.hk/en/gts/time/calendar/text/files/T${y}e.txt`
+    : `https://www.hko.gov.hk/tc/gts/time/calendar/text/files/T${y}c.txt`;
+const lunarCache = new Map(); // `${year}:${lang}` -> { table, ts }
+
+/** Chinese calendar table: 2026年1月5日  十七  星期一  小寒 */
+function parseLunarTextC(txt) {
+  const table = {};
+  const re = /(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\S+)\s+星期(\S)\s*(.*)$/;
+  for (const rawLine of txt.split(/\r?\n/)) {
+    const m = re.exec(rawLine.trim());
+    if (!m) continue;
+    const [, y, mo, d, lunar, week, term] = m;
+    const key = `${y.padStart(4, '0')}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    table[key] = { lunar, week, term: (term || '').trim() };
+  }
+  return table;
+}
+
+/** English calendar table: 2026/1/5   17   Monday   Moderate Cold */
+function parseLunarTextE(txt) {
+  const table = {};
+  const re = /^(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\S+)\s+(\S+)\s*(.*)$/;
+  for (const rawLine of txt.split(/\r?\n/)) {
+    const m = re.exec(rawLine.trim());
+    if (!m) continue;
+    const [, y, mo, d, lunar, week, term] = m;
+    const key = `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    table[key] = { lunar, week, term: (term || '').trim() };
+  }
+  return table;
+}
+
+async function getLunarTable(year, lang) {
+  const cacheKey = `${year}:${lang}`;
+  const hit = lunarCache.get(cacheKey);
+  if (hit && Date.now() - hit.ts < 24 * 60 * 60 * 1000) return hit;
+
+  const res = await fetch(LUNAR_URL(year, lang), {
+    headers: { 'User-Agent': UA },
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`lunar HTTP ${res.status}`);
+  const buf = Buffer.from(await res.arrayBuffer());
+  const text = buf.toString('utf-8').replace(/^\uFEFF/, '');
+  const entry = {
+    table: lang === 'en' ? parseLunarTextE(text) : parseLunarTextC(text),
+    ts: Date.now(),
+    year,
+    lang,
+  };
+  lunarCache.set(cacheKey, entry);
+  return entry;
+}
+
+/** Today's date in Hong Kong time, as YYYY-MM-DD. */
+function hkToday() {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Hong_Kong', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(new Date());
+}
+
+async function getLunarFor(dateIso, lang = 'tc') {
+  const year = Number(dateIso.slice(0, 4));
+  let entry = await getLunarTable(year, lang);
+  if (!entry.table[dateIso]) {
+    const prev = await getLunarTable(year - 1, lang).catch(() => null);
+    if (prev && prev.table[dateIso]) entry = prev;
+  }
+  return entry.table[dateIso] || null;
+}
+
+/* ------------------------------------------------------------------ *
+ * live imagery (radar / satellite / lightning)
+ * ------------------------------------------------------------------ */
+
+const IMAGERY = {
+  radar: 'https://www.hko.gov.hk/content_elements_v2/images/radar/R1.jpg',
+  satellite: 'https://www.hko.gov.hk/content_elements_v2/images/satellite/S1.jpg',
+  lightning: 'https://www.hko.gov.hk/content_elements_v2/images/lightning/lightning.png',
+};
+const IMAGERY_TTL = 60 * 1000; // these products refresh every few minutes
+
+async function getImagery(kind) {
+  const key = `img:${kind}`;
+  const hit = memCache.get(key);
+  if (hit && Date.now() - hit.ts < IMAGERY_TTL) return hit.body;
+
+  const res = await fetch(IMAGERY[kind], {
+    headers: { 'User-Agent': UA, Referer: 'https://www.hko.gov.hk/' },
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`imagery ${kind} HTTP ${res.status}`);
+  const body = {
+    buf: Buffer.from(await res.arrayBuffer()),
+    type: res.headers.get('content-type') || 'image/jpeg',
+  };
+  memCache.set(key, { body, ts: Date.now() });
+  return body;
+}
+
+/* ------------------------------------------------------------------ *
+ * news headlines (link aggregation: headline text + URL, cached)
+ * ------------------------------------------------------------------ */
+
+/**
+ * News sources.
+ *
+ * Only `whatsnew` publishes an RSS feed. The rest are JS-rendered index pages
+ * with no machine-readable feed, so we link out to them rather than scraping.
+ *
+ * We surface headline text + URL only and link back to HKO. HKO's feed carries
+ * an explicit copyright notice prohibiting republication of its content, so no
+ * article body, image or feed payload is stored or reshown.
+ */
+const NEWS_SOURCES = {
+  whatsnew: {
+    kind: 'rss',
+    url: 'https://rss.weather.gov.hk/rss/whatsnew_uc.xml',
+    page: 'https://www.hko.gov.hk/tc/whatsnew/index.htm',
+  },
+  hkonews:            { kind: 'link', page: 'https://www.hko.gov.hk/tc/hkonews/index.htm' },
+  blog:               { kind: 'link', page: 'https://www.hko.gov.hk/tc/blog/index.htm' },
+  forecaster_blog:    { kind: 'link', page: 'https://www.hko.gov.hk/tc/forecaster_blog/index.htm' },
+};
+const NEWS_TTL = 30 * 60 * 1000;
+const NEWS_CACHE = new Map();
+
+function xmlUnescape(s) {
+  return String(s)
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ').trim();
+}
+
+/** Minimal RSS 2.0 item parser — title + link only. */
+function parseRssItems(xml, limit = 8) {
+  const out = [];
+  const itemRe = /<item\b[^>]*>([\s\S]*?)<\/item>/gi;
+  let m;
+  while ((m = itemRe.exec(xml)) && out.length < limit) {
+    const block = m[1];
+    const t = /<title>([\s\S]*?)<\/title>/i.exec(block);
+    const l = /<link>([\s\S]*?)<\/link>/i.exec(block);
+    if (!t) continue;
+    const text = xmlUnescape(t[1]);
+    const url = l ? xmlUnescape(l[1]) : '';
+    if (!text) continue;
+    out.push({ text, url });
+  }
+  return out;
+}
+
+async function getNews(kind) {
+  const hit = NEWS_CACHE.get(kind);
+  if (hit && Date.now() - hit.ts < NEWS_TTL) return hit.items;
+
+  const src = NEWS_SOURCES[kind];
+  if (!src || src.kind !== 'rss') {
+    // No feed available: caller renders a link out to HKO's own page instead.
+    return [];
+  }
+
+  const res = await fetch(src.url, {
+    headers: { 'User-Agent': UA },
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`news ${kind} HTTP ${res.status}`);
+  const xml = await res.text();
+  const items = parseRssItems(xml);
+  NEWS_CACHE.set(kind, { items, ts: Date.now() });
+  return items;
+}
+
+/* ------------------------------------------------------------------ *
  * helpers
  * ------------------------------------------------------------------ */
 
@@ -270,6 +451,80 @@ async function handleApi(req, res, u) {
     return sendJson(res, 200, payload);
   }
 
+  if (u.pathname === '/api/lunar') {
+    const dateIso = String(q.get('date') || hkToday());
+    const lang = safeLang(q.get('lang'));
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateIso)) {
+      return sendJson(res, 400, { ok: false, error: 'date must be YYYY-MM-DD' });
+    }
+    try {
+      const entry = await getLunarFor(dateIso, lang);
+      return sendJson(res, 200, { ok: true, date: dateIso, lang, hkToday: hkToday(), ...(entry || {}), found: !!entry });
+    } catch (err) {
+      return sendJson(res, 502, { ok: false, date: dateIso, lang, error: err.message });
+    }
+  }
+
+  if (u.pathname === '/api/news') {
+    const kind = String(q.get('kind') || 'whatsnew');
+    if (!Object.prototype.hasOwnProperty.call(NEWS_SOURCES, kind)) {
+      return sendJson(res, 400, { ok: false, error: `unknown news kind "${kind}"`, allowed: Object.keys(NEWS_SOURCES) });
+    }
+    try {
+      const items = await getNews(kind);
+      return sendJson(res, 200, {
+        ok: true, kind,
+        hasFeed: NEWS_SOURCES[kind].kind === 'rss',
+        source: NEWS_SOURCES[kind].page,
+        count: items.length, items,
+      });
+    } catch (err) {
+      return sendJson(res, 502, { ok: false, kind, error: err.message, source: NEWS_SOURCES[kind].page, items: [] });
+    }
+  }
+
+  if (u.pathname === '/api/home') {
+    const lang = safeLang(q.get('lang'));
+    const force = q.get('force') === '1';
+    const types = Object.keys(DATA_TYPES);
+    const today = hkToday();
+
+    const [weatherResults, lunarSettled, newsSettled] = await Promise.all([
+      Promise.all(types.map(async (t) => {
+        try {
+          const r = await getData(t, lang, { force });
+          return [t, { ok: true, data: r.value, stale: r.stale, ts: r.ts, error: r.error || null }];
+        } catch (err) {
+          return [t, { ok: false, data: null, stale: true, ts: Date.now(), error: err.message }];
+        }
+      })),
+      getLunarFor(today, lang).then((v) => ({ ok: true, value: v })).catch((e) => ({ ok: false, error: e.message })),
+      Promise.all(Object.keys(NEWS_SOURCES).map(async (k) => {
+        try { return [k, { ok: true, items: await getNews(k) }]; }
+        catch (e) { return [k, { ok: false, items: [], error: e.message }]; }
+      })),
+    ]);
+
+    const payload = {
+      ok: true, lang, requestedAt: new Date().toISOString(),
+      errors: [], stale: false, meta: {},
+      lunar: { date: today, ...(lunarSettled.ok ? lunarSettled.value || {} : {}), ok: lunarSettled.ok, error: lunarSettled.error || null },
+      news: {},
+    };
+
+    for (const [t, r] of weatherResults) {
+      payload[t] = r.data;
+      payload.meta[t] = { ok: r.ok, stale: r.stale, fetchedAt: new Date(r.ts).toISOString(), error: r.error };
+      if (!r.ok) payload.errors.push({ type: t, error: r.error });
+      if (r.stale) payload.stale = true;
+    }
+    for (const [k, r] of newsSettled) {
+      payload.news[k] = { ok: r.ok, items: r.items, error: r.error || null };
+      if (!r.ok) payload.errors.push({ type: `news:${k}`, error: r.error });
+    }
+    return sendJson(res, 200, payload);
+  }
+
   return sendJson(res, 404, { ok: false, error: 'unknown api route' });
 }
 
@@ -327,6 +582,21 @@ const server = http.createServer(async (req, res) => {
       const picNo = safePic(iconMatch[1]);
       if (!picNo) return sendText(res, 400, 'Bad icon request');
       return await handleIcon(req, res, u, picNo);
+    }
+
+    const imgMatch = u.pathname.match(/^\/imagery\/(radar|satellite|lightning)$/);
+    if (imgMatch) {
+      try {
+        const { buf, type } = await getImagery(imgMatch[1]);
+        res.writeHead(200, {
+          'Content-Type': type,
+          'Content-Length': buf.length,
+          'Cache-Control': 'public, max-age=60',
+        });
+        return res.end(buf);
+      } catch (err) {
+        return sendJson(res, 502, { ok: false, error: err.message });
+      }
     }
 
     return await handleStatic(req, res, u);

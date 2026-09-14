@@ -1,8 +1,9 @@
 # 本地天氣站 / Local Weather Station
 
-A single-page weather dashboard that runs entirely on `localhost`, backed by the
-**Hong Kong Observatory Open Data API**. Zero npm dependencies — Node's standard
-library and a browser are all you need.
+A single-page weather dashboard that runs entirely on `localhost`, covering every
+homepage component of the Hong Kong Observatory's Traditional-Chinese site and
+fed by the **HKO Open Data API**. Zero npm dependencies — Node's standard library
+and a browser are all you need.
 
 ```
   http://localhost:8787/
@@ -14,18 +15,30 @@ library and a browser are all you need.
 
 This is an **independent implementation**, not a copy of `hko.gov.hk`.
 
-* **What it does** — reproduces the *function and information architecture* of the
-  HKO Traditional-Chinese homepage: current conditions, local forecast, 9-day
-  forecast, district-level temperature and rainfall, and warnings/tips.
-* **Where the content comes from** — every piece of weather text, every reading,
-  and every weather icon is fetched live from the Observatory's own public
-  endpoints at request time. Nothing is bundled, scraped, or redistributed.
-* **What is original** — all HTML, CSS, JavaScript, layout, and the 3-D chart
-  renderer in this repository were written from scratch. No HKO markup,
-  stylesheet, script, or asset is copied into this project.
+**What "matching the design" means here.** The visual language — palette,
+typography scale, container width, module ordering, section backgrounds — was
+derived by reading the Observatory's published design tokens (computed styles off
+the live page): a 1249 px container, `Arial/Helvetica/Microsoft JhengHei` at a
+16 px base, `#1B5397` primary blue, `#3E5259` secondary text, `#DCF6FF` content
+band. My stylesheet re-implements that design from scratch against those values.
 
-Weather data and the weather icon set remain the copyright of the
-Hong Kong Observatory. See <https://www.hko.gov.hk/en/abouthko/opendata_intro.htm>.
+**What was not copied.** No HKO HTML, CSS, JavaScript, image or written text is
+included in this repository. There is no scraped markup and no vendored
+stylesheet. The `public/` directory is written from scratch.
+
+**Where content comes from at runtime.** Weather readings, forecasts, warning
+text, weather icons, radar/satellite/lightning imagery and news headlines are all
+fetched live from the Observatory's own public endpoints. They are not bundled or
+redistributed.
+
+**Copyright.** Weather data, imagery and the icon set remain the copyright of the
+Hong Kong Observatory. Note that HKO's own RSS feed carries an explicit notice
+that republication of its content is prohibited without written authorisation —
+which is why this app shows headline text with a link back to HKO rather than
+republishing articles, and why no HKO asset is committed. Please read
+<https://www.hko.gov.hk/en/abouthko/opendata_intro.htm>.
+
+If you want the actual HKO site, use the actual HKO site: <https://www.hko.gov.hk/tc/>.
 
 ---
 
@@ -35,7 +48,7 @@ Hong Kong Observatory. See <https://www.hko.gov.hk/en/abouthko/opendata_intro.ht
 |---|---|
 | Node.js | 18 or newer (uses global `fetch`; tested on v22) |
 | Browser | any modern browser |
-| Network | outbound HTTPS to `data.weather.gov.hk` and `www.hko.gov.hk` |
+| Network | outbound HTTPS to `data.weather.gov.hk`, `www.hko.gov.hk`, `rss.weather.gov.hk` |
 
 No `npm install`. There is no `package.json` and no build step.
 
@@ -56,8 +69,37 @@ node server.js 8787
 ```
 
 Both launchers prompt for a port and default to `8787`. You can also pass the
-port directly: `node server.js 9000`. The server binds `127.0.0.1` only — it is
-not reachable from the network.
+port directly: `node server.js 9000`. The server binds `127.0.0.1` only.
+
+---
+
+## Component coverage
+
+Every module on the Observatory's homepage has a counterpart:
+
+| HKO homepage module | Here | Source |
+|---|---|---|
+| 天氣實況 (current conditions, icon, max/min) | 天氣實況 | `rhrread` + `fnd` |
+| 分區天氣 (district map + variable selector) | 分區天氣圖 (SVG, 26 stations) | `rhrread` |
+| 我的位置天氣 (weather at my location) | 定位 button → nearest station | browser geolocation |
+| 雷達 / 衛星 / 閃電 | 天氣圖像 module + page | proxied live imagery |
+| 地球天氣 / 世界天氣 | linked out to HKO | — |
+| 天氣預報 / 天氣概況 / 展望 | 本港地區天氣預報 | `flw` |
+| 九天天氣預報 | 九天天氣預報 (9 cards) | `fnd` |
+| 天氣警告 / 特別天氣提示 | 警告及提示 | `warnsum`, `warningInfo`, `swt` |
+| 天氣圖像 | 天氣圖像 | live imagery |
+| 最新消息 / 天氣隨筆 / 天文台最新動態 / 天文台網誌 | 最新消息 | `whatsnew` RSS + links |
+| 香港氣候 / 氣候摘要 | 香港氣候 | `flw` + link |
+| 社交媒體 / 天文台頻道 | linked out to HKO | — |
+| header: Gregorian + **lunar date** + solar term | masthead datebox | HKO calendar tables |
+| header: search + language menu | station search + 繁/简/EN | — |
+| top-level nav (9 sections) | blue nav bar | links to HKO |
+| footer link set | footer | links to HKO |
+
+**Where this deliberately differs:** modules whose content is HKO's own
+promotional or editorial material — the banner carousel, the Facebook page
+plugin, the YouTube embed, and the article bodies behind 天氣隨筆 / 天文台網誌 —
+are linked out rather than reproduced. Everything data-driven is implemented.
 
 ---
 
@@ -65,13 +107,13 @@ not reachable from the network.
 
 ```
 hko-local/
-├─ server.js          zero-dependency HTTP server: static host, API gateway, icon cache
+├─ server.js          zero-dependency HTTP server: static host, API gateway, caches
 ├─ start.bat          Windows launcher (prompts for port, opens browser)
 ├─ start.sh           POSIX launcher
 ├─ public/
-│  ├─ index.html      SPA shell
-│  ├─ styles.css      stylesheet
-│  └─ app.js          SPA: hash router, views, i18n, 3-D canvas chart
+│  ├─ index.html      SPA shell: masthead, nav, modules, footer
+│  ├─ styles.css      stylesheet (design tokens matched to HKO)
+│  └─ app.js          SPA: router, views, i18n, SVG map, 3-D canvas chart
 └─ .cache/
    └─ icons/          weather icons cached on first request
 ```
@@ -83,18 +125,20 @@ hko-local/
 The browser never talks to HKO directly. Everything goes through the local
 server, which solves three problems at once:
 
-1. **Caching** — each `dataType` has its own freshness window, so a page refresh
-   costs HKO nothing. Icons are cached on disk permanently after first fetch.
-2. **Resilience** — if HKO is unreachable, the last known-good response is served
-   and flagged `stale` rather than showing an error. The UI marks this with an
-   amber dot and a `STALE` note in the footer.
-3. **Single round trip** — `/api/bundle` fans out to all six endpoints
-   concurrently and returns one payload, instead of the browser making six calls.
+1. **Caching** — each source has its own freshness window, so a page refresh costs
+   HKO nothing. Weather icons are cached on disk permanently after first fetch.
+2. **Resilience** — if a source is unreachable, the last known-good response is
+   served and flagged `stale` rather than erroring. The UI shows an amber dot and
+   a `STALE` note in the footer.
+3. **Fewer round trips** — `/api/home` fans out to all weather types, the lunar
+   table and every news feed concurrently and returns one payload.
 
 ```
-browser ──▶ localhost:8787 ──▶ data.weather.gov.hk
+browser ──▶ localhost:8787 ──┬──▶ data.weather.gov.hk   (weather)
+                             ├──▶ www.hko.gov.hk         (icons, imagery, calendar)
+                             └──▶ rss.weather.gov.hk     (news)
                 │
-                ├─ in-memory cache (per dataType TTL)
+                ├─ in-memory cache (per-source TTL)
                 ├─ stale-on-error fallback
                 └─ .cache/icons/*.png  (disk, permanent)
 ```
@@ -104,63 +148,70 @@ browser ──▶ localhost:8787 ──▶ data.weather.gov.hk
 | Route | Purpose |
 |---|---|
 | `GET /` | SPA shell |
-| `GET /api/bundle?lang=tc` | all six data types in one response |
+| `GET /api/home?lang=tc` | **everything the homepage needs** in one response |
+| `GET /api/bundle?lang=tc` | the six weather data types only |
 | `GET /api/weather?type=rhrread&lang=tc` | a single data type |
+| `GET /api/lunar?date=2026-09-14&lang=tc` | lunar date + solar term |
+| `GET /api/news?kind=whatsnew` | news headlines (RSS) |
 | `GET /api/status` | uptime, cache stats, last upstream error |
-| `GET /icons/pic{nn}.png` | proxied + disk-cached HKO weather icon |
+| `GET /icons/pic{nn}.png` | proxied + disk-cached weather icon |
+| `GET /imagery/{radar,satellite,lightning}` | proxied live imagery, 60 s cache |
 
-Add `&force=1` to bypass the cache. `lang` accepts `tc` (traditional Chinese),
-`sc` (simplified Chinese), or `en` — this switches the API's own text, so the
-station names, forecasts, and warnings all change language too.
+Add `&force=1` to bypass the cache. `lang` accepts `tc`, `sc`, or `en` — this
+switches the API's own text, so station names, forecasts, warnings **and the lunar
+calendar table** all change language.
 
 ### Data types
 
-| `dataType` | Cache | Drives |
+| Source | Cache | Drives |
 |---|---|---|
 | `rhrread` | 5 min | current temp, humidity, UV, rainfall, lightning |
 | `flw` | 10 min | local weather forecast |
 | `fnd` | 60 min | 9-day forecast, sea and soil temperature |
-| `warnsum` | 1 min | active weather warning summary |
-| `warningInfo` | 1 min | full warning statements |
+| `warnsum` / `warningInfo` | 1 min | active warnings |
 | `swt` | 1 min | special weather tips |
+| lunar calendar | 24 h | header date box |
+| imagery | 60 s | radar / satellite / lightning |
+| `whatsnew` RSS | 30 min | news headlines |
 
 ---
 
 ## The SPA
 
-Four routes, hash-based, no framework:
+Seven hash-routed views, no framework:
 
 | Route | Contents |
 |---|---|
+| `#/home` | **all homepage modules in the Observatory's order** |
 | `#/overview` | current conditions, forecast text, key readings |
-| `#/regional` | district temperature/rainfall table + 3-D isometric chart |
+| `#/regional` | SVG station map + sortable table + 3-D isometric chart |
+| `#/imagery` | radar, satellite, lightning |
 | `#/forecast` | 9-day cards, sea and soil temperature |
-| `#/alerts` | active warnings, warning statements, special tips |
+| `#/alerts` | warnings, warning statements, special tips |
+| `#/news` | headline lists with links back to HKO |
 
-**Language** — the 繁 / 简 / EN buttons switch both the UI chrome and the
-underlying API language, so weather text comes back in the language you pick.
-The choice persists in `localStorage`.
+**Language** — 繁 / 简 / EN switches the UI chrome, the API language, and the
+calendar source. Persisted in `localStorage`.
+
+**The station map** is hand-built SVG — an equirectangular projection over a
+760×470 viewBox with stylised land outlines and 26 station markers coloured on a
+temperature ramp. Station coordinates are approximate and the map says so.
 
 **The 3-D chart** is drawn with the Canvas 2D API using an isometric projection
-written for this project — no charting library, no WebGL. Each bar is projected
-as three shaded faces (top / side / front), and the whole scene is auto-fitted to
-the canvas by measuring the projected bounding box before drawing. Hover a bar
-for a readout; the tooltip is a second pass drawn over the bars.
-
-Switch between temperature and rainfall with the buttons above the chart, and
-click a column header to re-sort.
+written for this project — no charting library, no WebGL. Each bar is three shaded
+faces, and the scene auto-fits by measuring its projected bounding box before
+drawing. Hover for a readout, drawn as a second pass over the bars.
 
 ---
 
 ## Troubleshooting
 
-**Port already in use** — the server prints a clear message and exits. Start on
-another port: `node server.js 8788`.
+**Port already in use** — the server says so and exits. Start elsewhere:
+`node server.js 8788`.
 
-**Everything is grey and the footer says STALE** — HKO was unreachable and the
-server is serving its last successful response. Check `/api/status` for the last
-upstream error.
+**Everything grey, footer says STALE** — HKO was unreachable; the last successful
+response is being served. Check `/api/status` for the upstream error.
 
-**Icons missing** — delete `.cache/icons/` and reload; they will be re-fetched.
+**Icons missing** — delete `.cache/icons/` and reload.
 
 **Wrong language on first load** — clear the `hko-local-lang` `localStorage` key.

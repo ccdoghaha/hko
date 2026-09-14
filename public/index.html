@@ -12,32 +12,67 @@
 
 <a class="skip" href="#main">跳至主要內容</a>
 
-<header class="topbar">
-  <div class="topbar__inner">
-    <div class="brand">
-      <span class="brand__mark" aria-hidden="true"></span>
-      <span class="brand__text">
-        <strong data-i18n="siteTitle">本地天氣站</strong>
-        <small data-i18n="siteSub">資料來源：香港天文台開放數據</small>
-      </span>
+<!-- ================= masthead ================= -->
+<header class="masthead">
+  <div class="brand">
+    <span class="brand__mark" aria-hidden="true"></span>
+    <span class="brand__text">
+      <strong data-i18n="siteTitle">本地天氣站</strong>
+      <small data-i18n="siteSub">資料來源：香港天文台開放數據</small>
+    </span>
+  </div>
+
+  <div class="masthead__right">
+    <div class="datebox">
+      <div class="datebox__g" id="dateGregorian">—</div>
+      <div class="datebox__l" id="dateLunar">—</div>
     </div>
 
-    <nav class="langs" aria-label="Language">
-      <button type="button" data-lang="tc" class="lang is-active">繁</button>
-      <button type="button" data-lang="sc" class="lang">简</button>
-      <button type="button" data-lang="en" class="lang">EN</button>
-    </nav>
+    <div class="toolbar">
+      <form class="search" id="stationSearch" role="search" autocomplete="off">
+        <input type="search" id="searchInput" placeholder="搜尋地點…" aria-label="搜尋地點"
+               data-i18n-ph="searchPh">
+        <button type="submit" aria-label="搜尋">🔍</button>
+      </form>
+
+      <nav class="langs" aria-label="Language">
+        <button type="button" data-lang="tc" class="lang is-active">繁</button>
+        <button type="button" data-lang="sc" class="lang">简</button>
+        <button type="button" data-lang="en" class="lang">EN</button>
+      </nav>
+    </div>
   </div>
 </header>
 
-<div id="warningBar" class="warnbar" hidden></div>
-
-<nav class="tabs" aria-label="Sections">
-  <a class="tab" href="#/overview" data-route="overview" data-i18n="tabOverview">總覽</a>
-  <a class="tab" href="#/regional" data-route="regional" data-i18n="tabRegional">分區天氣</a>
-  <a class="tab" href="#/forecast" data-route="forecast" data-i18n="tabForecast">九天預報</a>
-  <a class="tab" href="#/alerts"  data-route="alerts"   data-i18n="tabAlerts">警告及提示</a>
+<!-- ================= top-level nav (HKO section structure) ================= -->
+<nav class="hkonav" aria-label="Sections">
+  <div class="hkonav__inner">
+    <a href="https://www.hko.gov.hk/tc/wxinfo/currwx/current.htm" target="_blank" rel="noopener" data-i18n="navWeather">天氣</a>
+    <a href="https://www.hko.gov.hk/tc/cis/climahk.htm" target="_blank" rel="noopener" data-i18n="navClimate">氣候</a>
+    <a href="https://www.hko.gov.hk/tc/gts/eqinfo.htm" target="_blank" rel="noopener" data-i18n="navGeo">地球物理</a>
+    <a href="https://www.hko.gov.hk/tc/gts/time.htm" target="_blank" rel="noopener" data-i18n="navAstro">天文及授時</a>
+    <a href="https://www.hko.gov.hk/tc/radiation/real_time.htm" target="_blank" rel="noopener" data-i18n="navRad">輻射監測</a>
+    <a href="https://www.hko.gov.hk/tc/community/community_uc.htm" target="_blank" rel="noopener" data-i18n="navCommunity">社群</a>
+    <a href="https://www.hko.gov.hk/tc/education/edu.htm" target="_blank" rel="noopener" data-i18n="navLearn">學習</a>
+    <a href="https://www.hko.gov.hk/tc/whatsnew/index.htm" target="_blank" rel="noopener" data-i18n="navMedia">媒體及消息</a>
+    <a href="https://www.hko.gov.hk/tc/aboutus/aboutus.htm" target="_blank" rel="noopener" data-i18n="navAbout">關於我們</a>
+  </div>
 </nav>
+
+<!-- ================= app nav (SPA views) ================= -->
+<nav class="hkonav hkonav--app" aria-label="Views" style="background:#3f777d">
+  <div class="hkonav__inner">
+    <a href="#/home"     data-route="home"     data-i18n="tabHome">主頁</a>
+    <a href="#/overview" data-route="overview" data-i18n="tabOverview">總覽</a>
+    <a href="#/regional" data-route="regional" data-i18n="tabRegional">分區天氣</a>
+    <a href="#/imagery"  data-route="imagery"  data-i18n="tabImagery">天氣圖像</a>
+    <a href="#/forecast" data-route="forecast" data-i18n="tabForecast">九天預報</a>
+    <a href="#/alerts"   data-route="alerts"   data-i18n="tabAlerts">警告及提示</a>
+    <a href="#/news"     data-route="news"     data-i18n="tabNews">最新消息</a>
+  </div>
+</nav>
+
+<div id="warningBar" class="warnbar" hidden></div>
 
 <main id="main" class="wrap">
 
@@ -51,9 +86,23 @@
 
 </main>
 
+<!-- ================= footer ================= -->
 <footer class="foot">
-  <p data-i18n="footNote">本機示範應用。天氣資料由香港天文台開放數據 API 提供，版權屬香港天文台所有。此介面為獨立實作，並非天文台官方網站。</p>
-  <p class="foot__meta"><span id="footMeta">—</span></p>
+  <div class="foot__inner">
+    <ul class="foot__links">
+      <li><a href="https://www.hko.gov.hk/tc/cis/climahk.htm" target="_blank" rel="noopener" data-i18n="fClimate">香港氣候</a></li>
+      <li><a href="https://www.hko.gov.hk/tc/wxinfo/pastwx/mws.htm" target="_blank" rel="noopener" data-i18n="fSummary">每月天氣摘要</a></li>
+      <li><a href="https://www.hko.gov.hk/tc/whatsnew/index.htm" target="_blank" rel="noopener" data-i18n="fNew">新增項目</a></li>
+      <li><a href="https://www.hko.gov.hk/tc/abouthko/opendata_intro.htm" target="_blank" rel="noopener" data-i18n="fOpen">公開資料</a></li>
+      <li><a href="https://www.hko.gov.hk/tc/abouthko/related.htm" target="_blank" rel="noopener" data-i18n="fRelated">相關網址</a></li>
+      <li><a href="https://www.hko.gov.hk/tc/abouthko/userguide.htm" target="_blank" rel="noopener" data-i18n="fGuide">快速用戶指南</a></li>
+      <li><a href="https://www.hko.gov.hk/tc/cont.htm" target="_blank" rel="noopener" data-i18n="fContact">聯絡我們</a></li>
+      <li><a href="https://www.hko.gov.hk/tc/important_notice.htm" target="_blank" rel="noopener" data-i18n="fNotice">重要告示</a></li>
+      <li><a href="https://www.hko.gov.hk/tc/privacy.htm" target="_blank" rel="noopener" data-i18n="fPrivacy">私隱政策</a></li>
+    </ul>
+    <p data-i18n="footNote">本機示範應用。天氣資料由香港天文台開放數據 API 提供，版權屬香港天文台所有。此介面為獨立實作，並非天文台官方網站。</p>
+    <p class="foot__meta"><span id="footMeta">—</span></p>
+  </div>
 </footer>
 
 <script src="/app.js"></script>
