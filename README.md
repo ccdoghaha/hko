@@ -213,6 +213,50 @@ container**, a masthead carrying the Gregorian + lunar date and a toolbar
 **two-column body — a 218 px left navigation tree beside the content**, and a
 footer link set.
 
+### Homepage information architecture
+
+The home page reproduces HKO's module order, because the order *is* the
+information architecture — the same modules in a different sequence is a
+different page. Measured from the live homepage (2026-09-14) and mirrored here:
+
+| # | module | source |
+|---|---|---|
+| 1 | 天氣實況 | `rhrread` |
+| 2 | 分區天氣 | `rhrread` station network + DEM |
+| 3 | *(parameter / station selector, 14 + 36 options)* | `rhrread`, wind CSV |
+| 4 | **天氣預報**, nesting four sub-modules | `flw` + `fnd` |
+| | ↳ 天氣概況 | `flw.generalSituation` |
+| | ↳ 本港地區今晚及明日天氣預測 | `flw.forecastDesc` |
+| | ↳ 展望 | `flw.outlook` |
+| | ↳ 九天天氣預報 | `fnd` carousel |
+| 5 | 世界天氣 | — see below |
+| 6 | 社交媒體 | — |
+| 7 | 天文台頻道 | — |
+| 8 | 天氣圖像 · 衛星 · 雷達 · 閃電 | proxied radar/satellite/lightning |
+| 9 | 最新消息 | `whatsnew` RSS |
+| 10 | 天氣隨筆 | — |
+| 11 | 天文台最新動態 | — |
+| 12 | 天文台網誌 | — |
+| 13 | 香港氣候 | `CLMTEMP` |
+| | ↳ 氣候摘要 | |
+
+`check-ui.js` asserts the **sequence**, not just presence, so a module cannot be
+quietly reordered or dropped.
+
+Four of these modules (世界天氣, 社交媒體, 天文台頻道, and the three content
+streams) have no machine-readable source in the open-data API. Each keeps its
+slot and states in place that the API carries no such product, rather than being
+silently omitted — the same treatment the fifteen substitute product pages get.
+This is deliberate: a page that quietly drops the modules it cannot fill is not
+the same information architecture, it is a shorter one that looks complete.
+
+**The boundary on matching.** Design tokens and the module order are facts about
+how the page is built, and are reproduced in an original stylesheet. HKO's own
+HTML, CSS, JavaScript, and images are their copyrighted work and are not copied
+— the site is a from-scratch reimplementation on the same API. Where HKO
+publishes a product the API does not carry, this site says so rather than
+reproducing the Observatory's content.
+
 ### The page component set
 
 Every page is composed from the same parts, applied once in `pageChrome()` at the
@@ -460,11 +504,12 @@ hko-local/
 │  │                            METAR/TAF decoding, ceiling semantics
 │  ├─ check-db.js               25 checks: schema, idempotency, retention guard,
 │  │                            backup, integrity, durability across reopen
-│  ├─ check-ui.js               31 checks: DOM id resolution (shell vs script),
+│  ├─ check-ui.js               39 checks: DOM id resolution (shell vs script),
 │  │                            i18n key coverage in all 3 languages, sidebar tree
 │  │                            integrity, product-key + route resolution, picker
 │  │                            wiring, layout structure, route dispatch coverage,
-│  │                            source labelling and the provenance footnote
+│  │                            source labelling, the provenance footnote, and the
+│  │                            homepage module sequence
 │  ├─ check-prov.js             14 checks: provenance time extraction per HKO shape
 │  ├─ check-bind.js              5 checks: loopback default, HOST override, warning
 │  ├─ bench.js                  endpoint latency + payload baseline

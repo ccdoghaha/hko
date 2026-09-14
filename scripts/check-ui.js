@@ -281,6 +281,52 @@ check('tab groups have unique keys', dupTabKeys.length === 0,
   dupTabKeys.length ? `DUPLICATE KEYS: ${dupTabKeys.join(', ')}` : `${tabGroups.length} tab group(s), keys unique`);
 
 console.log('\n' + '='.repeat(76));
+/* ------------------------------------------------------------------ *
+ * 9. homepage information architecture
+ *
+ * The home page mirrors HKO's module order. Order is the point: the same
+ * modules in a different sequence is a different information architecture,
+ * so this asserts the sequence rather than mere presence.
+ * ------------------------------------------------------------------ */
+
+const src = fs.readFileSync(path.join(ROOT, 'public', 'app.js'), 'utf8');
+
+const homeReturn = src.match(/return bannerHtml\(\)[\s\S]{0,400}?;/);
+check('home composes its modules in one line', !!homeReturn,
+  homeReturn ? homeReturn[0].replace(/\s+/g, ' ').slice(0, 180) : 'not found');
+
+if (homeReturn) {
+  const seq = homeReturn[0];
+  const order = ['ps0', 'ps2', 'wxForecast', 'worldWx', 'socialMedia', 'channels',
+                 'ps6', 'ps7', 'wxArticle', 'hkoNews', 'hkoBlog', 'ps9'];
+  const idx = order.map((n) => [n, seq.indexOf(n)]);
+  const allPresent = idx.every(([, i]) => i >= 0);
+  check('home includes every HKO homepage module', allPresent,
+    allPresent ? order.join(' · ')
+               : 'missing: ' + idx.filter(([, i]) => i < 0).map(([n]) => n).join(', '));
+  const ascending = idx.every(([, i], k) => k === 0 || i > idx[k - 1][1]);
+  check("home modules run in HKO's order", ascending, order.join(' -> '));
+}
+
+check('forecast group nests its four sub-modules',
+  /wxSection[\s\S]{0,900}?generalSituation[\s\S]{0,600}?localForecastToday[\s\S]{0,600}?t\('outlook'\)[\s\S]{0,600}?t\('nineDay'\)/.test(src),
+  '天氣概況 > 本港地區今晚及明日天氣預測 > 展望 > 九天天氣預報');
+
+check('sub-module headings use .subhead', /class="subhead"/.test(src) && /\.subhead\b/.test(css),
+  '.subhead in markup and stylesheet');
+
+check('the picker sits after 分區天氣, not before it',
+  !!homeReturn && homeReturn[0].indexOf('pickerCard()') > homeReturn[0].indexOf('ps2'),
+  homeReturn ? homeReturn[0].match(/ps0 \+ ps2 \+ pickerCard\(\)/) ? 'ps0 + ps2 + pickerCard()' : homeReturn[0].replace(/\s+/g, ' ').slice(0, 90) : 'no composition line');
+
+check('no dead module blocks left behind', !/const ps5\b/.test(src), 'ps5 removed after its carousel moved');
+
+check('every module title key exists in all three dictionaries', (() => {
+  const keys = ['worldWeather', 'socialMedia', 'hkoChannel', 'weatherBlog',
+                'hkoUpdates', 'hkoBlog', 'hkClimate', 'wxSection', 'localForecastToday'];
+  return keys.every((k) => (src.match(new RegExp('(^|[ ,{])' + k + ':', 'gm')) || []).length >= 3);
+})(), 'module titles x3 languages');
+
 console.log(`  RESULT: ${pass}/${pass + fail} passed`);
 console.log('='.repeat(76) + '\n');
 

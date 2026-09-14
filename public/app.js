@@ -99,6 +99,7 @@ const I18N = {
     live: '已連線 · 資料時間', stale: '離線快取 · 資料時間', err: '無法連線',
     justNow: '剛剛更新', minsAgo: '分鐘前',
     currentWx: '天氣實況', flwTitle: '本港地區天氣預報', nineDay: '九天天氣預報',
+    wxSection: '天氣預報', localForecastToday: '本港地區今晚及明日天氣預測',
     regionalTemp: '分區天氣', regionalRain: '分區雨量', alertsTitle: '天氣警告',
     specialTips: '特別天氣提示', fireDanger: '火災危險警告',
     humidity: '相對濕度', uvindex: '紫外線指數', rainfall: '雨量', lightning: '閃電',
@@ -235,6 +236,7 @@ const I18N = {
     live: '已连线 · 数据时间', stale: '离线缓存 · 数据时间', err: '无法连线',
     justNow: '刚刚更新', minsAgo: '分钟前',
     currentWx: '天气实况', flwTitle: '本港地区天气预报', nineDay: '九天天气预报',
+    wxSection: '天气预报', localForecastToday: '本港地区今晚及明日天气预报',
     regionalTemp: '分区天气', regionalRain: '分区雨量', alertsTitle: '天气警告',
     specialTips: '特别天气提示', fireDanger: '火灾危险警告',
     humidity: '相对湿度', uvindex: '紫外线指数', rainfall: '雨量', lightning: '闪电',
@@ -371,6 +373,7 @@ const I18N = {
     live: 'Connected · data time', stale: 'Offline cache · data time', err: 'Connection failed',
     justNow: 'updated just now', minsAgo: 'min ago',
     currentWx: 'Current Weather', flwTitle: 'Local Weather Forecast', nineDay: '9-Day Forecast',
+    wxSection: 'Weather Forecast', localForecastToday: 'Local Forecast for Tonight and Tomorrow',
     regionalTemp: 'Regional Weather', regionalRain: 'Regional Rainfall', alertsTitle: 'Weather Warnings',
     specialTips: 'Special Weather Tips', fireDanger: 'Fire Danger Warning',
     humidity: 'Relative Humidity', uvindex: 'UV Index', rainfall: 'Rainfall', lightning: 'Lightning',
@@ -1139,20 +1142,6 @@ function viewHome() {
     </div>`;
   }).join('');
 
-  const ps5 = `
-    <section class="card">
-      <h2 class="card__title">${esc(t('nineDay'))}</h2>
-      <div class="card__body">
-        <div class="fcarousel">
-          <button type="button" class="fcarousel__nav fcarousel__nav--prev" data-carousel="-1" aria-label="previous">${svgIcon('prev', 18)}</button>
-          <div class="fcarousel__track" id="fcTrack">${days || `<p class="empty">${esc(t('pickerNoData'))}</p>`}</div>
-          <button type="button" class="fcarousel__nav fcarousel__nav--next" data-carousel="1" aria-label="next">${svgIcon('next', 18)}</button>
-        </div>
-      </div>
-      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(fnd().updateTime))}</p>
-    </section>`;
-
-  /* --- ps6: imagery --- */
   const ps6 = `
     <section class="card">
       <h2 class="card__title">${esc(t('weatherImagery'))}</h2>
@@ -1180,17 +1169,85 @@ function viewHome() {
       <p class="card__note">RSS: rss.weather.gov.hk · 30 min cache</p>
     </section>`;
 
-  /* --- ps9: climate --- */
+  /* --- 天氣預報: HKO groups four sub-modules under one section heading.
+   *     Each part maps to a different field of the same forecast payload. --- */
+  const wxForecast = `
+    <section class="card">
+      <h2 class="card__title">${esc(t('wxSection'))}</h2>
+      <div class="card__body">
+        <h3 class="subhead">${esc(t('generalSituation'))}</h3>
+        <p class="prose">${esc(f.generalSituation || '—')}</p>
+
+        <h3 class="subhead">${esc(t('localForecastToday'))}</h3>
+        <p class="prose"><b>${esc(f.forecastPeriod || t('forecastPeriod'))}:</b> ${esc(f.forecastDesc || '—')}</p>
+
+        <h3 class="subhead">${esc(t('outlook'))}</h3>
+        <p class="prose">${esc(f.outlook || '—')}</p>
+
+        <h3 class="subhead">${esc(t('nineDay'))}</h3>
+        <div class="fcarousel">
+          <button type="button" class="fcarousel__nav fcarousel__nav--prev" data-carousel="-1" aria-label="previous">${svgIcon('prev', 18)}</button>
+          <div class="fcarousel__track" id="fcTrack">${days || `<p class="empty">${esc(t('pickerNoData'))}</p>`}</div>
+          <button type="button" class="fcarousel__nav fcarousel__nav--next" data-carousel="1" aria-label="next">${svgIcon('next', 18)}</button>
+        </div>
+      </div>
+      <p class="card__note">${esc(t('updated'))}: ${esc(fmtTime(fnd().updateTime))}</p>
+    </section>`;
+
+  /* --- 世界天氣 / 社交媒體 / 天文台頻道: three modules HKO's homepage carries
+   *     that the open-data API has no machine-readable source for. Each keeps its
+   *     slot in the information architecture and states plainly what stands in. --- */
+  const worldWx = `<section class="card">
+      <h2 class="card__title">${esc(t('worldWeather'))}</h2>
+      <div class="card__body">
+        <p class="prose">${esc(t('productPolicy'))}</p>
+        <p class="card__more"><a href="#/lae">${esc(t('closestNote'))} → ${esc(t('laeTitle'))}</a></p>
+      </div>
+    </section>`;
+
+  const socialMedia = `<section class="card">
+      <h2 class="card__title">${esc(t('socialMedia'))}</h2>
+      <div class="card__body"><p class="prose">${esc(t('productPolicy'))}</p></div>
+    </section>`;
+
+  const channels = `<section class="card">
+      <h2 class="card__title">${esc(t('hkoChannel'))}</h2>
+      <div class="card__body"><p class="prose">${esc(t('productPolicy'))}</p></div>
+    </section>`;
+
+  /* --- 天氣隨筆 / 天文台最新動態 / 天文台網誌: three separate HKO content
+   *     streams. Only one news feed is published as open data, so all three keep
+   *     the slot and show that feed, labelled as the feed they actually are. --- */
+  const streamCard = (titleKey) => `<section class="card">
+      <h2 class="card__title">${esc(t(titleKey))}</h2>
+      <div class="card__body">
+        <p class="prose prose--muted">${esc(t('noFeed'))}</p>
+        ${whatsnew.length
+          ? `<ul class="newslist">${whatsnew.slice(0, 4).map((n) => `<li><span class="newslist__h">${esc(n.text)}</span></li>`).join('')}</ul>`
+          : `<p class="empty">${esc(t('noFeed'))}</p>`}
+      </div>
+    </section>`;
+
+  const wxArticle = streamCard('weatherBlog');
+  const hkoNews = streamCard('hkoUpdates');
+  const hkoBlog = streamCard('hkoBlog');
+
+  /* --- ps9: climate, with 氣候摘要 as the sub-module HKO hangs off it --- */
   const ps9 = `
     <section class="card">
       <h2 class="card__title">${esc(t('hkClimate'))}</h2>
       <div class="card__body">
-        <p class="prose">${esc(t('climateSummary'))}: <a href="#/climate">${esc(t('climTemp'))}</a></p>
+        <h3 class="subhead">${esc(t('climateSummary'))}</h3>
+        <p class="prose">${esc(t('climTemp'))} · <a href="#/climate">${esc(t('closestNote'))} →</a></p>
         ${f.generalSituation ? `<p class="prose prose--muted">${esc(f.generalSituation)}</p>` : ''}
       </div>
     </section>`;
 
-  return bannerHtml() + ps0 + pickerCard() + ps2 + ps5 + ps6 + ps7 + ps9;
+  // HKO's homepage module order: 天氣實況 · 分區天氣 · forecast group · world ·
+  // social · imagery · news streams · climate. The picker sits with 分區天氣
+  // because that is the section whose station and parameter it selects.
+  return bannerHtml() + ps0 + ps2 + pickerCard() + wxForecast + worldWx + socialMedia
+    + channels + ps6 + ps7 + wxArticle + hkoNews + hkoBlog + ps9;
 }
 
 /* ------------------------------------------------------------------ *
