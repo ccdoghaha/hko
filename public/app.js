@@ -70,6 +70,17 @@ const I18N = {
     warnRefTitle: '警告類型參考', warnRefIntro: '以下是天文台警告的種類及其含義。最後一欄為一般市場慣例，並非投資建議 — 是否停市由交易所決定。',
     warnCode: '代碼', warnName: '名稱', warnMeaning: '含義', warnMarket: '市場慣例',
     warnInForce: '生效中', warnHalt: '一般停市', warnRefNote: '資料來源：HKO 開放數據 API 說明書（警告代碼）+ rhrread 即時警告狀態',
+    colDirection: '風向', navAlerts: '警告',
+    closestNote: '以上為最接近的可用資料，並非該產品本身。',
+    closestImagery: '現有圖像（最接近）', closestRegional: '即時分區讀數（最接近）',
+    closestRainfall: '即時分區雨量（最接近）', closestUv: '即時紫外線（最接近）',
+    closestMarine: '海事相關即時資料（最接近）', closestField: '本機分析場（最接近）',
+    closestForecast: '九天天氣預報（最接近）', closestWindField: '即時風場（最接近）',
+    closestRadiation: '昨日輻射及日照（最接近）', closestSurface: '地面讀數（最接近）',
+    closestVisibility: '能見度及風（最接近）',
+    marineVis: '能見度', marineWind: '離島及海港測站風',
+    upperAirProxy: '高空探測不在開放數據內。以下為地面測站讀數，僅作參考 — 高空風由本機分析經冪律外推估算。',
+    fieldStats: '分析場範圍', analysisField: '分析場',
     fClimate: '香港氣候', fSummary: '每月天氣摘要', fNew: '新增項目', fOpen: '公開資料',
     fRelated: '相關網址', fGuide: '快速用戶指南', fContact: '聯絡我們', fNotice: '重要告示', fPrivacy: '私隱政策',
     loading: '載入中…', refresh: '即時更新', refreshing: '更新中…',
@@ -184,6 +195,17 @@ const I18N = {
     warnRefTitle: '警告类型参考', warnRefIntro: '以下是天文台警告的种类及其含义。最后一栏为一般市场惯例，并非投资建议 — 是否停市由交易所决定。',
     warnCode: '代码', warnName: '名称', warnMeaning: '含义', warnMarket: '市场惯例',
     warnInForce: '生效中', warnHalt: '一般停市', warnRefNote: '数据来源：HKO 开放数据 API 说明书（警告代码）+ rhrread 即时警告状态',
+    colDirection: '风向', navAlerts: '警告',
+    closestNote: '以上为最接近的可用资料，并非该产品本身。',
+    closestImagery: '现有图像（最接近）', closestRegional: '即时分区读数（最接近）',
+    closestRainfall: '即时分区雨量（最接近）', closestUv: '即时紫外线（最接近）',
+    closestMarine: '海事相关即时资料（最接近）', closestField: '本机分析场（最接近）',
+    closestForecast: '九天天气预报（最接近）', closestWindField: '即时风场（最接近）',
+    closestRadiation: '昨日辐射及日照（最接近）', closestSurface: '地面读数（最接近）',
+    closestVisibility: '能见度及风（最接近）',
+    marineVis: '能见度', marineWind: '离岛及海港测站风',
+    upperAirProxy: '高空探测不在开放数据内。以下为地面测站读数，仅作参考 — 高空风由本机分析经幂律外推估算。',
+    fieldStats: '分析场范围', analysisField: '分析场',
     fClimate: '香港气候', fSummary: '每月天气摘要', fNew: '新增项目', fOpen: '公开资料',
     fRelated: '相关网址', fGuide: '快速用户指南', fContact: '联络我们', fNotice: '重要告示', fPrivacy: '私隐政策',
     loading: '加载中…', refresh: '即时更新', refreshing: '更新中…',
@@ -298,6 +320,17 @@ const I18N = {
     warnRefTitle: 'Warning reference', warnRefIntro: 'The Observatory\'s warning types and what each means. The final column reflects ordinary market practice and is not advice — the exchange decides whether to suspend trading.',
     warnCode: 'Code', warnName: 'Name', warnMeaning: 'Meaning', warnMarket: 'Market practice',
     warnInForce: 'in force', warnHalt: 'usual halt', warnRefNote: 'Source: HKO Open Data API documentation (warning codes) + live warning status from rhrread',
+    colDirection: 'Direction', navAlerts: 'Warnings',
+    closestNote: 'The above is the nearest available data, not the product itself.',
+    closestImagery: 'Available imagery (closest)', closestRegional: 'Live regional readings (closest)',
+    closestRainfall: 'Live district rainfall (closest)', closestUv: 'Live UV (closest)',
+    closestMarine: 'Marine-relevant live data (closest)', closestField: 'Computed analysis field (closest)',
+    closestForecast: '9-day forecast (closest)', closestWindField: 'Live wind field (closest)',
+    closestRadiation: "Yesterday's radiation and sunshine (closest)", closestSurface: 'Surface readings (closest)',
+    closestVisibility: 'Visibility and wind (closest)',
+    marineVis: 'Visibility', marineWind: 'Island and harbour station wind',
+    upperAirProxy: 'Upper-air soundings are not in the open data. The surface readings below are shown for reference only — the altitude wind is extrapolated from them by this service.',
+    fieldStats: 'Field range', analysisField: 'Analysis field',
     fClimate: 'HK Climate', fSummary: 'Monthly Summary', fNew: "What's New", fOpen: 'Open Data',
     fRelated: 'Related Sites', fGuide: 'User Guide', fContact: 'Contact Us', fNotice: 'Important Notices', fPrivacy: 'Privacy Policy',
     loading: 'Loading…', refresh: 'Refresh', refreshing: 'Refreshing…',
@@ -2383,6 +2416,162 @@ function viewEarthquake() {
   });
 }
 
+/* ------------------------------------------------------------------ *
+ * "closest available" blocks
+ *
+ * Fifteen of the Observatory's products have no machine-readable source. Rather
+ * than a page that only says so, each renders the nearest thing this service can
+ * actually show, and labels it as a substitute rather than the product itself.
+ * ------------------------------------------------------------------ */
+
+/** Live imagery — the closest thing to the photo / satellite / chart galleries. */
+function closestImagery() {
+  return `<div class="imagery">
+      <div class="imgcard"><div class="imgcard__h">${esc(t('satellite'))}</div><img src="/imagery/satellite" alt="${esc(t('satellite'))}" loading="lazy"></div>
+      <div class="imgcard"><div class="imgcard__h">${esc(t('radar'))}</div><img src="/imagery/radar" alt="${esc(t('radar'))}" loading="lazy"></div>
+      <div class="imgcard"><div class="imgcard__h">${esc(t('lightningImg'))}</div><img src="/imagery/lightning" alt="${esc(t('lightningImg'))}" loading="lazy"></div>
+    </div>`;
+}
+
+/** The live station table — stands in for the automatic regional forecast. */
+function closestRegional() {
+  const rows = tempStations().map((d) => ({ place: d.place, value: Number(d.value) }))
+    .filter((r) => Number.isFinite(r.value)).sort((a, b) => b.value - a.value);
+  const body = rows.slice(0, 20).map((r) => `<tr><td>${esc(r.place)}</td>
+      <td class="num"><span class="tempchip" style="background:${tempColor(r.value)}">${esc(r.value.toFixed(1))}</span></td></tr>`).join('');
+  return rows.length
+    ? `<div class="tablewrap" style="max-height:300px;overflow-y:auto"><table class="tbl">
+        <thead><tr><th>${esc(t('colStation'))}</th><th style="text-align:right">${esc(t('temp'))} (°C)</th></tr></thead>
+        <tbody>${body}</tbody></table></div>`
+    : `<p class="empty">${esc(t('pickerNoData'))}</p>`;
+}
+
+/** Current rainfall by district — stands in for the 2-hour nowcast. */
+function closestRainfall() {
+  const rows = rainStations().map((d) => ({ place: d.place, value: Number(d.max) || 0 }))
+    .sort((a, b) => b.value - a.value);
+  const wet = rows.filter((r) => r.value > 0);
+  const show = (wet.length ? wet : rows).slice(0, 18);
+  return `<div class="metrics">
+      <div class="metric"><div class="metric__k">${esc(t('districtsWithRain'))}</div><div class="metric__v">${wet.length}<small>/ ${rows.length}</small></div></div>
+      <div class="metric"><div class="metric__k">${esc(t('maxRainfall'))}</div><div class="metric__v">${wet.length ? esc(wet[0].value.toFixed(1)) : '0'}<small>mm</small></div></div>
+    </div>
+    <div class="tablewrap" style="margin-top:10px">
+      <table class="tbl"><thead><tr><th>${esc(t('colDistrict'))}</th><th style="text-align:right">${esc(t('rainfall'))} (mm)</th></tr></thead>
+      <tbody>${show.map((r) => `<tr><td>${esc(r.place)}</td><td class="num">${esc(r.value.toFixed(1))}</td></tr>`).join('')}</tbody></table>
+    </div>`;
+}
+
+/** Observed UV — stands in for the UV forecast. */
+function closestUv() {
+  const uv = (((rhr().uvindex || {}).data) || [])[0];
+  if (!uv) return `<p class="empty">${esc(t('pickerNoData'))}</p>`;
+  return `<div class="metrics">
+      <div class="metric"><div class="metric__k">${esc(t('uvindex'))} · ${esc(uv.place)}</div>
+        <div class="metric__v">${esc(uv.value)}</div><div class="metric__sub">${esc(uv.desc || '')}</div></div>
+    </div>`;
+}
+
+/** Visibility plus island wind stations — the marine-relevant subset. */
+function closestMarine() {
+  const vis = prod('LTMV');
+  const visRows = ((vis && vis.data) || []).slice(0, 8);
+  const wind = ((state.wind && state.wind.stations) || []);
+  const marine = wind.filter((s) => /Cheung Chau|Waglan|Sha Chau|Tap Mun|Lamma|Green Island|Star Ferry|Central Pier|North Point|Chek Lap Kok/i.test(s.station));
+  if (!state.wind) ensureWind();
+  const visHtml = visRows.length
+    ? `<div class="tablewrap"><table class="tbl"><thead><tr><th>${esc(t('colStation'))}</th><th style="text-align:right">${esc(t('visibility'))}</th></tr></thead>
+        <tbody>${visRows.map((r) => `<tr><td>${esc(r[1])}</td><td class="num">${esc(r[2])}</td></tr>`).join('')}</tbody></table></div>`
+    : `<p class="skeleton" style="width:50%"></p>`;
+  const windHtml = marine.length
+    ? `<div class="tablewrap"><table class="tbl"><thead><tr><th>${esc(t('colStation'))}</th><th style="text-align:right">${esc(t('windSpeed'))}</th><th>${esc(t('colDirection'))}</th></tr></thead>
+        <tbody>${marine.map((s) => `<tr><td>${esc(s.station)}</td><td class="num">${esc(s.speedKmh)} km/h</td><td>${esc(s.calm ? t('calm') : s.dirName || '—')}</td></tr>`).join('')}</tbody></table></div>`
+    : `<p class="skeleton" style="width:50%"></p>`;
+  return `<p class="paramrow__lab">${esc(t('marineVis'))}</p>${visHtml}
+    <p class="paramrow__lab" style="margin-top:12px">${esc(t('marineWind'))}</p>${windHtml}`;
+}
+
+/** The computed analysis raster — the closest thing to an analysed chart. */
+function closestField() {
+  const a = state.analysis;
+  if (!a) { loadAnalysis(false); return `<p class="skeleton" style="width:60%"></p>`; }
+  return `<div class="mapwrap"><img src="/analysis/field.png?v=${encodeURIComponent(a.generatedAt || '')}" alt="${esc(t('analysisField'))}" style="width:100%;display:block"></div>
+    <p class="paramrow__hint">${esc(t('fieldStats'))}: ${esc(a.field.min)}–${esc(a.field.max)} °C · ${esc(a.grid.cols)}×${esc(a.grid.rows)} @ ${esc(a.grid.metresPerCell)} m</p>`;
+}
+
+/** The 9-day forecast strip — stands in for the extended/probabilistic product. */
+function closestForecast() {
+  const days = nineDays().slice(0, 9);
+  if (!days.length) return `<p class="empty">${esc(t('pickerNoData'))}</p>`;
+  return `<div class="fcarousel"><div class="fcarousel__track">${days.map((d) => {
+    const pic = d.ForecastIcon;
+    return `<div class="fcarousel__item">
+        <div class="fcarousel__dow">${esc(d.week || '')}</div>
+        <div class="fcarousel__date">${esc(fmtDM(d.forecastDate))}</div>
+        ${pic ? `<img class="fcarousel__icon" src="${esc(iconUrl(pic))}" alt="" width="50" height="50">` : ''}
+        <div class="fcarousel__temp">${esc(d.forecastMintemp ? d.forecastMintemp.value : '—')} <span>| ${esc(d.forecastMaxtemp ? d.forecastMaxtemp.value : '—')}${esc(t('unitC'))}</span></div>
+      </div>`;
+  }).join('')}</div></div>`;
+}
+
+/** Vector wind field — stands in for the trajectory product. */
+function closestWindField() {
+  const rows = ((state.wind && state.wind.stations) || []).slice(0, 12);
+  if (!state.wind) ensureWind();
+  if (!rows.length) return `<p class="skeleton" style="width:50%"></p>`;
+  return `<div class="tablewrap" style="max-height:280px;overflow-y:auto"><table class="tbl">
+      <thead><tr><th>${esc(t('colStation'))}</th><th style="text-align:right">${esc(t('windSpeed'))}</th><th>${esc(t('colDirection'))}</th><th style="text-align:right">${esc(t('gust'))}</th></tr></thead>
+      <tbody>${rows.map((s) => `<tr><td>${esc(s.station)}</td><td class="num">${esc(s.speedKmh)} km/h</td>
+        <td>${esc(s.calm ? t('calm') : (s.dirName || '—'))}</td><td class="num">${s.gustKmh == null ? '—' : esc(s.gustKmh)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+/** Yesterday's radiation and sunshine, from RYES — stands in for the radiation page. */
+function closestRadiation() {
+  const r = prod('RYES');
+  if (!r) { ensureProducts(); return `<p class="skeleton" style="width:55%"></p>`; }
+  const keys = ['HKOReadingsSolarRadiation', 'HKOReadingsSunshine', 'HKOReadingsEvaporation', 'HKOReadingsMaxTemp', 'HKOReadingsMinTemp'];
+  const li = state.lang === 'en' ? 2 : (state.lang === 'sc' ? 1 : 0);
+  const rows = keys.filter((k) => r[k] != null).map((k) => {
+    const lab = RYES_LABELS[k];
+    return `<tr><td>${esc(lab ? lab[li] : k)}</td><td class="num">${esc(String(r[k]))}</td></tr>`;
+  }).join('');
+  return rows
+    ? `<div class="tablewrap"><table class="tbl"><thead><tr><th>${esc(t('colElement'))}</th><th style="text-align:right">${esc(t('colValue'))}</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>`
+    : `<p class="empty">${esc(t('pickerNoData'))}</p>`;
+}
+
+/** UV index by station — the upper-air page has no equivalent, so this is the surface proxy. */
+function closestSurface() {
+  const rows = tempStations().map((d) => ({ place: d.place, value: Number(d.value) })).filter((r) => Number.isFinite(r.value));
+  return `<p class="prose prose--muted">${esc(t('upperAirProxy'))}</p>
+    <div class="metrics">
+      <div class="metric"><div class="metric__k">${esc(t('histPoints'))}</div><div class="metric__v">${rows.length}</div></div>
+      <div class="metric"><div class="metric__k">${esc(t('pickerMean'))}</div>
+        <div class="metric__v">${rows.length ? esc((rows.reduce((s, r) => s + r.value, 0) / rows.length).toFixed(1)) : '—'}</div></div>
+    </div>`;
+}
+
+/** Which substitute block each product page shows. */
+const CLOSEST_BLOCK = {
+  photos: { fn: closestImagery, label: 'closestImagery' },
+  seagallery: { fn: closestImagery, label: 'closestImagery' },
+  earthwx: { fn: closestImagery, label: 'closestImagery' },
+  ocf: { fn: closestRegional, label: 'closestRegional' },
+  ncrf: { fn: closestRainfall, label: 'closestRainfall' },
+  uvfcst: { fn: closestUv, label: 'closestUv' },
+  scs: { fn: closestMarine, label: 'closestMarine' },
+  marine: { fn: closestMarine, label: 'closestMarine' },
+  mariners: { fn: closestMarine, label: 'closestMarine' },
+  portmet: { fn: closestMarine, label: 'closestMarine' },
+  wxchart: { fn: closestField, label: 'closestField' },
+  extended: { fn: closestForecast, label: 'closestForecast' },
+  trajectory: { fn: closestWindField, label: 'closestWindField' },
+  sanddust: { fn: closestMarine, label: 'closestVisibility' },
+  radiation: { fn: closestRadiation, label: 'closestRadiation' },
+  upperair: { fn: closestSurface, label: 'closestSurface' },
+};
+
 /* ---- product without an open-data source ---- */
 function viewProduct() {
   const key = state.productKey;
@@ -2395,15 +2584,30 @@ function viewProduct() {
         <p><a href="#/home">${esc(t('backHome'))}</a></p></div>
     </section>`;
   }
+
+  const block = CLOSEST_BLOCK[key];
+  let substitute = '';
+  if (block) {
+    let inner = '';
+    try { inner = block.fn(); } catch { inner = ''; }
+    substitute = `<section class="card">
+      <h2 class="card__title">${esc(t(block.label))}</h2>
+      <div class="card__body">${inner}</div>
+      <p class="card__note">${esc(t('closestNote'))}</p>
+    </section>`;
+  }
+
   return `<section class="card">
       <h2 class="card__title">${esc(info.n[li])}</h2>
       <div class="card__body">
         <p class="prose">${esc(info.why[li])}</p>
         <p class="prose prose--muted">${esc(t('productPolicy'))}</p>
-        <p><a href="#/overview">${esc(t('seeOverview'))}</a> · <a href="#/imagery">${esc(t('seeImagery'))}</a></p>
+        <p><a href="#/overview">${esc(t('seeOverview'))}</a> · <a href="#/imagery">${esc(t('seeImagery'))}</a>
+           · <a href="#/warningref">${esc(t('navAlerts'))}</a></p>
       </div>
       <p class="card__note">${esc(t('productNote'))}</p>
-    </section>`;
+    </section>
+    ${substitute}`;
 }
 
 /* ------------------------------------------------------------------ *

@@ -247,7 +247,24 @@ That gives **22 pages backed by live data**:
 | **警告類型參考** | **API doc warning codes + live status** |
 | 高解析度分析 · 低空作業 | computed (see below) |
 
-and **15 further product pages** that explain what is not in the open data.
+and **15 further product pages** that explain what is not in the open data — and
+each of those shows the **closest available real data** instead of stopping at
+"not available":
+
+| product page | substitute shown |
+|---|---|
+| 天氣照片 · 我的海洋天氣圖像廊 · 地球天氣 | live radar / satellite / lightning |
+| 自動分區天氣預報 | the live 26-station table |
+| 兩小時降雨預報 | live rainfall by district |
+| 紫外線指數預測 | the observed UV index |
+| 華南海域天氣報告 · 船舶 · 航運界 · 漁民 · 沙塵 | visibility + island and harbour wind |
+| 天氣圖 | the computed analysis field |
+| 延伸預報 | the 9-day forecast strip |
+| 反軌跡路線圖 | the live vector wind field |
+| 輻射監測 | yesterday's radiation and sunshine (`RYES`) |
+| 香港高空氣象觀測 | surface readings, with a note that the altitude wind is extrapolated |
+
+Each is labelled as a substitute, not as the product.
 
 The three archive-backed pages are worth calling out: the service writes every
 observation, analysis run and LAE verdict to SQLite, and those pages are the

@@ -84,15 +84,27 @@ check('three dictionaries found', Object.values(dicts).every((d) => d.size > 50)
 
 // keys used via t('key')
 const used = uniq([...js.matchAll(/\bt\('([A-Za-z0-9_]+)'\)/g)].map((m) => m[1]));
+
+// Keys passed to t() through a variable are invisible to the scan above, so the
+// string literals that reach t() indirectly are collected too. Without this the
+// closest-* labels and the card titles would go unchecked.
+const indirect = uniq([
+  ...[...js.matchAll(/label:\s*'([A-Za-z0-9_]+)'/g)].map((m) => m[1]),                       // CLOSEST_BLOCK labels
+  ...[...js.matchAll(/productShell\('([A-Za-z0-9_]+)'/g)].map((m) => m[1]),                 // product card titles
+  ...[...js.matchAll(/astroTable\('([A-Za-z0-9_]+)',/g)].map((m) => m[1]),                  // sun / moon card titles
+  ...[...js.matchAll(/\bblock\('[a-z_]+',\s*'([A-Za-z0-9_]+)'\)/g)].map((m) => m[1]),       // news card titles
+]);
+const allUsed = uniq([...used, ...indirect]);
+
 const missingKeys = {};
 for (const lang of ['tc', 'sc', 'en']) {
-  const miss = used.filter((k) => !dicts[lang].has(k));
+  const miss = allUsed.filter((k) => !dicts[lang].has(k));
   if (miss.length) missingKeys[lang] = miss;
 }
 check('every t() key defined in all 3 languages', Object.keys(missingKeys).length === 0,
   Object.keys(missingKeys).length
     ? Object.entries(missingKeys).map(([l, m]) => `${l}: ${m.join(',')}`).join(' | ')
-    : `${used.length} keys used, 0 missing`);
+    : `${allUsed.length} keys used (${indirect.length} via variables), 0 missing`);
 
 /* ------------------------------------------------------------------ *
  * 3. data-i18n attributes in the shell must resolve
